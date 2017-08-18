@@ -1,0 +1,67 @@
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+var params = {};
+
+if(request.body != null){
+	params = request.body;
+}else if(request.parameters.body){
+	params = request.parameters.body;
+} else {
+  params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+  	try{
+    	params = JSON.parse(params);   
+    }catch(e){
+      	return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var key = params.key;
+var action = params.action;
+
+var queryParams = {};
+queryParams["query"] =  'key = "'+ key +'"';
+queryParams["fields"] = "name, address, number, client, assignee, status, delivered, orderDate, formType";
+var orderQueryResults = documents.query(queryParams);
+if(orderQueryResults.metadata.status == "failure") {
+    return {status : "failure", errorDetails : "an error has occured when quering order document: " + key, errorMsg: orderQueryResults};
+} 
+var updateParams = orderQueryResults.result.documents[0];
+updateParams["orderStatus"] = "Confirmed"
+updateParams["formType"] = "onlineOrder";
+updateParams["meta.types"] = {
+    "orderDate" : "date",
+    "items" : "text"
+}
+delete updateParams["versionNumber"];
+var fieldsToSave = updateParams;
+var fieldsToSaveResult = documents.save(fieldsToSave);
+if(fieldsToSaveResult.metadata.status == "failure") {
+    return fieldsToSaveResult.metadata;
+}else{
+    fieldsToSave["key"] = fieldsToSave.key;
+    fieldsToSave["creationDate"] = orderQueryResults.result.documents[0]["creationDate"];
+    var message = {"result": {result : [fieldsToSave], action: "edit"}, "id" : "orders-grid"};
+    publish("responseChannel", message);
+    
+    /*
+    var number = orderQueryResults.result.documents[0]["number"];
+    var user = apsdb.callApi("GetUser", {login: number}, null);
+    if(user.metadata.status == "success" && user.result.user.gcmRegId){
+    	var gcmRegId = user.result.user.gcmRegId;
+        var message = '{"Content": "Your order has been confirmed"}';  
+        var arrayDevices = [gcmRegId];
+        var deviceType = "android";
+        push(arrayDevices, message, deviceType);
+    }
+    */
+    
+    
+    return  {status : fieldsToSaveResult.metadata.status, result : fieldsToSave}
+}
+
+
+
+

@@ -1,0 +1,70 @@
+<div>
+    <div class="row mrg5">
+        <div class="col-xs-12 col-sm-4">
+            <div class="input-group">
+               <div class="input-group-addon">Filter</div>
+            <scriptr-autocomplete
+                                  id="locationList"                
+                                  placeholder="Search Client by Number"
+                                  pause="400"
+                                  search-fields="number"
+                                  title-field="name"
+                                  description-field="description"                
+                                  minlength="0"
+                                  msg-tag="everyone-main-live"                
+                                  text-no-results="No results"                
+                                  text-searching="Searching..."
+                                  image-field="img"
+                                  transport="wss"
+                                  on-format-data="vm.listCallback"
+                                  selected-object="vm.onSelectItem"   
+                                  input-class="form-control form-control-small">
+            </scriptr-autocomplete>
+            </div>
+        </div>   
+        <div class="col-sm-6">
+            <scriptr-date-time-picker
+                                      type="range"
+                                      start-date-config="{ startView:'day', minView:'day' }"
+                                      end-date-config="{ startView:'day', minView:'day' }"
+                                      date-helper="vm.dateHelper"      
+                                      on-set-time="vm.onSetTime" 
+                                      start-date-class = "col-sm-6"
+                                      end-date-class = "col-sm-6"
+                                      start-date-on-set-time="vm.mapStartDateOnSetTime"
+                                      end-date-on-set-time="vm.mapEndDateOnSetTime"
+                                      >
+            </scriptr-date-time-picker>
+        </div>
+    </div>
+    <div>
+        <scriptr-map
+                     default-center="33.888630,35.495480"
+                     sources-info="vm.sources"
+                     clustered-view="true"
+                     cluster-zoom="8"
+                     path-stroke-opacity="0.5"
+                     path-stroke-weight="10"
+                     summary-icons="vm.icons"
+                     api="management/api/maps"
+                     api-params='{"timeframe" : "this_1_years", "limit" : "20"}'
+                     msg-tag="everyone-main-live"
+                     geofence-manager="false"
+                     focused-marker-zoom="15"
+                     detailed-zoom-min="14"
+                     on-format-data="vm.onMapFormatData"
+                     on-select-asset="vm.onSelectAsset">
+            <div>
+                <info-window
+                             id="infoWindowTemplate_simulator"
+                             template="/management/templates/info_simulator.html"
+                             max-width="600">
+                </info-window>
+                <info-window id="infoWindowTemplate_stream"
+                             template="/UIComponents/dashboard/frontend/examples/map/info_stream.html"
+                             max-width="300">
+                </info-window>
+            </div>
+        </scriptr-map>
+    </div>
+</div>

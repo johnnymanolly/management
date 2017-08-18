@@ -1,0 +1,86 @@
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+var params = {};
+
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var startDate = params.startDate;
+var endDate = params.endDate;
+var location = params.location;
+var number = params.number;
+var cancel = params.cancel;
+var key = params.key;
+
+if(startDate == null || typeof startDate == 'undefined'){
+    startDate =  new Date();
+    startDate.setHours(0);
+    startDate.setMinutes(0);
+    startDate.setSeconds(0);
+    startDate = formatDate(startDate)
+}
+
+var results;
+
+if(cancel){
+    var updateParams = {};
+    updateParams["update"] = "true";
+    updateParams["key"] = key;
+    updateParams["cancelled"] = "Yes";
+    updateParams["meta.types"] = {
+        "orderDate" : "date"
+    }
+    var fieldsToSave = updateParams;
+    var fieldsToSaveResult = documents.save(fieldsToSave);
+    if(fieldsToSaveResult.metadata.status == "failure") {
+        return fieldsToSaveResult.metadata;
+    }else{
+        fieldsToSave["key"] = fieldsToSave.key;
+        var message = {"result": "success", "id" : "orders-grid"};
+        publish("responseChannel", message);
+        return   {result : "success"}
+    }
+}else{
+    var queryParams = {};
+    var fieldsParams = "fullName, address, number, orderDate, orderStatus, deliveryDate, delivered, items, total";
+    var queryString = 'formType = "onlineOrder" and cancelled = "No" and number = "' + number + '" and orderedBy = "' + number + '"';
+
+    queryParams["query"] =  queryString;
+    queryParams["fields"] =  fieldsParams;
+
+    log.info(JSON.stringify(queryParams))
+    results = documents.query(queryParams);
+
+    return results.result.documents
+}
+
+function atLeastTwoDigits (value) {
+    return value < 10 ? "0" + value : value;
+}
+
+function formatDate(date){
+    var formattedDate = date.getFullYear()
+    + "-" + atLeastTwoDigits(date.getMonth() + 1)
+    + "-" + atLeastTwoDigits(date.getDate())
+    + "T" + atLeastTwoDigits(date.getHours())
+    + ":" + atLeastTwoDigits(date.getMinutes())
+    + ":" + atLeastTwoDigits(date.getSeconds());
+    formattedDate += date.getTimezoneOffset() < 0 ? "+" : "-";
+    formattedDate += atLeastTwoDigits((Math.abs(date.getTimezoneOffset()) / 60)) + "00";
+    return formattedDate
+}
+
+

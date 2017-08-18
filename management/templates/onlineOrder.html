@@ -1,0 +1,84 @@
+<div class="text-center loading" ng-show="vm.showLoading"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+<div class="col-xs-12" ng-show="vm.showError"><div class="alert" ng-class="'alert-' + ( vm.message.type || 'warning')">{{vm.message.content}}</div></div>
+<div class="mrg5">
+    <div class="row col-xs-12">
+        <div class="col-sm-3">
+            <scriptr-autocomplete
+                                  id="clientsList"                
+                                  placeholder="Search for a client ot order"
+                                  pause="400"
+                                  class=""
+                                  search-fields="id"
+                                  title-field="name"
+                                  description-field="number"                
+                                  minlength="0"
+                                  image-field="pic"
+                                  text-no-results="No results"                
+                                  text-searching="Searching..."
+                                  image-field="img"
+                                  transport="https"
+                                  on-format-data="vm.orderListClientsCallback"
+                                  api="management/api/getAllUsers"
+                                  selected-object="vm.onClientSelect"   
+                                  input-class="form-control form-control-small">
+            </scriptr-autocomplete>
+        </div>
+        <div class="col-sm-3">  
+            <scriptr-date-time-picker
+                                      type="dropDownInput"
+                                      date-label="Delivery date"
+                                      start-date-config="{ startView:'day', minView:'day' }"
+                                      date-helper="vm.dateHelper"  
+                                      on-set-time="vm.onDeliveryOrderSetTime" 
+                                      start-date-class = "col-xs-12"
+                                      >
+            </scriptr-date-time-picker> 
+        </div>
+        <div class="col-sm-3">
+            <span>Name: {{vm.name}}</span>
+        </div>
+        <div class="col-sm-3">
+            <span>Number: {{vm.number}}</span>
+        </div>
+        <div class="col-sm-3">
+            <span>Address: {{vm.address}}</span>
+        </div>
+        <div class="col-sm-3">
+            <span>Email: {{vm.email}}</span>
+        </div>
+    </div>
+    <div></div>
+    </br>
+</br>
+</br>
+<div ng-show="vm.clientSet"> 
+    <div class="row col-xs-12 mrgl">
+        <div class="col-sm-12">
+            <scriptr-autocomplete
+                                  id="orderList"                
+                                  placeholder="Add Items"
+                                  on-send-order="vm.sendOnlineOrder"
+                                  pause="400"
+                                  search-fields="name"
+                                  show-loading="false"
+                                  selected-object="vm.onSelect"
+                                  title-field="name"
+                                  mrg="23"
+                                  set-width="277"
+                                  set-class="col-xs-12 col-sm-3"
+                                  clear-selected="true"                
+                                  description-field="category"                
+                                  image-field="pic"
+                                  list-selected-object="true"                
+                                  minlength="0"
+                                  text-no-results="No results"                
+                                  text-searching="Searching..."
+                                  transport="https"
+                                  on-format-data="vm.orderListCallback"
+                                  api="management/api/getItemsforMobileApp"
+                                  input-class="form-control form-control-small">
+            </scriptr-autocomplete>
+        </div>
+    </div>
+</div>
+</div>

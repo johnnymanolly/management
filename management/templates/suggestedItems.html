@@ -1,0 +1,41 @@
+<div class="container">
+   <div class="col-xs-12 heading">Suggested Items</div>
+</div>
+<div class="col-xs-12">
+  <div class="row">
+      <div class="col-sm-6">
+      <scriptr-date-time-picker
+                                type="range"
+                                start-date-config="{ startView:'day', minView:'day' }"
+                                end-date-config="{ startView:'day', minView:'day' }"
+                                date-helper="vm.dateHelper"      
+                                on-set-time="vm.onSetTime" 
+                                start-date-class = "col-xs-12 col-sm-5"
+                                end-date-class = "col-xs-12 col-sm-5"
+                                start-date-on-set-time="vm.energyStartDateOnSetTime"
+                                end-date-on-set-time="vm.energyEndDateOnSetTime"
+                                >
+      </scriptr-date-time-picker> 
+    </div>
+  </div>
+</div>
+<scriptr-grid columns-definition='[
+          {headerName: "Client Name", field: "name"},
+          {headerName: "Number", field: "number"},
+          {headerName: "Suggested Item", field: "item"},
+          {headerName: "Date", field: "date"}]' 
+           enable-sorting='true'
+           row-data = '[
+              {name: "Johnny Manolly", number: "70928406", item: "Beirut beer", date: "2017-05-26"}
+           ]'
+           enable-delete-row='false'
+           grid-height="500"
+           enable-add-row='false'
+           cell-editable='false'
+           enable-client-side-filter='true'
+           enable-server-side-filter='false' 
+           enable-client-side-sorting='true'
+           row-model-selection='multiple'
+           pagination-page-size='5'
+           transport='wss'>
+  </scriptr-grid>

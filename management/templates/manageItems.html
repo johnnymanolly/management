@@ -1,0 +1,20 @@
+<scriptr-grid columns-definition='vm.manageItemsColDef' 
+              api='management/api/getItems'
+              default-cell-renderer="vm.defaultCellRenderer"   
+              msg-tag="items-grid"   
+              enable-delete-row='true'
+              row-model-type='infinite'
+              pagination="true"
+              grid-height="500"
+              enable-col-resize="true"     
+              enable-add-row='true'
+              cell-editable='true'
+              enable-client-side-filter='true'
+              enable-server-side-filter='false' 
+              enable-client-side-sorting='false'
+              enable-server-side-sorting='true'
+              row-model-selection='multiple'
+              on-cell-clicked='vm.manageItemsSelectionChanged'
+              pagination-page-size='50'
+              transport='wss'>
+</scriptr-grid>

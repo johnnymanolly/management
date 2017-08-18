@@ -1,0 +1,64 @@
+var documents = require("document");
+var img = request.files["file"];
+
+var images = [];
+images.push(img[0]);
+var log = require("log");
+log.setLevel("INFO");
+
+var params = {};
+if(request.body != null){
+	params = request.body;
+}else if(request.parameters.body){
+	params = request.parameters.body;
+} else {
+  params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+  	try{
+    	params = JSON.parse(params);   
+    }catch(e){
+      	return "INVALID OR MISSING PARAMETER";
+    }
+}
+//return params.name
+var rows = {};
+for(row in params){
+    rows[row] = params[row];
+}
+
+if(rows["image"]){
+    var filename = rows["image"];
+    var result = documents.getAttachment(rows.key, filename, {"fieldName": "attachments", "versionNumber": "1"});
+    images.push(result);
+}
+
+rows["attachments"] = images;
+rows["formType"] = "item";
+
+if(rows["upload"] == "image"){
+    rows["image"] = img[0].fileName;
+}else{
+    rows["barcode"] = img[0].fileName;
+}
+rows["meta.types"] = {
+    "price": "numeric"
+}
+if(rows.action){
+    delete rows.action
+}
+if(rows["upload"]){
+    delete rows.upload
+}
+
+var fieldsToSaveResult = documents.save(rows);
+if(fieldsToSaveResult.metadata.status == "failure") {
+    return fieldsToSaveResult.metadata;
+}else{
+    rows["key"] = fieldsToSaveResult.result.document.key;
+    var message = {"result": {result : [rows], action: "edit"}, "id" : "items-grid"};
+    publish("responseChannel", message);
+    return  {status : fieldsToSaveResult.metadata.status, result : fieldsToSaveResult}
+}
+
+return fieldsToSaveResult

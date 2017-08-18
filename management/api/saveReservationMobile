@@ -1,0 +1,50 @@
+var documents = require("document");
+var dateFormatter = require("/modules/momentjs/moment.min.js");
+
+var log = require("log");
+log.setLevel("INFO");
+
+var params = JSON.parse(request.rawBody);
+if(params){
+    for(obj in params){
+        params[obj] = params[obj]
+    }
+    params["formType"] = "reservation";
+    var registered = false;
+    
+    //check if new client
+    var number = params["number"];
+    var user = apsdb.callApi("GetUser", {login: number}, null);
+    if(user.metadata.status == "success" && user.result.user.login){
+        registered = true;
+    }else{
+        registered = false;
+    }
+    if(!registered){
+        var queryParams = {};
+        var fieldsParams = "*";
+        var queryString = 'formType = "client" and number = "' + number + '"';
+
+        queryParams["query"] =  queryString;
+        queryParams["fields"] =  fieldsParams; 
+        var result = documents.query(queryParams);
+        if(result.result.documents.length > 0) {
+            registered = true;
+        }
+    }
+    params["client"] = (registered) ? "Previous Client" : "New Client";
+}
+
+log.info(JSON.stringify(params))
+params["fullName"] = params["firstName"] + " " + params["lastName"];
+params["confirmed"] = "No";
+params["cancelled"] = "No";
+var saveResult = documents.save(params);
+log.info(JSON.stringify(saveResult))
+params["key"] = saveResult.result.document.key;
+var message = {"result": {result : [params], action: "add"}, "id" : "reservation-grid"};
+publish("responseChannel", message);
+return saveResult
+
+
+

@@ -1,0 +1,61 @@
+var commons = require('management/api/lib/commonsLib');
+var params = {};
+
+if(request.body != null){
+	params = request.body;
+}else if(request.parameters.body){
+	params = request.parameters.body;
+} else {
+  params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+  	try{
+    	params = JSON.parse(params);   
+    }catch(e){
+      	return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var requiredParams = ["login", "password", "name", "email"];
+// START: Integrity checks
+/*
+var isValidParams = commons.validateParamsNonEmpty(params, requiredParams);
+if (isValidParams ["status"] == 'failure') {
+    return isValidParams;
+}
+*/
+var login = params.login;
+var password = params.password;
+var firstName = params.firstName;
+var lastName = params.lastName;
+var email = params.email;
+
+var fields = {
+    login : login,
+    password: password,
+    firstName : firstName,
+    lastName: lastName,
+    email: email
+}
+/*
+ fields = {
+    login : "70928406",
+    password: "132456",
+    name : "Johnny Manolly",
+    email: "manollyjohnny@gmail.com",
+    address: "beit koko" 
+}
+*/
+var saveUser = apsdb.callApi("SaveUser", fields, null);
+return saveUser
+if(saveUser.metadata.status == "success" && saveUser.result.metadata.status == "success"){
+    return "success";
+}else{
+    return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
+}
+
+
+
+
+
+

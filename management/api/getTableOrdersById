@@ -1,0 +1,56 @@
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var params = {};
+
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var queryParams = {};
+var key = params["key"];
+var fieldsParams = "items, total";
+var queryString = 'key = "'+ key +'"';
+
+queryParams["count"] = "true";
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+var results = documents.query(queryParams);
+var docs =  results.result.documents;
+//return JSON.parse(docs[0].items)
+var array = JSON.parse(docs[0].items);
+if(typeof array == "string") array = [JSON.parse(array)];
+for(var i = 0; i <= array.length; i++){
+    if(typeof array[i] == "string"){
+        array[i] = JSON.parse(array[i]);
+    }
+}
+return {documents: array, count: array.length}
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
+}

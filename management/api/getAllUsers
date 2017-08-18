@@ -1,0 +1,19 @@
+var documents = require("document");
+
+var users = apsdb.callApi("ListUsers", {"apsdb.attributes": "*"}, null);
+users = users.result.users;
+
+var queryParams = {};
+var fieldsParams = "secondaryAddress, address, name, number";
+var queryString = 'formType = "client"';
+
+queryParams["count"] = "true";
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+log.info(JSON.stringify(queryParams))
+results = documents.query(queryParams);
+
+var clients = results.result.documents; 
+
+return {users : users, clients: clients}

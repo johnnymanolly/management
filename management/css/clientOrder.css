@@ -1,0 +1,41 @@
+.client-info {
+    margin: 10px;
+    margin-top: 50px    
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.processed-by {
+    background-color: #269900;
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    width: 100px;
+    margin: 0px 0px;
+}
+
+.confirm-order {
+    background-color: #ff0000;
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    width: 100px;
+    margin-left: 16px;
+    margin-top: 6px;
+}
+
+.previous-client {color : green; font-weight: bold}
+.new-client {color : red; font-weight: bold}   

@@ -1,0 +1,17 @@
+<scriptr-grid columns-definition='vm.promotionColDef' 
+           api='management/api/getPromotions'
+           enable-delete-row='true'
+           row-model-type='pagination'
+           grid-height="500"
+           enable-add-row='true'
+           cell-editable='true'
+           enable-client-side-filter='true'
+           enable-col-resize="true"    
+           enable-server-side-filter='false' 
+           enable-client-side-sorting='false'
+           enable-server-side-sorting='true'
+           row-model-selection='multiple'
+           pagination-page-size='50'
+           on-cell-clicked='vm.promotionOnCellClicked'   
+           transport='https'>
+  </scriptr-grid>

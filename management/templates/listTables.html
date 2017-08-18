@@ -1,0 +1,33 @@
+<div class="text-center loading" ng-show="vm.showLocalOrdersLoading"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+<!-- div class="col-xs-12" ng-show="vm.showError"><div class="alert" ng-class="'alert-' + ( vm.message.type || 'warning')">{{vm.message.content}}</div></div -->
+
+<div ng-show="!vm.showLocalOrdersLoading">
+
+    <div ng-show="!vm.tableSelected" class="col-xs-12 pdl0 slick-wrap">
+        <!-- begin carousel options -->
+        <div>
+            <div class="slick-container dark-grey-bg" class="col-xs-12">
+                <slick 
+                       settings="vm.slickConfig"
+                       infinite="true" 
+                       slides-to-show="vm.tables.length"
+                       slides-to-scroll="0"
+                       ng-if="true" 
+                       init-onload="false"
+                       data="true"
+                       >
+                    <div class="slick-item" ng-repeat="table in vm.tables">
+                        <span>
+                            <a ng-class="(table.busy) ? 'busy' : ''" ng-click="vm.onTableSelect(table)"  uib-tooltip="{{ table.label }}" tooltip-placement="auto" tooltip-append-to-body="true">
+                                <img ng-if="table.imgSrc" ng-src="{{ table.imgSrc }}"  alt="{{ table.label}}" />
+                            <span class="slick-label">{{ table.label }}</span>
+                            </a>
+                        </span>
+                    </div>
+                </slick>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- end carousel options -->
+</div>

@@ -1,0 +1,20 @@
+<scriptr-grid 
+              columns-definition='vm.addClientColDef' 
+              api='management/api/addClient'
+              default-cell-renderer="vm.defaultCellRenderer"   
+              on-cell-clicked="vm.onClientCellClicked"
+              enable-delete-row='true'
+              pagination:'true'
+              row-model-type='infinite'
+              server-filter-label='Search for client'
+              grid-height="500"
+              enable-add-row='true'
+              cell-editable='true'
+              enable-client-side-filter='true'
+              enable-server-side-filter='false' 
+              enable-client-side-sorting='false'
+              enable-server-side-sorting='true'
+              row-model-selection='multiple'
+              pagination-page-size='50'
+              transport='https'>
+</scriptr-grid>
