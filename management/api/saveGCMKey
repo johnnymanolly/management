@@ -1,0 +1,34 @@
+var params = {};
+if(request.body != null){
+	params = request.body;
+}else if(request.parameters.body){
+	params = request.parameters.body;
+} else {
+  params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+  	try{
+    	params = JSON.parse(params);   
+    }catch(e){
+      	return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var GCMKey = params.GCMKey;
+var number = params.number;
+
+var fields = {
+    "login" : "76340651",
+    "GCMKey": GCMKey,
+    "apsdb.update" : "true"
+}
+
+var saveUser = apsdb.callApi("SaveUser", fields, null);
+return saveUser
+if(saveUser.metadata.status == "success" && saveUser.result.metadata.status == "success"){
+    return "success";
+}else{
+    return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
+}
+
+

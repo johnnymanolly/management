@@ -1,5 +1,6 @@
 var documents = require("document");
 var dateFormatter = require("/modules/momentjs/moment.min.js");
+var alertLib = require("management/api/lib/alert");
 
 var log = require("log");
 log.setLevel("INFO");
@@ -48,56 +49,6 @@ if(!registered){
     }
 }
 order["client"] = (registered) ? "Previous Client" : "New Client";
-/*
-params = {
-
-         name: "johnny Manolly",
-  	     address: "Beit koko",
-         number: number,
-         client: (registered) ? "Previous Client" : "New Client",
-         location : "48.8980,2.2951",
-         total: 50000,
-		 items : [{
-                    "name": "Mozzarella Chicken Burger",
-                    "price": "10000 LL",
-                    "image": "salami.jpg",
-                    "itemDocKey": "C5789AB7362EE015B66F4188127FE7EE",
-                    "barcode": "barcode.png",
-                    "barcodeID": "4597741305",
-                    "pos": 2,
-                    "category": "food",
-                    "comments": "",
-                    "quantity": 2,
-                    "total": 20000
-                },
-                {
-                    "name": "Chicken Breast Burger",
-                    "price": "8000 LL",
-                    "itemDocKey": "193B624BB24E90729845F0EC3D06252F",
-                    "image": "Mortadelle Olives.jpg",
-                    "barcode": "barcode.png",
-                    "barcodeID": "",
-                    "pos": 0,
-                    "comments": "",
-                    "category": "food",
-                    "quantity": 3,
-                    "total": 24000
-                },
-                {
-                    "name": "Mexican Chicken Burger",
-                    "price": "10000 LL",
-                    "itemDocKey": "19561C3F7D536ED546EA010E57E9C707",
-                    "image": "Mortadelle Dinde.jpg",
-                    "barcodeID": "",
-                    "barcode": "barcode.png",
-                    "pos": 3,
-                    "comments": "extra spicy",
-                    "category": "food",
-                    "quantity": 3,
-                    "total": 30000
-                }]
-}    
-*/
 
 log.info(JSON.stringify(order))
 order["fullName"] = order["firstName"] + " " + order["lastName"];
@@ -108,6 +59,7 @@ log.info(JSON.stringify(saveResult))
 order["key"] = saveResult.result.document.key;
 var message = {"result": {result : [order], action: "add"}, "id" : "orders-grid"};
 publish("responseChannel", message);
+alertLib.alert();
 return saveResult
 
 

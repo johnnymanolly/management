@@ -162,7 +162,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
 
         if(scope.api.getFocusedCell().column.colDef.headerName == "Assignee"){
             var selectedRow = scope.api.getSelectedNodes()[0];
-            if(selectedRow.data && !selectedRow.data.assignee && !selectedRow.data.cancelled == "Yes"){
+            if(selectedRow.data && !selectedRow.data.assignee && selectedRow.data.cancelled == "No"){
                 var params = selectedRow.data
                 params["action"] = "edit";
                 params["assignee"] = vm.user;
@@ -176,7 +176,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                         scope.api.hideOverlay();
                     },
                     function(err) {
-                  //      vm.showAlert("success", "The order has been sent.");
+                        //      vm.showAlert("success", "The order has been sent.");
                         console.log(err);
                         scope.api.hideOverlay();
                     });   
@@ -243,7 +243,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         if(params.data.key){
             return '<div class="btn-edited btn btn-primary btn-upload" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
         }else{
-            return '<div class="btn-edited btn btn-primary btn-upload" ng-click="$ctrl.onImageUpload()">Upload</div>'
+            return '<div class="btn-edited btn btn-primary btn-upload" ng-click="$ctrl.stopEditing()">Upload</div>'
         }
 
     }
@@ -263,6 +263,17 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         }
     }
 
+    vm.outOfStockItemCellRenderer =  function(params){
+        if(params.value && params.value == "true"){
+            return '<span class="unpublish">Available</span>'
+        }else if(params.value && params.value == "false"){
+            return '<button class="confirm-order">Out of stock</button>'
+        }else{
+            return '<button class="confirm-order disabled">Out of stock</button>'
+        }
+    }
+
+
     vm.manageItemsSelectionChanged = function(scope){
         if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Item"){
             var selectedRow = scope.api.getSelectedNodes()[0];
@@ -270,6 +281,24 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             params["action"] = "edit";
             var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
             params["publish"] = action;
+            delete params["creationDate"];
+            scope.api.showLoadingOverlay();
+            httpClient
+                .get('management/api/getItems', params).then(
+                function(data, response){
+                    console.log("success");
+                    scope.api.hideOverlay();
+                },
+                function(err) {
+                    console.log(err);
+                    scope.api.hideOverlay();
+                });   
+        }else if(scope.api.getFocusedCell().column.colDef.headerName == "Out Of Stock"){
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            var params = selectedRow.data
+            params["action"] = "edit";
+            var outOfStock = (selectedRow.data.outOfStock == "true") ? "false" : "true"; 
+            params["outOfStock"] = outOfStock;
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
@@ -454,7 +483,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         if(scope.api.getFocusedCell().column.colDef.headerName == "Confirm Reservation"){
             var selectedRow = scope.api.getSelectedNodes()[0];
             if(selectedRow.data && selectedRow.data.confirmed != "Confirmed"){
-              //  var self = vm;
+                //  var self = vm;
                 var params = selectedRow.data;
                 params["action"] = "edit";
                 params["confirmed"] = "Confirmed";
@@ -464,7 +493,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                     .get('management/api/getReservations', params).then(
                     function(data, response){
                         console.log("success");
-                        vm.showAlert("success", "A notification has been sent to the client that the reservation is confirmed.");
+                        vm.pushreservationNotification(data);
                         scope.api.hideOverlay();
                     },
                     function(err) {
@@ -474,6 +503,29 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             }
         }
 
+    }
+
+    vm.pushreservationNotification = function(data){
+        if(data.GCMKey){
+            var url = 'https://android.googleapis.com/gcm/send';
+            var params = {
+                "to" : data.GCMKey,
+                "data" : {
+                    "m" : "Your reservation has been confirmed"
+                },
+            }
+            var token = 'AIzaSyCE-ZDpyp1gDmpnSr78TVDZYiqvBGtVCnQ';
+            httpClient
+                .post(url, params, null, url, token).then(
+                function(data, response){
+                    console.log("success");
+                    vm.showAlert("success", "A notification has been sent to the client that the reservation is confirmed.");
+                },
+                function(err) {
+                    console.log(err);
+                    vm.showAlert("danger", "An error has occurred");
+                });    
+        }
     }
 
     vm.promotionUploadImageButtonRenderer = function(params){
@@ -517,12 +569,38 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                 function(data, response){
                     console.log("success");
                     scope.api.hideOverlay();
+                    if(data.notification){
+                        vm.sendPromotionNotification(data);
+                    }
                     scope.api.refreshInfiniteCache();
                 },
                 function(err) {
                     console.log(err);
                     scope.api.hideOverlay();
                 });   
+        }
+    }
+
+    vm.sendPromotionNotification = function(data){
+        if(data.notification){
+            var url = 'https://android.googleapis.com/gcm/send';
+            var params = {
+                "registration_ids" : data.keys,
+                "data" : {
+                    "m" : data.notification
+                },
+            }
+            var token = 'AIzaSyCE-ZDpyp1gDmpnSr78TVDZYiqvBGtVCnQ';
+            httpClient
+                .post(url, params, null, url, token).then(
+                function(data, response){
+                    console.log("success");
+                    vm.showAlert("success", "A notification has been sent to all clients about this promotion.");
+                },
+                function(err) {
+                    console.log(err);
+                    vm.showAlert("danger", "An error has occurred");
+                });    
         }
     }
 
@@ -551,7 +629,10 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
     vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
         {headerName: "Brand", field: "brand", hide: true},
-        {headerName: "Category", field: "category"},
+        {headerName: "Category", field: "category", cellEditor: "select",
+            cellEditorParams: {
+              values: ["fruits", "beverages", "others"]
+        }},
         {headerName: "Description", field: "description"},
         {headerName: "Price", field: "price"},
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
@@ -569,6 +650,9 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         }},
         {headerName: "Publish Item", field: "publish", editable : false, cellRenderer: function (params) {  
             return vm.publishItemCellRenderer(params);
+        }},
+        {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
+            return vm.outOfStockItemCellRenderer(params);
         }}];
 
     vm.reservationColDef = [
@@ -644,8 +728,8 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             if(params.value){
                 return '<span>' + params.value + '</span>'
             }else {
-                 params.data.deliveryDate = "asap";
-                 return '<span>' + params.data.deliveryDate + '</span>'
+                params.data.deliveryDate = "asap";
+                return '<span>' + params.data.deliveryDate + '</span>'
             }
         }},
         {headerName: "Cancelled", field: "cancelled", editable : false},
@@ -667,8 +751,8 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
 
     vm.promotionColDef = [
         {headerName: "Name", field: "name"},
-      //  {headerName: "Brand", field: "brand"},
-    //    {headerName: "Category", field: "category"},
+        //  {headerName: "Brand", field: "brand"},
+        //    {headerName: "Category", field: "category"},
         {headerName: "Description", field: "description"},
         {headerName: "Price (€)", field: "price"},
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
@@ -677,6 +761,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         {headerName: "Image", field: "image",editable : false, cellRenderer: function (params) {  
             return vm.promotionViewImageCellRenderer(params);
         }},
+        {headerName: "Notification Message", field: "notification"},
         {headerName: "Publish Promotion", field: "publish", editable : false, cellRenderer: function (params) {  
             return vm.promotionPublishItemCellRenderer(params);
         }}];
@@ -781,7 +866,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             delete objects[i]["id"];
         }
         var params = {};
-        params["name"] = vm.name;
+        params["fullName"] = vm.name;
         params["number"] = vm.number;
         params["address"] = vm.address;
         params["orderedBy"] = vm.user;
@@ -876,5 +961,49 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             vm.showError = false;
         }, 5000);
     }
+
+});
+
+myApp.controller('notificationCtrl', function($scope, httpClient) {
+    var vm = this;
+    vm.params = {} 
+
+    httpClient
+        .get("management/api/getNotificationsSettings", null)
+        .then(
+        function(data, response) {
+            if(data && (data.emails || data.mobiles)){
+                var emailsArray = JSON.parse(data.emails);
+                var mobilesArray = JSON.parse(data.mobiles);
+                if(typeof emailsArray == "string") emailsArray = [emailsArray];
+                if(typeof mobilesArray == "string") mobilesArray = [mobilesArray];
+                vm.emails= emailsArray;
+                vm.mobiles = mobilesArray;
+            }else{
+                vm.emails = [];
+                vm.mobiles = [];
+            }
+            console.log('SUCCESS');
+        },
+        function(err) {
+            console.log('ERROR');
+        });
+
+    vm.buildParams = function(){
+        var emailsArray = [];
+        var mobilesArray = [];
+        if(vm.emails){
+            for(var i = 0; i < vm.emails.length; i++){
+                emailsArray.push(vm.emails[i]["text"]);
+            }  
+        }
+        if(vm.mobiles){
+            for(var i = 0; i < vm.mobiles.length; i++){
+                mobilesArray.push(vm.mobiles[i]["text"]);
+            }
+        }
+        vm.params["emails"] = emailsArray;
+        vm.params["mobiles"] = mobilesArray;
+    } 
 
 });

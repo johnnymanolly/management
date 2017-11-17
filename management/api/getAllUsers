@@ -2,6 +2,10 @@ var documents = require("document");
 
 var users = apsdb.callApi("ListUsers", {"apsdb.attributes": "*"}, null);
 users = users.result.users;
+var keys = []
+for(var i = 0; i <  users.length; i++){
+    keys.push(users[i]["GCMKey"][0])
+}
 
 var queryParams = {};
 var fieldsParams = "secondaryAddress, address, name, number";

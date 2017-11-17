@@ -21,6 +21,7 @@ if(typeof params == 'string' && params != null){
 var results;
 var action = params.action;
 var key = params.key;
+var number = params.number;
 
 if(action){
     if(action == "add"){
@@ -47,7 +48,7 @@ if(action){
             fieldsToSave["key"] = fieldsToSave.key;
             var message = {"result": "success", "id" : "reservation-grid"};
             publish("responseChannel", message);
-
+            /*
             if(params.orderStatus && params.orderStatus == "Confirmed"){
                 var number = orderQueryResults.result.documents[0]["number"];
                 var user = apsdb.callApi("GetUser", {login: number}, null);
@@ -59,8 +60,16 @@ if(action){
                     push(arrayDevices, message, deviceType);
                 }
             }
-
-            return   {result : "success"}
+			*/
+            var fields = {
+                login : number
+            }
+            var GCMKey;
+            var saveUser = apsdb.callApi("GetUser", fields, null);
+            if(saveUser.result && saveUser.result.user){
+                GCMKey = saveUser.result.user.GCMKey;
+            }
+            return   {result : "success", GCMKey : GCMKey}
         }
     }else if(action == "delete"){
 

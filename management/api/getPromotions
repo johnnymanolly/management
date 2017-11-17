@@ -93,6 +93,17 @@ if(action){
       fieldsToSave["key"] = fieldsToSave.key;
       var message = {"result": "success", "id" : "promotion-grid"};
       publish("responseChannel", message);
+        
+      if(fieldsToSave["notification"] && fieldsToSave["notification"] != "" && fieldsToSave["publish"] == "Published"){
+        var users = apsdb.callApi("ListUsers", {"apsdb.attributes": "*"}, null);
+        users = users.result.users;
+        var keys = []
+        for(var i = 0; i <  users.length; i++){
+            keys.push(users[i]["GCMKey"][0])
+        }
+         return  {status : "success", notification: fieldsToSave["notification"], keys: keys}
+      }    
+        
       return  {status : "success"}
     }
   }else if(action == "delete"){

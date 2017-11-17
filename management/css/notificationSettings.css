@@ -1,0 +1,46 @@
+body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: #f1f4f9;
+}
+:focus {outline: none!important;}
+.loading {margin: 30px 0; display: inline-block; width: 100%;}
+.generic-box {
+    border-radius: 4px;
+    background: #fff;
+    padding: 10px;
+    cursor: default;
+    margin-top: 15px;
+}
+
+.generic-box .box-height {
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.generic-box h5 {
+    font-size: 16px;
+    border-bottom: 1px solid #555;
+    margin-top: 0;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.generic-box .btn {
+    cursor: pointer;
+}
+.btn-default {
+    background: #90C143;
+    border: none;
+  //  color: #fff;
+}
+
+
+/*** angular input ***/
+tags-input .host {height: auto;}
+tags-input .tags .input {font-family: 'Josefin Sans', sans-serif; background: #fff; font-size: 13px;}
+tags-input .tags {border:1px solid #ccc; border-radius:4px; box-shadow:inset 0 1px 1px rgba(0,0,0,.075);  height: auto;}
+tags-input .tags .tag-item {height: auto; word-break: break-all; font-family: 'Josefin Sans', sans-serif; font-size: 13px;background: #22A3DD; border: 1px solid #137ABF; color: #fff;}
+tags-input .tags .tag-item .remove-button:active {color: #137ABF;}
+tags-input .tags.focused {box-shadow: none;}

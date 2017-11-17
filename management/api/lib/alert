@@ -1,0 +1,53 @@
+var document = require("document");
+function alert() {
+
+    var key = toHex("notificationSettings");
+    var queryParams = {};
+    queryParams["query"] =  'key = "'+ key +'"';
+    queryParams["fields"] = "emails, mobiles";
+    var results =  document.query(queryParams);
+    if(results.metadata.status == "failure") {
+        return {status : "failure", errorDetails : "an error has occured when quering Log doc key: " + key, errorMsg: results};
+    } else if(results.result.documents && results.result.documents.length == 1){
+        var doc =  results.result.documents[0];
+
+        var emailsArray = JSON.parse(doc.emails);
+        var mobilesArray = JSON.parse(doc.mobiles);
+        if(typeof emailsArray == "string") emailsArray = [emailsArray];
+        if(typeof mobilesArray == "string") mobilesArray = [mobilesArray];
+        
+        var body = "You have a new online order. Click on the link to see the order: https://la-fourchette-libanaise.scriptrapps.io/management/home.html#/onlineOrders"
+
+        // Send Email
+        for(var i = 0; i < emailsArray.length; i++){
+            sendMail(emailsArray[i], "La Fourchette Libanaise", "New Order", body);
+        }
+        // Send SMS
+        /*
+            for(var y = 0; y < mobilesArray.length; y++){
+                try {
+                    var smsClient = new smsmodule.TwilioSMS();
+                    smsClient.send({"number": mobilesArray[y], "message": config.Body});
+                }catch(exception){
+                    return exception;
+                }
+            }
+            */
+
+    }
+
+}
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
+}

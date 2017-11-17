@@ -3,6 +3,12 @@
     margin-top: 50px    
 }
 
+header, .logo {background: #313131!important;}
+
+.username {
+    background: #ff8c00!important;
+}
+
 button:disabled,
 button[disabled]{
   border: 1px solid #999999;
@@ -25,6 +31,20 @@ button[disabled]{
 
 .confirm-order {
     background-color: #ff0000;
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    width: 100px;
+    margin-left: 16px;
+    margin-top: 6px;
+}
+
+.print {
+    background-color: #269900;
     border: none;
     color: white;
     padding: 0px 0px;

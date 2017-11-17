@@ -20,10 +20,11 @@ if(typeof params == 'string' && params != null){
 
 var key = params.key;
 var action = params.action;
+var number = params.number;
 
 var queryParams = {};
 queryParams["query"] =  'key = "'+ key +'"';
-queryParams["fields"] = "name, address, number, client, assignee, status, delivered, orderDate, formType";
+queryParams["fields"] = "name, address, number, client, assignee, delivered, orderDate, orderStatus, formType";
 var orderQueryResults = documents.query(queryParams);
 if(orderQueryResults.metadata.status == "failure") {
     return {status : "failure", errorDetails : "an error has occured when quering order document: " + key, errorMsg: orderQueryResults};
@@ -58,8 +59,16 @@ if(fieldsToSaveResult.metadata.status == "failure") {
     }
     */
     
+    var fields = {
+        login : number
+    }
+    var GCMKey;
+    var saveUser = apsdb.callApi("GetUser", fields, null);
+    if(saveUser.result && saveUser.result.user){
+        GCMKey = saveUser.result.user.GCMKey;
+    }
     
-    return  {status : fieldsToSaveResult.metadata.status, result : fieldsToSave}
+    return  {status : fieldsToSaveResult.metadata.status, GCMKey : GCMKey}
 }
 
 

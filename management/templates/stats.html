@@ -1,218 +1,237 @@
 <html ng-app="myApp">
-<head>
+    <head>
 
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="//use.fontawesome.com/3d61d6959e.js"></script>
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="//use.fontawesome.com/3d61d6959e.js"></script>
 
-    <link rel="stylesheet" href="//www.scriptr.io/lib/UIComponents/build/ide/css//components.min.css">
-    
-    <script src="//maps.google.com/maps/api/js?key=AIzaSyBcPYghFh_BXz4dDz-TXTHbU2iV3Wbf57I&libraries=drawing,visualization"></script>
-    <script src="//www.scriptr.io/lib/UIComponents/build/ide/js/template_resources.min.js"></script>
-    
-</head> 
-  
-<script>
+        <link rel="stylesheet" href="//www.scriptr.io/lib/UIComponents/build/ide/css//components.min.css">
 
-(function() {  
-   $.urlParam = function(name){
-	     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-	     if (results==null){
-	         return null;
-	     }else{
-	         return results[1] || 0;
-	     }
-	}
+        <script src="//maps.google.com/maps/api/js?key=AIzaSyBcPYghFh_BXz4dDz-TXTHbU2iV3Wbf57I&libraries=drawing,visualization"></script>
+        <script src="//www.scriptr.io/lib/UIComponents/build/ide/js/template_resources.min.js"></script>
 
-	$.getUrlVars = function() {
-		var vars = [], hash;
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		for(var i = 0; i < hashes.length; i++)
-		{
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
-	}
-	  
+    </head> 
 
-      
-    var underscore = angular.module('underscore', []);
-		underscore.factory('_', ['$window', function($window) {		
-  		return $window._; // assumes underscore has already been loaded on the page		
-	}]);
-    
+    <script>
 
-    var wssConfig = ["wsClientProvider",function (wsClientProvider) {
-   	 	wsClientProvider.setBaseUrl("wss://" + window.location.host + "/");   	 
-        wsClientProvider.setToken($.urlParam("auth_token"));
-        wsClientProvider.setPublishChannel("requestChannel");
-        wsClientProvider.setSubscribeChannel("responseChannel");
-    }];
+        (function() {  
+            $.urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                    return null;
+                }else{
+                    return results[1] || 0;
+                }
+            }
 
-    var httpsConfig = ["httpClientProvider",function (httpClientProvider) {
-   	  httpClientProvider.setBaseUrl("https://" + window.location.host);
-      httpClientProvider.setToken($.urlParam("auth_token"));
-    }]
+            $.getUrlVars = function() {
+                var vars = [], hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for(var i = 0; i < hashes.length; i++)
+                {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            }
 
-     var myApp= angular.module("myApp", ["underscore" , "WsClient", "HttpClient", "Chart", 'gridster', 'ui.bootstrap', 'ngRoute', 'Gauge', 'Speedometer', 'Odometer', 'Message', 'Map', 'Grid', 'toggle-switch', 'Slider', 'Button', 'IFrame', 'Accelerometer'])
-     
-     angular.module('myApp').run(cachedTemplates);  
-      
-     angular.module('myApp').config(wssConfig);
-     angular.module('myApp').config(httpsConfig);
-     
-     myApp.config(function($interpolateProvider, $locationProvider) {
-        $interpolateProvider.startSymbol('{[{');
-        $interpolateProvider.endSymbol('}]}');
-        $locationProvider.html5Mode({
-          enabled: true,
-          requireBase: false
-        });
-     });
-  
-  
-     myApp.controller('RootCtrl', function($scope, $interpolate, $location) {
-       var vm = this;
-       vm.gridsterOptions = {
-          pushing: false,
-          
-          minRows: 1, // the minimum height of the grid, in rows
-          maxRows: 100,
-          columns: 5, // the width of the grid, in columns
-          colWidth: 'auto', // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-          rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
-          margins: [10, 10], // the pixel distance between each widget
-          defaultSizeX: 2, // the default width of a gridster item, if not specifed
-          defaultSizeY: 1, // the default height of a gridster item, if not specified
-          mobileBreakPoint: 1024, // if the screen is not wider that this, remove the grid layout and stack the items
-          minColumns: 1,
-          resizable: {
-            enabled: false
-          },
-          draggable: {
-             enabled: false
-          }
-       };
-       
-        vm.init = function() {
-        }
-     });
-        	
-})();
-  
-</script>
+
+
+            var underscore = angular.module('underscore', []);
+            underscore.factory('_', ['$window', function($window) {		
+                return $window._; // assumes underscore has already been loaded on the page		
+            }]);
+
+
+            var wssConfig = ["wsClientProvider",function (wsClientProvider) {
+                wsClientProvider.setBaseUrl("wss://" + window.location.host + "/");   	 
+                wsClientProvider.setToken($.urlParam("auth_token"));
+                wsClientProvider.setPublishChannel("requestChannel");
+                wsClientProvider.setSubscribeChannel("responseChannel");
+            }];
+
+            var httpsConfig = ["httpClientProvider",function (httpClientProvider) {
+                httpClientProvider.setBaseUrl("https://" + window.location.host);
+                httpClientProvider.setToken($.urlParam("auth_token"));
+            }]
+
+            var myApp= angular.module("myApp", ["underscore" , "WsClient", "HttpClient", "Chart", 'gridster', 'ui.bootstrap', 'ngRoute', 'Gauge', 'Speedometer', 'Odometer', 'Message', 'Map', 'Grid', 'toggle-switch', 'Slider', 'Button', 'IFrame', 'Accelerometer'])
+
+            angular.module('myApp').run(cachedTemplates);  
+
+            angular.module('myApp').config(wssConfig);
+            angular.module('myApp').config(httpsConfig);
+
+            myApp.config(function($interpolateProvider, $locationProvider) {
+                $interpolateProvider.startSymbol('{[{');
+                $interpolateProvider.endSymbol('}]}');
+                $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: false
+                });
+            });
+
+
+            myApp.controller('RootCtrl', function($scope, $interpolate, $location) {
+                var vm = this;
+                vm.gridsterOptions = {
+                    pushing: false,
+
+                    minRows: 1, // the minimum height of the grid, in rows
+                    maxRows: 100,
+                    columns: 5, // the width of the grid, in columns
+                    colWidth: 'auto', // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
+                    rowHeight: 'match', // can be an integer or 'match'.  Match uses the colWidth, giving you square widgets.
+                    margins: [10, 10], // the pixel distance between each widget
+                    defaultSizeX: 2, // the default width of a gridster item, if not specifed
+                    defaultSizeY: 1, // the default height of a gridster item, if not specified
+                    mobileBreakPoint: 1024, // if the screen is not wider that this, remove the grid layout and stack the items
+                    minColumns: 1,
+                    resizable: {
+                        enabled: false
+                    },
+                    draggable: {
+                        enabled: false
+                    }
+                };
+
+                vm.init = function() {
+                }
+            });
+
+        })();
+
+    </script>
 
     <body>
-      <div ng-controller="RootCtrl as vm" ng-init="vm.init();"> 
-		<div gridster="vm.gridsterOptions">
-          <ul>
-                <li class="myItem" gridster-item='{sizeX: 2, sizeY: 1, col: 2 , row: 0 }'>
-                    <div class="box">
-                        <div class="box-content">
-                          <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total sales (in euro)" class="box-label">Total sales (in euro)</div>
-                          <div  style="height: calc(100% - 30px)" > <scriptr-odometer
-                                      	transport= 'wss' 
-                                      	boxLabel= 'Total sales (in euro)' 
-                                      	msg-tag= 'totalSales' 
-                                      	data= 'null' 
-                                      	animation= 'count' 
-                                      	duration= '1000' 
-                                      	size= '3' 
-                                      	http-method= 'GET' 
-                                        api-params="{'queryFilter' : 'Delivered'}"                                              
-                                      	api= 'management/api/stats' 
-                           ></scriptr-odometer> </div>
+        <div ng-controller="RootCtrl as vm" ng-init="vm.init();"> 
+            <div gridster="vm.gridsterOptions">
+                <ul>
+                    <li class="myItem" gridster-item='{sizeX: 2, sizeY: 1, col: 2 , row: 0 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total sales (in euro)" class="box-label">Total sales (in euro)</div>
+                                <div  style="height: calc(100% - 30px)" > <scriptr-odometer
+                                                                                            transport= 'wss' 
+                                                                                            boxLabel= 'Total sales (in euro)' 
+                                                                                            msg-tag= 'totalSales' 
+                                                                                            data= 'null' 
+                                                                                            animation= 'count' 
+                                                                                            duration= '1000' 
+                                                                                            size= '3' 
+                                                                                            http-method= 'GET' 
+                                                                                            api-params="{'queryFilter' : 'Delivered'}"                                              
+                                                                                            api= 'management/api/stats' 
+                                                                                            ></scriptr-odometer> </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 0 , row: 0 }'>
-                    <div class="box">
-                        <div class="box-content">
-                          <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Day sales vs Night sales" class="box-label">Day sales vs Night sales</div>
-                          <div  style="height: calc(100% - 30px)" > <scriptr-chart
-                                      	type= 'donut' 
-                                      	boxLabel= 'Day sales vs Night sales' 
-                                      	transport= 'wss' 
-                                      	data= '' 
-                                      	msg-tag= 'salesStats' 
-                                      	colors= '["#f8f200","#fc3017","#38B9D6","#1DBC68","#E90088"]' 
-                                      	label-color= '#060606' 
-                                      	background-color= '#7793c3' 
-                                      	http-method= 'GET' 
-                                      	donut-formatter= 'check' 
-                                      	api= '' 
-                           ></scriptr-chart> </div>
+                    </li>
+                    <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 0 , row: 0 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Day sales vs Night sales" class="box-label">Day sales vs Night sales</div>
+                                <div  style="height: calc(100% - 30px)" > <scriptr-chart
+                                                                                         type= 'donut' 
+                                                                                         boxLabel= 'Day sales vs Night sales' 
+                                                                                         transport= 'wss' 
+                                                                                         data= '' 
+                                                                                         msg-tag= 'salesStats' 
+                                                                                         colors= '["#f8f200","#fc3017","#38B9D6","#1DBC68","#E90088"]' 
+                                                                                         label-color= '#060606' 
+                                                                                         background-color= '#7793c3' 
+                                                                                         http-method= 'GET' 
+                                                                                         donut-formatter= 'check' 
+                                                                                         api= '' 
+                                                                                         ></scriptr-chart> </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 1 , row: 0 }'>
-                    <div class="box">
-                        <div class="box-content">
-                          <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Day orders vs Night orders" class="box-label">Day orders vs Night orders</div>
-                          <div  style="height: calc(100% - 30px)" > <scriptr-chart
-                                      	type= 'donut' 
-                                      	boxLabel= 'Day orders vs Night orders' 
-                                      	transport= 'wss' 
-                                      	data= '' 
-                                      	msg-tag= 'ordersStats' 
-                                      	colors= '["#1203ff","#fc3017"]' 
-                                      	label-color= '#0c0101' 
-                                      	background-color= '#f6b210' 
-                                      	http-method= 'GET' 
-                           ></scriptr-chart> </div>
+                    </li>
+                    <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 1 , row: 0 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Day orders vs Night orders" class="box-label">Day orders vs Night orders</div>
+                                <div  style="height: calc(100% - 30px)" > <scriptr-chart
+                                                                                         type= 'donut' 
+                                                                                         boxLabel= 'Day orders vs Night orders' 
+                                                                                         transport= 'wss' 
+                                                                                         data= '' 
+                                                                                         msg-tag= 'ordersStats' 
+                                                                                         colors= '["#1203ff","#fc3017"]' 
+                                                                                         label-color= '#0c0101' 
+                                                                                         background-color= '#f6b210' 
+                                                                                         http-method= 'GET' 
+                                                                                         ></scriptr-chart> </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 4 , row: 0 }'>
-                    <div class="box">
-                        <div class="box-content">
-                          <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total orders" class="box-label">Total orders</div>
-                          <div  style="height: calc(100% - 30px)" > <scriptr-odometer
-                                      	transport= 'wss' 
-                                      	boxLabel= 'Total orders' 
-                                      	msg-tag= 'totalOrders' 
-                                      	data= 'null' 
-                                      	animation= 'count' 
-                                      	duration= '1000' 
-                                      	size= '3' 
-                                      	http-method= 'GET' 
-                                      	api= '' 
-                           ></scriptr-odometer> </div>
+                    </li>
+                    <li class="myItem" gridster-item='{sizeX: 1, sizeY: 1, col: 4 , row: 0 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total orders" class="box-label">Total orders</div>
+                                <div  style="height: calc(100% - 30px)" > <scriptr-odometer
+                                                                                            transport= 'wss' 
+                                                                                            boxLabel= 'Total orders' 
+                                                                                            msg-tag= 'totalOrders' 
+                                                                                            data= 'null' 
+                                                                                            animation= 'count' 
+                                                                                            duration= '1000' 
+                                                                                            size= '3' 
+                                                                                            http-method= 'GET' 
+                                                                                            api= '' 
+                                                                                            ></scriptr-odometer> </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li ng-show="false" class="myItem" gridster-item='{sizeX: 5, sizeY: 2, col: 0 , row: 1 }'>
-                    <div class="box">
-                        <div class="box-content">
-                          <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Delivered orders" class="box-label">Delivered orders</div>
-                          <div  style="height: calc(100% - 30px)" > <scriptr-grid
-                                      	columns-definition= '[{headerName: "Name", field: "name"},{headerName: "Number", field: "number"},{headerName: "Address", field: "address"}, {headerName: "Total Amount", field: "total"}]' 
-                                      	row-data= '' 
-                                      	enable-sorting= 'true' 
-                                      	enable-delete-row= 'false' 
-                                      	boxLabel= 'Delivered orders' 
-                                      	fixed-height= 'false' 
-                                      	enable-add-row= 'false' 
-                                      	msg-tag= 'grid' 
-                                      	cell-editable= 'false' 
-                                        enable-col-resize="true"                                           
-                                      	enable-client-side-filter= 'false' 
-                                      	enable-server-side-filter= 'true' 
-                                      	enable-server-side-sorting= 'true' 
-                                      	row-model-selection= 'multiple' 
-                                        api-params="{'queryFilter' : 'Delivered'}"                                          
-                                      	pagination-page-size= '20' 
-                                      	transport= 'https' 
-                                      	row-model-type= 'pagination' 
-                                      	api= 'management/api/getOrders' 
-                           ></scriptr-grid> </div>
+                    </li>
+                      <li class="myItem" gridster-item='{sizeX: 2, sizeY: 2, col: 0 , row: 1 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total orders" class="box-label"></div>
+                                <div  style="height: calc(100% - 30px)" ><scriptr-chart
+                                                                                        type='line'
+                                                                                        transport="wss"
+                                                                                        msg-tag="chartline"
+                                                                                        ykeys='["a", "b"]'
+                                                                                        xkey='y'
+                                                                                        labels='["Serie A", "Serie B"]'   
+                                                                                        date-format="vm.dateFormat"
+                                                                                        colors='["#FCC717", "#E90088"]'
+                                                                                        data='[ { y: "2006", a: 100, b: 90 },
+                                                                                            { y: "2007", a: 75,  b: 65 },
+                                                                                            { y: "2008", a: 50,  b: 40 },
+                                                                                            { y: "2009", a: 75,  b: 65 },
+                                                                                            { y: "2010", a: 50,  b: 40 },
+                                                                                            { y: "2011", a: 75,  b: 65 },
+                                                                                            { y: "2012", a: 100, b: 90 }]'
+                                                                                        </scriptr-chart> </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-          </ul>
+                    </li>
+                    <li class="myItem" gridster-item='{sizeX: 3, sizeY: 2, col: 2 , row: 1 }'>
+                        <div class="box">
+                            <div class="box-content">
+                                <div  style="height: 30px;" tooltip-placement="bottom" uib-tooltip="Total orders" class="box-label"></div>
+                                <div  style="height: calc(100% - 30px)" ><scriptr-chart
+          type='bar'
+          stacked='true'
+          xkey='y'
+          ykeys='["a", "b"]'
+          labels='["Serie A", "Serie B"]'   
+          transport="wss"
+          msg-tag="chart"
+          data='[ { y: "2006", a: 100, b: 90 },
+                                                                                            { y: "2007", a: 75,  b: 65 },
+                                                                                            { y: "2008", a: 50,  b: 40 },
+                                                                                            { y: "2009", a: 75,  b: 65 },
+                                                                                            { y: "2010", a: 50,  b: 40 },
+                                                                                            { y: "2011", a: 75,  b: 65 },
+                                                                                            { y: "2012", a: 100, b: 90 }]'
+      </scriptr-chart> </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
-  </body>  
+    </body>  
 </html>

@@ -78,7 +78,8 @@ if(action){
         "price": "numeric"
     }  
     if(action == "add"){
-        fieldsToSave["publish"] = "Unpublished";   
+        fieldsToSave["publish"] = "Unpublished"; 
+        fieldsToSave["outOfStock"] = "false";   
         var fieldsToSaveResult = documents.save(fieldsToSave);
         if(fieldsToSaveResult.metadata.status == "failure") {
             return fieldsToSaveResult.metadata;
