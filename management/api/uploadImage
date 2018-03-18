@@ -34,7 +34,7 @@ if(rows["image"]){
 }
 
 rows["attachments"] = images;
-rows["formType"] = "item";
+rows["formType"] = rows["formType"];
 
 if(rows["upload"] == "image"){
     rows["image"] = img[0].fileName;
@@ -56,7 +56,8 @@ if(fieldsToSaveResult.metadata.status == "failure") {
     return fieldsToSaveResult.metadata;
 }else{
     rows["key"] = fieldsToSaveResult.result.document.key;
-    var message = {"result": {result : [rows], action: "edit"}, "id" : "items-grid"};
+    var msg_id = rows["formType"] + "-grid";
+    var message = {"result": {result : [rows], action: "edit"}, "id" : msg_id};
     publish("responseChannel", message);
     return  {status : fieldsToSaveResult.metadata.status, result : fieldsToSaveResult}
 }

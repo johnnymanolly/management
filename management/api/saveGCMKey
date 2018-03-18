@@ -17,8 +17,9 @@ if(typeof params == 'string' && params != null){
 var GCMKey = params.GCMKey;
 var number = params.number;
 
+
 var fields = {
-    "login" : "76340651",
+    "login" : number,
     "GCMKey": GCMKey,
     "apsdb.update" : "true"
 }

@@ -1,0 +1,23 @@
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var params = JSON.parse(request.rawBody);
+var keys = params["keys"];
+log.info(keys)
+
+var results;
+var queryParams = {};
+var fieldsParams = "*";
+log.info(JSON.stringify(keys))
+var keys = ["2931EDE24B193C6D9F40C503F719B4EB", "1E0548B323C61EC14BDD59DD8612FFA8"];
+var queryString = 'formType = "item" and publish = "Published" and apsdb.documentKey in ' + keys;
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+log.info(JSON.stringify(queryParams))
+results = documents.query(queryParams);
+return results
+return results.result.documents
+

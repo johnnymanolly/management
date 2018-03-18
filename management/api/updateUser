@@ -16,44 +16,31 @@ if(typeof params == 'string' && params != null){
     }
 }
 
-var authkey = atob("UEYzNUVERTI0Qw==");
-
-var requiredParams = ["number", "password", "email", "firstName", "lastName"];
-
-var isValidParams = commons.validateParamsNonEmpty(params, requiredParams);
-if (isValidParams ["status"] == 'failure') {
-    return isValidParams;
-}
-
+var log = require("log");
+log.setLevel("INFO");
 
 var firstName = params.firstName;
 var lastName = params.lastName;
-var login = params.number;
+var number = params.number;
 var email = params.email;
 var password = params.password;
 
 var fields = {
-    id : login,
-    password: password,
+    "apsdb.update": "true",
+    id : number,
     firstName : firstName,
     lastName: lastName,
     name: firstName + " " + lastName,
     email: email
 }
 
+if(password){
+    fields["password"] = password
+}
+log.info("fields: "+JSON.stringify(fields))
 var saveUser = apsdb.callApi("SaveUser", fields, null);
 if(saveUser.metadata.status == "success"){
-    var tokenResult = apsdb.callApi("GenerateToken",{"apsdb.runAs":login, "apsdb.bindReferrer": false},null);
-    if(tokenResult.metadata.status == "success"){
-        tokenResult["result"]["token"] = tokenResult["result"]["apsdb.authToken"];
-        
-        var token = tokenResult.result["token"];
-    	tokenResult.result["token"] = btoa(authkey + ":" + login + ":" + token);
-        
-        delete tokenResult["result"]["apsdb.authToken"];
-        tokenResult["result"]["user"] = fields;
-        return tokenResult.result
-    }
+    return saveUser
 }else{
     return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
 }

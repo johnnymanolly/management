@@ -30,7 +30,7 @@ if(orderQueryResults.metadata.status == "failure") {
     return {status : "failure", errorDetails : "an error has occured when quering order document: " + key, errorMsg: orderQueryResults};
 } 
 var updateParams = orderQueryResults.result.documents[0];
-updateParams["orderStatus"] = "Confirmed"
+updateParams["orderStatus"] = params["orderStatus"];
 updateParams["formType"] = "onlineOrder";
 updateParams["meta.types"] = {
     "orderDate" : "date",

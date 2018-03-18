@@ -5,6 +5,8 @@ var alertLib = require("management/api/lib/alert");
 var log = require("log");
 log.setLevel("INFO");
 
+log.info(JSON.stringify(request.rawBody))
+
 var order = JSON.parse(request.rawBody);
 for(obj in order){
   order[obj] = order[obj]
@@ -13,16 +15,15 @@ for(obj in order){
 order["items"] = JSON.stringify(order["items"]);
 
 order["formType"] = "onlineOrder";
-order["orderStatus"] = "Unassigned";
+order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Unassigned" : "Scheduled"
+order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Unassigned" : "Scheduled"
 order["delivered"] = "Not delivered";
-var date = new Date();
-
-var orderDate = dateFormatter.moment(date.getTime()).add(3,'h').format("YYYY-MM-DDTHH:mm:ssZZ");
-order["orderDate"] = orderDate;
+order["cancelled"] = "No";
 
 order["meta.types"] = {
         "items" : "text",
         "total" : "numeric",
+        "deliveryDate": "date",
         "orderDate": "date"
       }
 
@@ -51,7 +52,7 @@ if(!registered){
 order["client"] = (registered) ? "Previous Client" : "New Client";
 
 log.info(JSON.stringify(order))
-order["fullName"] = order["firstName"] + " " + order["lastName"];
+order["fullName"] = order["name"];
 order["orderedBy"] = number;
 order["cancelled"] = "No";
 var saveResult = documents.save(order);

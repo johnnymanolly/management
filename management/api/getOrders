@@ -46,6 +46,7 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
+var deliveryFilter = params.deliveryFilter;
 
 var results;
 
@@ -72,6 +73,7 @@ if(action){
    //   updateParams["orderStatus"] = "Assigned";
       updateParams["meta.types"] = {
           "orderDate" : "date",
+          "deliveryDate": "date",
           "total" : "numeric",
           "items" : "text"
       }
@@ -92,7 +94,7 @@ if(action){
 }else{
     var queryParams = {};
     if(sortType == null) sortType = "string"
-    var fieldsParams = "name, address, number, client, fullName, orderedBy, orderDate, deliveryDate, cancelled, assignee, orderStatus, delivered, location, total, formType";
+    var fieldsParams = "name, address, number, client, fullName, orderedBy, orderDate, deliveryDate, cancelled, assignee, orderStatus, delivered, location, scheduled, total, deliveredBy, formType";
     var queryString = 'formType = "onlineOrder"';
     var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
     
@@ -101,13 +103,17 @@ if(action){
     queryParams["fields"] =  fieldsParams;
 
     if(queryFilter){
-      var filterQuery = (filterColumnName == null)? " and (name like \"" +queryFilter+ "%\" or address like \"" +queryFilter+ "%\" or number like \"" +queryFilter+ "%\" or orderStatus like \"" +queryFilter+ "%\" or delivered like \"" +queryFilter+ "%\")" : " and ("+filterColumnName+"<"+sortType+">" + " like \"" +queryFilter+ "%\")";
+      var filterQuery = (filterColumnName == null)? " and (fullName like \"" +queryFilter+ "%\" or address like \"" +queryFilter+ "%\" or number like \"" +queryFilter+ "%\" or orderStatus like \"" +queryFilter+ "%\" or delivered like \"" +queryFilter+ "%\")" : " and ("+filterColumnName+"<"+sortType+">" + " like \"" +queryFilter+ "%\")";
       queryParams["query"] += filterQuery;
     }
     
-    queryParams["query"] += ' and orderDate<date> > "' + startDate + '"';
+    if(deliveryFilter){
+        queryParams["query"] += ' and deliveredBy like "' + deliveryFilter + '%\"';
+    }
+    
+    queryParams["query"] += ' and deliveryDate<date> > "' + startDate + '"';
     if(endDate != null && typeof endDate != 'undefined'){
-        queryParams["query"] += ' and orderDate<date> <= "' + endDate + '"';
+        queryParams["query"] += ' and deliveryDate<date> <= "' + endDate + '"';
     }
 
     if(sortString){

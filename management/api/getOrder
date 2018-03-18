@@ -34,7 +34,7 @@ var filterColumnName = params.filterColumnName;
 var key = params.key;
 var queryParams = {};
 if(sortType == null) sortType = "string"
-var fieldsParams = "items, image";
+var fieldsParams = "items";
 var queryString = 'formType = "onlineOrder" and key="'+key+'"';
 var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
 
@@ -61,7 +61,7 @@ log.info(JSON.stringify(queryParams))
 var results = documents.query(queryParams);
 var docs =  results.result.documents;
 
-
+log.info(JSON.stringify(docs))
 var array = JSON.parse(docs[0].items);
 if(typeof array == "string") array = [JSON.parse(array)];
 for(var i = 0; i <= array.length; i++){

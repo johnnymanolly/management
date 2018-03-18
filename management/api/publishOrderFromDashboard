@@ -30,17 +30,15 @@ for(obj in params){
 order["items"] = JSON.stringify(order["items"]);
 
 order["formType"] = "onlineOrder";
-order["orderStatus"] = "Unassigned";
+order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Confirmed" : "Scheduled"
+order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Confirmed" : "Scheduled"
 order["delivered"] = "Not delivered";
 order["cancelled"] = "No";
-var date = new Date();
-
-var orderDate = dateFormatter.moment(date.getTime()).add(3,'h').format("YYYY-MM-DDTHH:mm:ssZZ");
-order["orderDate"] = orderDate;
 
 order["meta.types"] = {
     "items" : "text",
     "total" : "numeric",
+    "deliveryDate": "date",
     "orderDate": "date"
 }
 
@@ -69,7 +67,7 @@ log.info(JSON.stringify(saveResult))
 order["key"] = saveResult.result.document.key;
 var message = {"result": {result : [order], action: "add"}, "id" : "orders-grid"};
 publish("responseChannel", message);
-alertLib.alert();
+//alertLib.alert();
 return {status: "success"}
 
 
