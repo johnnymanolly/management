@@ -1,14 +1,13 @@
-<scriptr-grid 
-              columns-definition='vm.addClientColDef' 
-              api='management/api/addClient'
+<scriptr-grid columns-definition='vm.manageMenuColDef' 
+              api='management/api/getMenu'
               default-cell-renderer="vm.defaultCellRenderer"   
-              on-cell-clicked="vm.onClientCellClicked"
+              msg-tag="menu-grid"   
               enable-delete-row='true'
-              pagination:'true'
-              row-model-type='virtual'
+              row-height="30"   
+              row-model-type='infinite'
               pagination="true"
-              server-filter-label='Search for client'
-              grid-height='calc(100vh - 110px)'
+              grid-height='calc(100vh - 109px)'
+              enable-col-resize="true"     
               enable-add-row='true'
               cell-editable='true'
               enable-client-side-filter='true'
@@ -16,6 +15,7 @@
               enable-client-side-sorting='false'
               enable-server-side-sorting='true'
               row-model-selection='multiple'
+              on-cell-clicked='vm.manageMenuSelectionChanged'
               pagination-page-size='50'
-              transport='https'>
+              transport='wss'>
 </scriptr-grid>

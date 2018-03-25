@@ -1,11 +1,12 @@
 <scriptr-grid columns-definition='vm.manageItemsColDef' 
               api='management/api/getItems'
               default-cell-renderer="vm.defaultCellRenderer"   
-              msg-tag="items-grid"   
+              msg-tag="item-grid"   
               enable-delete-row='true'
+              row-height="30"   
               row-model-type='infinite'
               pagination="true"
-              grid-height="500"
+              grid-height='calc(100vh - 109px)'
               enable-col-resize="true"     
               enable-add-row='true'
               cell-editable='true'

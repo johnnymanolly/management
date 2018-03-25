@@ -1,0 +1,22 @@
+<div class="col-xs-12 col-sm-4 mrgt7"><a class="back-to-panel btn-block btn btn-info" ng-href="#/maps" href="#/maps"><i class="fa fa-arrow-circle-left"></i> Back </a></div>
+<scriptr-grid columns-definition='[
+          {headerName: "Name", field: "name"},
+          {headerName: "Number", field: "number"},                        
+          {headerName: "Device Id", field: "deviceId", editable: false},
+          {headerName: "Vehicle type", field: "vehicleType"}]' 
+           enable-sorting='true'
+           row-model-type='infinite'
+           pagination="true"   
+           enable-delete-row='true'
+           grid-height='calc(100vh - 146px)'
+           enable-add-row='false'
+           suppress-filter="true"   
+           cell-editable='true'
+           enable-client-side-filter='true'
+           enable-server-side-filter='false' 
+           enable-client-side-sorting='true'
+           row-model-selection='multiple'
+           api="management/api/getDeliveryMotors"   
+           pagination-page-size='5'
+           transport='wss'>
+  </scriptr-grid>

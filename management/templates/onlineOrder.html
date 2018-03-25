@@ -8,7 +8,7 @@
                                   placeholder="Search for a client ot order"
                                   pause="400"
                                   class=""
-                                  search-fields="name"
+                                  search-fields="name,number"
                                   title-field="name"
                                   description-field="number"                
                                   minlength="0"
@@ -27,7 +27,7 @@
             <scriptr-date-time-picker
                                       type="dropDownInput"
                                       date-label="Delivery date"
-                                      start-date-config="{ startView:'day', minView:'day' }"
+                                      config="{ startView:'day', minView:'minute' }"
                                       date-helper="vm.dateHelper"  
                                       on-set-time="vm.onDeliveryOrderSetTime" 
                                       start-date-class = "col-xs-12"
@@ -51,7 +51,7 @@
     </br>
 </br>
 </br>
-<div ng-show="vm.clientSet"> 
+<div ng-if="vm.clientSet"> 
     <div class="row col-xs-12 mrgl">
         <div class="col-sm-12">
             <scriptr-autocomplete
@@ -59,10 +59,10 @@
                                   placeholder="Add Items"
                                   on-send-order="vm.sendOnlineOrder"
                                   pause="400"
-                                  search-fields="name"
+                                  search-fields="category,name"
                                   show-loading="false"
                                   selected-object="vm.onSelect"
-                                  title-field="name"
+                                  title-field="name,price"
                                   mrg="23"
                                   set-width="277"
                                   set-class="col-xs-12 col-sm-3"

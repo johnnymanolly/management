@@ -14,11 +14,11 @@
                                       >
             </scriptr-date-time-picker> 
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2 mrgr20">
             <div class="input-group">
                 <scriptr-autocomplete
                                       id="ordersList"                
-                                      placeholder="Show only"
+                                      placeholder="Filter by status"
                                       pause="400"
                                       search-fields="id"
                                       title-field="label"
@@ -33,7 +33,30 @@
                                       input-class="form-control form-control-small">
                 </scriptr-autocomplete>
             </div>
-        </div>   
+        </div>  
+           <div class="col-sm-2">
+            <div class="input-group">
+                <scriptr-autocomplete
+                                      id="deliveryFilter"                
+                                          placeholder="Filter by delivery"
+                                          pause="400"
+                                          class=""
+                                          search-fields="name,deviceId"
+                                          title-field="name,deviceId"
+                                          description-field="vehicleType"                
+                                          minlength="0"
+                                          image-field="pic"
+                                          text-no-results="No results"                
+                                          text-searching="Searching..."
+                                          image-field="img"
+                                          transport="https"
+                                          api="management/api/getDeliveryMotors"
+                                          on-format-data="vm.onDeliveryFilterData"
+                                          selected-object="vm.onDeliveryfilterSet"   
+                                          input-class="form-control form-control-small">
+                </scriptr-autocomplete>
+            </div>
+        </div> 
     </div>
 </div>
 <scriptr-grid 
@@ -41,16 +64,17 @@
               enable-sorting='true'
               default-cell-renderer="vm.defaultCellRenderer"   
               api = 'management/api/getOrders'
-              api-params='vm.apiParams'   
-              grid-height="500"
+              api-params='vm.gridParams'   
+              grid-height='calc(100vh - 166px)'
               pagination="true"
               msg-tag="orders-grid"   
               enable-col-resize="true"   
               suppress-filter='true'
-              cell-editable='false'
+              cell-editable='true'
+              row-height='30'
               enable-client-side-filter='true'
               suppress-filter='false'
-              enable-server-side-filter='false' 
+              enable-server-side-filter='true' 
               enable-server-side-sorting='true'
               row-model-type='infinite'
               row-model-selection='multiple'

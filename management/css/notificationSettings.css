@@ -30,10 +30,11 @@ body {
 .generic-box .btn {
     cursor: pointer;
 }
-.btn-default {
+
+.btn-save {
     background: #90C143;
     border: none;
-  //  color: #fff;
+    color: #fff;
 }
 
 

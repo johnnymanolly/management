@@ -52,7 +52,7 @@
             "subitems": [
                 {"icon": "fa fa-ticket", "label": "Settings", "route":"#/settings", "class": "pull-left"},
             ],  
-            "appname" : "La Fourchette Libanaise",
+            "appname" : "Cashier",
             "logout": {"icon": "fa fa-sign-out", "label": "Logout", "route":"#/logout"}
         })
         myApp.controller('testCtrl', function($scope, $http, $timeout, httpClient, headerItemsJson) {
@@ -72,7 +72,7 @@
             var vm = this;  
             vm.showError = false;
             vm.headerItems = headerItemsJson;
-            vm.user = (atob(document.cookie.split("=")[1]).split(":")[1]);
+            vm.user = {login: (atob(document.cookie.split("=")[1]).split(":")[1])};
             var number = findGetParameter("number");
             vm.number = number;
             vm.key = findGetParameter("key");  
@@ -85,6 +85,8 @@
             vm.orderDate = findGetParameter("orderDate");
             vm.status = findGetParameter("status");
             vm.assignee = findGetParameter("assignee");
+            vm.scheduled = findGetParameter("scheduled");
+            vm.onlineOrderSource = findGetParameter("onlineOrderSource");
             vm.apiParams = {key : vm.key};
             vm.test = function(gridOptions) {
                 var selectedRows = gridOptions.api.getSelectedRows();
@@ -128,7 +130,7 @@
                 params["key"] = vm.key;
                 params["number"] = vm.number;
                 params["action"] = "edit";
-                params["orderStatus"] = "confirmed";
+                params["orderStatus"] = (vm.scheduled == "Scheduled") ? vm.scheduled : "Confirmed";
                 var self = vm;
                 vm.showLoading = true;
                 httpClient
@@ -241,7 +243,7 @@
         </br>
         <div></div>
     </br>
-<div><button ng-if="vm.status != 'Confirmed'" ng-click="vm.confirmOrder()" class="confirm-order">Confirm Order</button></div>
+<div><button ng-if="vm.status != 'Confirmed' && (vm.status != 'Scheduled' || vm.onlineOrderSource =='true')" ng-click="vm.confirmOrder()" class="confirm-order">Confirm Order</button></div>
 <div><button ng-click="vm.print()" class="print">Print Order</button></div>
 </div>
 <div class="text-center loading" ng-show="vm.showLoading"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
@@ -251,9 +253,9 @@
               api='management/api/getOrder'
               api-params='vm.apiParams'    
               row-model-type='pagination'
-              grid-height="500"
+              grid-height='calc(100vh - 200px)'
               cell-editable='false'
-              row-height="vm.rowHeight"    
+              row-height="25"    
               suppress-filter='true'    
               enable-client-side-filter='false'
               enable-server-side-filter='false' 

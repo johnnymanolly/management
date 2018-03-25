@@ -5,28 +5,21 @@
         <tr>
           <th>Name</th>
           <th>Number</th>
-          <th>Client</th>
-          <th>Address</th>
-          <th>Order Status</th>
-          <th>Order Date</th>
-          <th>Assignee</th>  
+          <th>Device ID</th>
+          <th>Vehicle Type</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{marker.details.name.value || "n/a"}}<span ng-hide="!marker.details.name.value"></span></td>
-          <td>{{marker.details.number.value || "n/a"}}<span ng-hide="!marker.details.number.value"></span></td>
-          <td>{{marker.details.client.value || "n/a"}}<span ng-hide="!marker.details.client.value"></span></td>
-          <td>{{marker.details.address.value || "n/a"}}<span ng-hide="!marker.details.address.value"></span></td>
-          <td>{{marker.details.orderStatus.value || "n/a"}}<span ng-hide="!marker.details.orderStatus.value"></span></td>
-          <td>{{marker.details.orderDate.value || "n/a"}}<span ng-hide="!marker.details.orderDate.value"></span></td>
-          <td>{{marker.details.assignee.value || "Unassigned"}}<span ng-hide="!marker.details.assignee.value"></span></td>
+          <td>{{marker.details.name.value || "n/a"}}</td>
+          <td>{{marker.details.number.value || "n/a"}}</td>
+          <td>{{marker.details.deviceId.value || "n/a"}}</td>
+          <td>{{marker.details.vehicleType.value || "n/a"}}</td>
         </tr>
       </tbody>
     </table>
     <!-- end table -->
-    <a ng-if="marker.details.assignee.value != 'Unassigned'" type="button" class="btn btn-success" target="_blank" href="/management/templates/order.html?number={{marker.details.number.value}}&name={{marker.details.name.value}}&assignee={{marker.details.assignee.value}}&client={{marker.details.client.value}}&orderDate={{marker.details.orderDate.value}}&address={{marker.details.address.value}}&key={{marker.details.assetId.value}}&status={{marker.details.orderStatus.value}}">View order details</a>
-    <button ng-if="marker.details.assignee.value == 'Unassigned'" disabled="true" class="btn btn-success">View order details</button>
+    <!--a type="button" class="btn btn-success" href="#/onlineOrders" ng-click="vm.viewDeliveryOrders(marker.details.deviceId.value)">View orders details</a-->
 </div>
 
 </div>

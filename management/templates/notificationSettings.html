@@ -1,12 +1,13 @@
 <div class="text-center loading" ng-hide="vm.emails || vm.mobiles"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
 <div ng-show="vm.emails || vm.mobiles" class="generic-box">
+    <h4>Please enter your email adress and mobile number to get notified on a new order</h4>    
     <div class="box-height">
         <tags-input ng-model="vm.emails" placeholder="email addresses" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"></tags-input>
         <tags-input ng-model="vm.mobiles" placeholder="mobile numbers" allowed-tags-pattern="[0-9-+s()]*$"></tags-input>
     </div>
     <div class="mt10">
         <scriptr-button
-                        type="btn-success btn-default btn-sm"
+                        type="btn-success btn-save btn-sm"
                         is-disabled="false"
                         on-buttonclick="vm.buildParams"    
                         transport="https"    

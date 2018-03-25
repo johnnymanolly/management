@@ -1,7 +1,4 @@
-<div class="container">
-   <div class="col-xs-12 heading">Suggested Items</div>
-</div>
-<div class="col-xs-12">
+<!--div class="col-xs-12">
   <div class="row">
       <div class="col-sm-6">
       <scriptr-date-time-picker
@@ -18,7 +15,7 @@
       </scriptr-date-time-picker> 
     </div>
   </div>
-</div>
+</div-->
 <scriptr-grid columns-definition='[
           {headerName: "Client Name", field: "name"},
           {headerName: "Number", field: "number"},
@@ -29,7 +26,7 @@
               {name: "Johnny Manolly", number: "70928406", item: "Beirut beer", date: "2017-05-26"}
            ]'
            enable-delete-row='false'
-           grid-height="500"
+           grid-height='calc(100vh - 200px)'
            enable-add-row='false'
            cell-editable='false'
            enable-client-side-filter='true'
