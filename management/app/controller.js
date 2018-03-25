@@ -1,41 +1,67 @@
 
-myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, headerItemsJson, menuItemsJson, imageSrc) {
+myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClient, headerItemsJson, menuItemsJson, imageSrc, categories) {
     var vm = this;
-    vm.tables = [];
-    var tablesCount = 24;
+    vm.obj = [""];
+    vm.sub_cats = [];
+    vm.gridParams = {};
+    vm.scheduledGridParams = {};
 
-    vm.$onInit = function() {
-        console.log("hello");
+    var endDate = moment(new Date()).format("YYYY-MM-DDT23:59:59+0000");    
+    vm.gridParams["endDate"] = endDate;
+    vm.scheduledGridParams["startDate"] = moment(new Date()).add(1, "day").format("YYYY-MM-DDT00:00:00+0000");
 
-        for(var x = 1; x <= tablesCount; x++){
-            var table = {};
-            table["id"] = x;
-            table["label"] = "Table " + x;
-            table["imgSrc"] = imageSrc.table;
-            vm.tables.push(table);
-        }
+    httpClient
+        .get('management/api/getDeliveryMotors', {}).then(
+        function(data, response){
+            data = data.documents;
+            for(var i = 0; i < data.length; i++){
+                vm.obj.push(data[i].name);
+            }
+            console.log("success");
+        },
+        function(err) {
+            console.log(err);
+        });   
+    
+     var items = {};
+     httpClient
+        .get('management/api/getCategories', {}).then(
+        function(data, response){
+            data = data.documents;
+            for(var i = 0; i < data.length; i++){
+                vm.sub_cats.push(data[i].subCategory);
+                items[data[i].subCategory] = {};
+                items[data[i].subCategory] = (data[i].category);
+                
+            }
+            console.log("success");
+        },
+        function(err) {
+            console.log(err);
+        });  
+    
+    
+     vm.cats = [];
+     httpClient
+        .get('management/api/getMenu', {}).then(
+        function(data, response){
+            data = data.documents;
+            for(var i = 0; i < data.length; i++){
+                vm.cats.push(data[i].menu);                
+            }
+            console.log("success");
+        },
+        function(err) {
+            console.log(err);
+        });
 
-    }
 
     vm.headerItems = headerItemsJson;
     vm.imageSrc = imageSrc;
-    vm.user = vm.user = (atob(document.cookie.split("=")[1]).split(":")[1]);
+    vm.user = {login: (atob(document.cookie.split("=")[1]).split(":")[1])};
     vm.menuItems = menuItemsJson;
     vm.items = [];
-
-    vm.slickConfig = {
-        enabled: true,
-        autoplay: true,
-        draggable: false,
-        autoplaySpeed: 3000,
-        method: {},
-        event: {
-            beforeChange: function (event, slick, currentSlide, nextSlide) {
-            },
-            afterChange: function (event, slick, currentSlide, nextSlide) {
-            }
-        }
-    }; 
+    vm.mapsSrc = $sce.trustAsResourceUrl('/management/templates/location.html?deviceId='+vm.deliveryDevice);
 
     /* ****************************   ORDERS *************** */
     vm.showOnlyData = [
@@ -63,57 +89,27 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
 
     vm.onSelectShowOnly = function(obj){
         if(obj.originalObject.label != "All"){
-            var params = {
-                queryFilter : obj.originalObject.label
-            } 
-            }else{
-                var params = {};
-            }
-        $scope.$broadcast('updateGridData', {params: params});
+            vm.gridParams["queryFilter"] = obj.originalObject.label
+        }else{
+            vm.gridParams["queryFilter"] = null
+        }
+        $scope.$broadcast('updateGridData', {params: vm.gridParams});
     }
 
     vm.ordersStartDateOnSetTime = function(date){
-        vm.ordersStartDate = moment(date).format('YYYY-MM-DD');
+        vm.ordersStartDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');
         if(vm.ordersStartDate != null && vm.ordersEndDate != null){
-            var params = {startDate : vm.ordersStartDate, endDate : vm.ordersEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
+            vm.gridParams["startDate"] = vm.ordersStartDate;
+            vm.gridParams["endDate"] = vm.ordersEndDate;
+            $scope.$broadcast('updateGridData', {params: vm.gridParams});
         }
     }
     vm.ordersEndDateOnSetTime = function(date){
-        vm.ordersEndDate = moment(date).format('YYYY-MM-DD');
+        vm.ordersEndDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');
         if(vm.ordersStartDate != null && vm.ordersEndDate != null){
-            var params = {startDate : vm.ordersStartDate, endDate : vm.ordersEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
-        }
-    }
-
-    vm.localOrdersStartDateOnSetTime = function(date){
-        vm.localOrdersStartDate = moment(date).format('YYYY-MM-DD');
-        if(vm.localOrdersStartDate != null && vm.localOrdersEndDate != null){
-            var params = {startDate : vm.localOrdersStartDate, endDate : vm.localOrdersEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
-        }
-    }
-    vm.localOrdersEndDateOnSetTime = function(date){
-        vm.localOrdersEndDate = moment(date).format('YYYY-MM-DD');
-        if(vm.localOrdersStartDate != null && vm.localOrdersEndDate != null){
-            var params = {startDate : vm.localOrdersStartDate, endDate : vm.localOrdersEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
-        }
-    }
-
-    vm.servedTablesStartDateOnSetTime = function(date){
-        vm.servedTablesStartDate = moment(date).format('YYYY-MM-DD');
-        if(vm.servedTablesStartDate != null && vm.servedTablesEndDate != null){
-            var params = {startDate : vm.servedTablesStartDate, endDate : vm.servedTablesEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
-        }
-    }
-    vm.servedTablesEndDateOnSetTime = function(date){
-        vm.servedTablesEndDate = moment(date).format('YYYY-MM-DD');
-        if(vm.servedTablesStartDate != null && vm.servedTablesEndDate != null){
-            var params = {startDate : vm.servedTablesStartDate, endDate : vm.servedTablesEndDate};
-            $scope.$broadcast('updateGridData', {params: params});
+            vm.gridParams["startDate"] = vm.ordersStartDate;
+            vm.gridParams["endDate"] = moment(vm.ordersEndDate).format("YYYY-MM-DDT23:59:59+0000");
+            $scope.$broadcast('updateGridData', {params: vm.gridParams});
         }
     }
 
@@ -134,13 +130,23 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         }else if(params.data && params.data.orderStatus && params.data.orderStatus == "Confirmed"){
             return '<button class="confirm-order">Mark as delivered</button>'
         }else{
-            return '<button  tooltip-placement="auto" uib-tooltip="Order must be confirmed to mark as delivered" class="disabled fix-inline">Mark as delivered</button>'
+            return '<button  tooltip-placement="auto" uib-tooltip="Order must be confirmed to mark as delivered" class="disabled fix-inline mrgt1">Mark as delivered</button>'
         } 
     }
 
     vm.statusRenderer = function(params){
         return '<span class="ag-cell-inner" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
     }
+
+    vm.onDeliveryfilterSet = function(obj, scope){
+        if(obj.originalObject.label != "All"){
+            vm.gridParams["deliveryFilter"] = obj.originalObject.name
+        }else{
+             vm.gridParams["deliveryFilter"] = null;
+        }
+        $scope.$broadcast('updateGridData', {params: vm.gridParams});
+    }
+
     vm.dateRenderer = function(params){
         if(params.value){
             var orderDate = params.value.replace("T", " ").replace("+0000", "");
@@ -165,7 +171,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             if(selectedRow.data && !selectedRow.data.assignee && selectedRow.data.cancelled == "No"){
                 var params = selectedRow.data
                 params["action"] = "edit";
-                params["assignee"] = vm.user;
+                params["assignee"] = vm.user.login;
                 params["orderStatus"] = "Assigned";
                 delete params["creationDate"];
                 scope.api.showLoadingOverlay();
@@ -209,29 +215,30 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
 
     vm.viewOrder  = function(params){
         if(params.data && params.data.assignee){
-            return '<div><a target="_blank" href="/management/templates/viewOnlineOrder.html?number='+params.data.number+'&name='+params.data.fullName+'&assignee='+params.data.assignee+'&client='+params.data.client+'&orderDate='+params.data.orderDate+'&address='+params.data.address+'&key='+params.data.key+'&status='+params.data.orderStatus+'&total='+params.data.total+'&deliveryDate='+params.data.deliveryDate+'&orderedBy='+params.data.orderedBy+'">view order</a></div>' 
+            return '<div><a target="_blank" href="/management/templates/viewOnlineOrder.html?number='+params.data.number+'&name='+params.data.fullName+'&assignee='+params.data.assignee+'&client='+params.data.client+'&orderDate='+params.data.orderDate+'&address='+params.data.address+'&key='+params.data.key+'&status='+params.data.orderStatus+'&total='+params.data.total+'&deliveryDate='+params.data.deliveryDate+'&orderedBy='+params.data.orderedBy+'&onlineOrderSource=true">view order</a></div>' 
+        }else{
+            return '<button class="disabled fix-inline mrgt1" tooltip-placement="auto" uib-tooltip="Please assign to the order first">view order</button>'
+        }
+
+    }
+
+    vm.viewScheduledOrder  = function(params){
+        if(params.data && params.data.assignee){
+            return '<div><a target="_blank" href="/management/templates/viewOnlineOrder.html?number='+params.data.number+'&name='+params.data.fullName+'&assignee='+params.data.assignee+'&client='+params.data.client+'&orderDate='+params.data.orderDate+'&address='+params.data.address+'&key='+params.data.key+'&status='+params.data.orderStatus+'&total='+params.data.total+'&deliveryDate='+params.data.deliveryDate+'&orderedBy='+params.data.orderedBy+'&scheduled='+params.data.scheduled+'">view order</a></div>' 
         }else{
             return '<button class="disabled fix-inline" tooltip-placement="auto" uib-tooltip="Please assign to the order first">view order</button>'
         }
 
     }
+
     vm.viewLocation = function(params){
         if(params.value){
             return '<div><a target="_blank" href="/management/templates/location.html?number='+params.data.number+'&name='+params.data.name+'&assignee='+params.data.assignee+'&client='+params.data.client+'&orderDate='+params.data.creationDate+'&address='+params.data.address+'&key='+params.data.key+'&status='+params.data.orderStatus+'&location='+params.data.location+'"">view location</a></div>' 
         }else{
-            return '<button class="disabled fix-inline" tooltip-placement="auto" uib-tooltip="Client did not provide his location">view location</button>' 
+            return '<button class="disabled fix-inline mrgt1" tooltip-placement="auto" uib-tooltip="Client did not provide his location">view location</button>' 
         }
 
     }
-
-    vm.viewLocalOrder = function(params){
-        return '<div><a target="_blank" href="/management/templates/viewLocalOrder.html?table='+params.data.tableId+'&assignee='+params.data.assignee+'&orderDate='+params.data.orderDate+'&key='+params.data.key+'&totalNewItems='+params.data.totalNewItems+'">view order</a></div>' 
-    }
-
-    vm.viewOccupiedTableOrders = function(params){
-        return '<div><a target="_blank" href="/management/templates/viewServedTableOrders.html?table='+params.data.tableId+'&assignee='+params.data.assignee+'&orderDate='+params.data.orderDate+'&key='+params.data.key+'&total='+params.data.total+'">view order</a></div>' 
-    }
-
 
     /* ****************************  END ORDERS *************** */
 
@@ -241,9 +248,9 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
     vm.uploadImageButtonRenderer = function(params){
         var data = {data : params.data};
         if(params.data.key){
-            return '<div class="btn-edited btn btn-primary btn-upload" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
+            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
         }else{
-            return '<div class="btn-edited btn btn-primary btn-upload" ng-click="$ctrl.stopEditing()">Upload</div>'
+            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
         }
 
     }
@@ -272,6 +279,50 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             return '<button class="confirm-order disabled">Out of stock</button>'
         }
     }
+    
+    vm.manageCategoriesSelectionChanged  = function(scope){
+        if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Category"){
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            var params = selectedRow.data
+            params["action"] = "edit";
+            var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
+            params["publish"] = action;
+            delete params["creationDate"];
+            scope.api.showLoadingOverlay();
+            httpClient
+                .get('management/api/getCategories', params).then(
+                function(data, response){
+                    console.log("success");
+                    scope.api.hideOverlay();
+                },
+                function(err) {
+                    console.log(err);
+                    scope.api.hideOverlay();
+                });   
+        }
+    }
+    
+     vm.manageMenuSelectionChanged  = function(scope){
+        if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Menu"){
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            var params = selectedRow.data
+            params["action"] = "edit";
+            var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
+            params["publish"] = action;
+            delete params["creationDate"];
+            scope.api.showLoadingOverlay();
+            httpClient
+                .get('management/api/getMenu', params).then(
+                function(data, response){
+                    console.log("success");
+                    scope.api.hideOverlay();
+                },
+                function(err) {
+                    console.log(err);
+                    scope.api.hideOverlay();
+                });   
+        }
+    }
 
 
     vm.manageItemsSelectionChanged = function(scope){
@@ -281,6 +332,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             params["action"] = "edit";
             var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
             params["publish"] = action;
+            params["category"] = items[selectedRow.data.subCategory];
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
@@ -341,121 +393,49 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         return data
     } 
 
-    vm.listCallback = function(data){
-        vm.tripsData = [
-            {
-                "id" : "all",
-                "name": "all",
-                "number": "all",
-                "label" : "All"
-            }
-        ];
-        var assets = data;
-        for (var key in assets) {
-            if (assets.hasOwnProperty(key)) {
-                console.log(key, assets[key]);
-                vm.pushAssets(key, assets[key])
-            }
-        }
-        return vm.tripsData;
+    vm.onDeliveryData = function(data){
+        return data.documents;
     }
-    vm.pushAssets = function(assetId, trips) {
-
-        var assetSource = trips.source;
-        var key = assetSource + "_" + assetId;
-        var number = trips["0"][0].number.value;
-        var name = trips["0"][0].name.value;
-        var img = trips["0"][0].img.value;
-
-        var assetModel = null;
-        var assetMake = null;
-
-        //Asset Trips
-        var tripsOrder = trips.order;
-
-        // Loop on asset trips
-        for (var t = tripsOrder.length - 1; t >= 0; t--) {
-            var tripKey = tripsOrder[t];
-            if (trips.hasOwnProperty(tripKey)) {
-                var trip = trips[tripKey];
-
-                // Loop on trips points
-                for (var i = trip.length - 1; i >= 0; i--) {
-                    var tripPoint = trip[i];
-
-                    var tripMarker = {};
-
-                    tripMarker.tripKey = tripKey;
-
-                    tripMarker.details = tripPoint;
-
-                    assetModel = (tripMarker.details && tripMarker.details.model) ? tripMarker.details.model.value : "";
-                    assetMake = (tripMarker.details && tripMarker.details.make) ? tripMarker.details.make.value : "";
-                    tripMarker.label = vm.buildAssetLabel(assetMake, assetModel, assetId);
-
-
-                } //End looping on asset's trip's points
-            }// End check for Availble tripKey in trips
-        }//End looping on asset's trips
-        vm.addAssetToSourceList(assetSource, assetId, key, tripMarker.label, number, name, img);
-    };
-
-    vm.addAssetToSourceList = function(assetSource, assetId, assetKey, label, number, name, img) {
-
-        vm.tripsData.push({
-            "name" : name,
-            "number" : number,
-            "id" : assetKey,
-            "img": img,
-            "label" : label
-        });
-
-    };
-    vm.buildAssetLabel = function(make, model, assetId) {
-        var assetLabel = (make) ? (make + " ") : "";
-        assetLabel += (model) ? (model + "-") : "";
-        assetLabel += assetId;
-        return assetLabel;
-    }
-
-    vm.showAssetDashboard = function(id) {
-        alert(id)
+    
+    vm.onDeliveryFilterData = function(data){
+        var obj = {
+           name: "All",
+           label: "All"
+        };
+        data = data.documents;
+        data.push(obj);
+        return data
     }
 
     vm.focusOnAsset = function() {
         $scope.$broadcast('mapFoucsOnMarker', "all");
     }
 
-    vm.onMenuItemClick = function(item){
-        if(item.label == "Order Locally"){
-            vm.updatetables();
-        } 
-        if(item.label == "Order Online"){
-            vm.clientSet = false;
-        }
+    vm.onDeliveryDeviceSet = function(data, scope){
+        vm.deliveryDevice = data.originalObject.deviceId;
+        vm.mapsSrc = $sce.trustAsResourceUrl('/management/templates/location.html?deviceId='+vm.deliveryDevice);
     }
 
-    vm.updatetables = function(){
-        vm.tableSelected = false;
-        vm.showLocalOrdersLoading = true;
-        var params = {};
-        httpClient
-            .get('management/api/getLocalOrders', params).then(
-            function(data, response){
-                console.log("success");
-                for(var x = 0; x < vm.tables.length; x++){
-                    vm.tables[x]["busy"] = false;
-                }
-                for(var y = 0; y < data.length; y++){
-                    vm.tables[data[y].tableId - 1]["busy"] = true; 
-                }
-                vm.showLocalOrdersLoading = false;
-            },
-            function(err) {
-                console.log(err);
-                vm.showLocalOrdersLoading = false;
-            });  
+    vm.onMenuItemClick = function(item){
+        if(item.label == "Online Orders"){
+            vm.clientSet = false;
+            var endDate = moment(new Date()).format("YYYY-MM-DDT23:59:59+0000");    
+            vm.gridParams = {};
+            vm.gridParams["endDate"] = endDate;
+            vm.ordersStartDate = null;
+            vm.ordersEndDate = null;
+        }
+        /*
+        if(item.label == "Order Online"){
+            vm.clientSet = false;
+            vm.name = null;
+            vm.email = null;
+            vm.address = null;
+            vm.number = null;
+        }
+        */
     }
+
 
     vm.mapStartDateOnSetTime = function(date){
         vm.mapStartDate = moment(date).format('YYYY-MM-DD');
@@ -478,62 +458,12 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         return '<div><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
     }  
 
-    vm.confirmReservationSelectionChanged = function(scope, selectedRow){
-
-        if(scope.api.getFocusedCell().column.colDef.headerName == "Confirm Reservation"){
-            var selectedRow = scope.api.getSelectedNodes()[0];
-            if(selectedRow.data && selectedRow.data.confirmed != "Confirmed"){
-                //  var self = vm;
-                var params = selectedRow.data;
-                params["action"] = "edit";
-                params["confirmed"] = "Confirmed";
-                delete params["creationDate"];
-                scope.api.showLoadingOverlay();
-                httpClient
-                    .get('management/api/getReservations', params).then(
-                    function(data, response){
-                        console.log("success");
-                        vm.pushreservationNotification(data);
-                        scope.api.hideOverlay();
-                    },
-                    function(err) {
-                        console.log(err);
-                        scope.api.hideOverlay();
-                    });   
-            }
-        }
-
-    }
-
-    vm.pushreservationNotification = function(data){
-        if(data.GCMKey){
-            var url = 'https://android.googleapis.com/gcm/send';
-            var params = {
-                "to" : data.GCMKey,
-                "data" : {
-                    "m" : "Your reservation has been confirmed"
-                },
-            }
-            var token = 'AIzaSyCE-ZDpyp1gDmpnSr78TVDZYiqvBGtVCnQ';
-            httpClient
-                .post(url, params, null, url, token).then(
-                function(data, response){
-                    console.log("success");
-                    vm.showAlert("success", "A notification has been sent to the client that the reservation is confirmed.");
-                },
-                function(err) {
-                    console.log(err);
-                    vm.showAlert("danger", "An error has occurred");
-                });    
-        }
-    }
-
     vm.promotionUploadImageButtonRenderer = function(params){
         var data = {data : params.data};
         if(params.data.key){
-            return '<div class="btn-edited btn btn-primary btn-upload" upload-button url="/management/api/uploadImagePromotion?upload=image" data="data" on-upload="$ctrl.onUpload(data)" on-success="$ctrl.onSuccess(res)">Upload</div>'
+            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImagePromotion?upload=image" data="data" on-upload="$ctrl.onUpload(data)" on-success="$ctrl.onSuccess(res)">Upload</div>'
         }else{
-            return '<div class="btn-edited btn btn-primary btn-upload" ng-click="$ctrl.stopEditing()">Upload</div>'
+            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
         }
     }
 
@@ -544,14 +474,6 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             return '<button class="confirm-order">Publish</button>'
         }else{
             return '<button class="confirm-order disabled">Publish</button>'
-        }
-    }
-
-    vm.confirmReservationButtonRenderer = function(params){
-        if(params.value && params.value == "Confirmed"){
-            return '<span class="processed-by">'+params.value+'</span>'
-        }else{
-            return '<button class="confirm-order">Confirm order</button>'
         }
     }
 
@@ -604,10 +526,6 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         }
     }
 
-    vm.orderSourceRenderer = function(params){
-
-    }
-
     vm.order = function(params){
         if(params.data.name){
             return '<div><a href="#/order">Order</a></div>' 
@@ -618,27 +536,45 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
 
     vm.onClientCellClicked = function(event, scope){
         if(scope.api.getFocusedCell().column.colDef.headerName == "Order"){
-            vm.$broadcast('angucomplete-alt:changeInput', "clientsList", event.data.name);
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            var params = selectedRow.data;
+            var name = params.name;
+            var number = params.number;
+            var email = params.email;
+            var address = params.address;
+
+            vm.name = name;
+            vm.address = number;
+            vm.number = number;
+            vm.email = email;
+            $location.path("/orderOnline");
+            vm.clientSet = true;
         }
     }
 
     vm.onDeliveryOrderSetTime = function(date){
-        vm.deliveryOrderDate = date;
+        vm.deliveryOrderDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');;
     }
 
     vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
         {headerName: "Brand", field: "brand", hide: true},
-        {headerName: "Category", field: "category", cellEditor: "select",
-            cellEditorParams: {
-              values: ["fruits", "beverages", "others"]
-        }},
+        {headerName: "Category", field: "category", cellEditor: "select", hide: true,
+         cellEditorParams: {
+             values: categories
+         }},
+        {headerName: "Form Type", field: "formType", hide: true},
+        {headerName: "Sub Category", field: "subCategory", cellEditor: "select",
+         cellEditorParams: {
+             values: vm.sub_cats
+         }},
+        {headerName: "Brand", field: "brand"},
         {headerName: "Description", field: "description"},
         {headerName: "Price", field: "price"},
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
             return vm.uploadImageButtonRenderer(params);
         }},
-        {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
+        {headerName: "Image (200 x 200)", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
         {headerName: "File", field: "file", hide: true, cellRenderer: function (params) {  
@@ -654,20 +590,36 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
             return vm.outOfStockItemCellRenderer(params);
         }}];
-
-    vm.reservationColDef = [
-        {headerName: "Name", field: "fullName"},
-        {headerName: "Number", field: "number"},
-        {headerName: "Client", field: "client", hide: true},
-        {headerName: "Reservation date", field: "reservationDate"},
-        {headerName: "Reservation time", field: "reservationTime"},
-        {headerName: "Persons", field: "numberOfPersons"},
-        {headerName: "Comments", field: "comments"},
-        {headerName: "Cancelled", field: "cancelled"},
-        {headerName: "Confirm Reservation", field: "confirmed", editable : false, cellRenderer: function (params) {  
-            return vm.confirmReservationButtonRenderer(params);
+    
+    vm.manageCategoriesColDef = [
+        {headerName: "Category Name", field: "category", cellEditor: "select",
+         cellEditorParams: {
+             values: vm.cats
+         }},
+        {headerName: "Form Type", field: "formType", hide: true},
+        {headerName: "Sub Category Name", field: "subCategory"},
+        {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
+            return vm.uploadImageButtonRenderer(params);
+        }},
+        {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
+            return vm.viewImageCellRenderer(params);
+        }},
+        {headerName: "Publish Category", field: "publish", editable : false, cellRenderer: function (params) {  
+            return vm.publishItemCellRenderer(params);
         }}
-    ];
+        ];
+    
+      vm.manageMenuColDef = [
+        {headerName: "Menu Name", field: "menu"},
+        {headerName: "Form Type", field: "formType", hide: true},
+        {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
+            return vm.uploadImageButtonRenderer(params);
+        }},
+        {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
+            return vm.viewImageCellRenderer(params);
+        }}
+        ];
+
 
     vm.addClientColDef = [
         {headerName: "Name", field: "name"},
@@ -679,27 +631,64 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         }}
     ];
 
-    vm.localOrdersColDef = [
-        {headerName: "Table", field: "tableId"},
-        {headerName: "Total Order Amount (€)", field: "totalNewItems"},
-        {headerName: "Order Date", field: "orderDate"},
-        {headerName: "Ordered By", field: "assignee"},
-        {headerName: "View Order", editable : false, cellRenderer: function (params) {  
-            return vm.viewLocalOrder(params);
-        }}
-    ];
-
-    vm.servedTablesColDef = [
-        {headerName: "Table", field: "tableId"},
-        {headerName: "Total (€)", field: "total"},
-        {headerName: "Order Date", field: "orderDate"},
-        {headerName: "Ordered By", field: "assignee"},
-        {headerName: "View Order", editable : false, cellRenderer: function (params) {  
-            return vm.viewOccupiedTableOrders(params);
-        }}
-    ];
-
     vm.onlineOrdersColDef = [
+        {headerName: "Name", field: "fullName", editable : false, cellStyle: function(params) {
+            if (params.data.client=='Previous Client') {
+                return {"color" : 'green', "font-weight": 'bold'};
+            } else {
+                return {"color": 'red', "font-weight": 'bold'};
+            }
+        }},
+        {headerName: "Address", field: "address", editable : false, hide: false},
+        {headerName: "Maps", field: "location", editable : false, cellRenderer: function (params) {  
+            return vm.viewLocation(params);
+        }},
+        {headerName: "Number", field: "number", editable : false,},
+        {headerName: "Total", field: "total", hide: true},
+        {headerName: "Ordered By", field: "orderedBy", hide: true},
+        {headerName: "Client", field: "client",  hide: true, cellStyle: function(params) {
+            if (params.value=='Previous Client') {
+                return {"color" : 'green', "font-weight": 'bold'};
+            } else {
+                return {"color": 'red', "font-weight": 'bold'};
+            }
+        }},
+
+        {headerName: "Order date", field: "orderDate", editable : false, hide: true, cellRenderer: function (params) {  
+            return vm.dateRenderer(params);
+        }}, 
+
+        {headerName: "Delivery Date", field: "deliveryDate", editable : false, cellRenderer: function (params) {  
+            if(params.value){
+                return vm.dateRenderer(params);
+            }
+        }},
+        {headerName: "Cancelled", field: "cancelled", editable : false, hide: true},
+        {headerName: "Assignee", field: "assignee", editable : false, cellRenderer: function (params) {  
+            return vm.assignToMeButtonRenderer(params);
+        }},
+        {headerName: "Order Source", field: "source", hide: true, cellRenderer: function (params) {  
+            return vm.orderSourceRenderer(params);
+        }},
+        {headerName: "Status", field: "orderStatus", editable : false, cellRenderer: function (params) {  
+            return vm.statusRenderer(params);
+        }},
+        {headerName: "View Order", editable : false, cellRenderer: function (params) {  
+            return vm.viewOrder(params);
+        }},
+        {headerName: "Delivery man", field: "deliveredBy", cellEditor: "select", editable : true,
+         cellEditorParams: {  
+             values : vm.obj
+         }},
+        {headerName: "Mark as delivered", field: "delivered", editable : false, cellRenderer: function (params) {  
+            return vm.markAsDelivered(params);
+        }}]
+
+    vm.getdeliveryDevices = function(){
+        return {values : ["johnny"]}
+    }
+
+    vm.scheduledOrdersColDef = [
         {headerName: "Name", field: "fullName", cellStyle: function(params) {
             if (params.data.client=='Previous Client') {
                 return {"color" : 'green', "font-weight": 'bold'};
@@ -721,18 +710,18 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                 return {"color": 'red', "font-weight": 'bold'};
             }
         }},
+
         {headerName: "Order date", field: "orderDate", editable : false, cellRenderer: function (params) {  
             return vm.dateRenderer(params);
         }}, 
+
         {headerName: "Delivery Date", field: "deliveryDate", editable : false, cellRenderer: function (params) {  
             if(params.value){
-                return '<span>' + params.value + '</span>'
-            }else {
-                params.data.deliveryDate = "asap";
-                return '<span>' + params.data.deliveryDate + '</span>'
+                return vm.dateRenderer(params);
             }
         }},
-        {headerName: "Cancelled", field: "cancelled", editable : false},
+        {headerName: "Cancelled", field: "cancelled", editable : false, hide: true},
+        {headerName: "Scheduled", field: "scheduled", editable : false, hide: true},   
         {headerName: "Assignee", field: "assignee", editable : false, cellRenderer: function (params) {  
             return vm.assignToMeButtonRenderer(params);
         }},
@@ -743,10 +732,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             return vm.statusRenderer(params);
         }},
         {headerName: "View Order", editable : false, cellRenderer: function (params) {  
-            return vm.viewOrder(params);
-        }},
-        {headerName: "Mark as delivered", field: "delivered", editable : false, cellRenderer: function (params) {  
-            return vm.markAsDelivered(params);
+            return vm.viewScheduledOrder(params);
         }}]
 
     vm.promotionColDef = [
@@ -773,6 +759,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
         for(var i = 0; i < data.length; i++){
             var item = {};
             item["id"] = i;
+            item["key"] = data[i].key;
             item["name"] = data[i].name;
             item["quantity"] = 1;
             item["category"] = data[i].category;0
@@ -795,7 +782,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                 items["id"] = i;
                 item["name"] = users[i].name[0];
                 item["number"] = users[i].id[0];
-                item["address"] = users[i].address[0];
+                item["address"] = (users[i].address) ? users[i].address[0] : "";
                 item["email"] = users[i].email[0];
                 item["pic"] = vm.imageSrc.userImg;
                 items.push(item);
@@ -814,6 +801,9 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                 items.push(item);
             }
         }
+        if(vm.clientSet){
+            $scope.$broadcast('angucomplete-alt:changeInput', "clientsList", vm.name);
+        }
         return items;
     }
 
@@ -826,36 +816,8 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
     }
 
     vm.onSelect = function(item, scope){
+        console.log("test")
 
-    }
-
-    vm.onTableSelect = function(table){
-        vm.tableSelected = true;
-        vm.selectedTable = table.label;
-        vm.selectedTableId = table.id;
-        $location.url("/orderLocally");
-        if(table.busy){
-            vm.showLocalOrdersLoading = true; 
-            var params = {tableId : table.id}  
-            httpClient
-                .get('management/api/getTableOrderById', params).then(
-                function(data, response){
-                    console.log("success");
-                    var items = data;
-                    for(var i = 0; i < items.length; i++){
-                        items[i]["icon"] = "glyphicon glyphicon-glass";
-                    }
-
-                    vm.defaultSetOrders = items;
-                    vm.showLocalOrdersLoading = false;
-                },
-                function(err) {
-                    console.log(err);
-                    vm.showLocalOrdersLoading = false;
-                });  
-        }else{
-            vm.defaultSetOrders = [];
-        }
     }
 
     vm.sendOnlineOrder = function(items, self){
@@ -866,13 +828,16 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
             delete objects[i]["id"];
         }
         var params = {};
+        params["assignee"] = vm.user.login;
+        params["fullName"] = vm.name;
         params["fullName"] = vm.name;
         params["number"] = vm.number;
         params["address"] = vm.address;
-        params["orderedBy"] = vm.user;
+        params["orderedBy"] = vm.user.login;
         params["total"] = self.total;
         params["items"] = objects;
-        params["deliveryDate"] = vm.deliveryOrderDate || "asap";
+        params["orderDate"] = moment(new Date).format('YYYY-MM-DDTHH:mm:ss+0000');
+        params["deliveryDate"] = vm.deliveryOrderDate || params["orderDate"];
         vm.showLoading = true;
         httpClient
             .get('management/api/publishOrderFromDashboard', params).then(
@@ -883,68 +848,14 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, httpClient, he
                 self.orderSent = false;
                 $scope.$broadcast('angucomplete-alt:clearInput', "clientsList");
                 vm.clientSet = false;
-                vm.onDeliveryOrderSetTime = null;
-                vm.showAlert("success", "The order has been sent.");
+                vm.deliveryOrderDate = null;
+                //    vm.showAlert("success", "The order has been sent.");
+                $location.path("/onlineOrders")
             },
             function(err) {
                 console.log(err);
                 vm.showLoading = false;
             }); 
-    }
-
-    vm.sendLocalOrder = function(items, self){
-        var objects = JSON.parse(JSON.stringify(items));
-        var newObjects = JSON.parse(JSON.stringify(self.newObjects));
-        for(var i = 0; i < objects.length; i++){
-            delete objects[i]["pic"];
-            delete objects[i]["icon"];
-            delete objects[i]["id"];
-        }
-        for(var i = 0; i < newObjects.length; i++){
-            delete newObjects[i]["pic"];
-            delete newObjects[i]["icon"];
-            delete newObjects[i]["id"];
-        }
-        var params = {};
-        params["tableId"] = vm.selectedTableId;
-        params["assignee"] = vm.user;
-        params["total"] = self.total;
-        params["totalNewItems"] = self.totalNewObjects;
-        params["items"] = objects;
-        params["newItems"] = newObjects;
-        vm.showLocalOrdersLoading = true;
-        httpClient
-            .get('management/api/publishLocalOrderFromDashboard', params).then(
-            function(data, response){
-                console.log("success");
-                vm.showLocalOrdersLoading = false;
-                self.objects = [];
-                vm.showAlert("success", "The order has been sent.");
-                $location.url("/listTables");
-                vm.updatetables();
-            },
-            function(err) {
-                console.log(err);
-                vm.showLocalOrdersLoading = false;
-            }); 
-    }
-
-    vm.onMarkAsPaid = function(){
-        var params = {tableId: vm.selectedTableId, tableStatus: "paid"}
-        vm.showLocalOrdersLoading = true;
-        httpClient
-            .get('management/api/getTableOrderById', params).then(
-            function(data, response){
-                console.log("success");
-                vm.showLocalOrdersLoading = false;
-                self.objects = [];
-                $location.url("/listTables");
-                vm.updatetables();
-            },
-            function(err) {
-                console.log(err);
-                vm.showLocalOrdersLoading = false;
-            });  
     }
 
     vm.closeAlert = function() {

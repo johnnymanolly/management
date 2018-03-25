@@ -57,6 +57,8 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
+var subCategory = params.subCategory;
+var category = params.category;
 
 var results;
 
@@ -116,6 +118,12 @@ if(action){
     if(sortType == null) sortType = "string"
     var fieldsParams = "*";
     var queryString = 'formType = "item"';
+    if(subCategory){
+        queryString += ' and subCategory="'+subCategory+'"';
+    }
+    if(category){
+        queryString += ' and category="'+category+'"';
+    }
     var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
 
     queryParams["count"] = "true";
