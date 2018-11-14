@@ -1,6 +1,7 @@
 var log = require("log");
 log.setLevel("INFO");
 var documents = require("document");
+var moment = require("modules/momentjs/moment.min.js").moment
 var params = {};
 
 if(request.body != null){
@@ -20,6 +21,7 @@ if(typeof params == 'string' && params != null){
 
 var startDate = params.startDate;
 var endDate = params.endDate;
+var scheduled = params.scheduled;
 var location = params.location;
 var number = params.number;
 var cancel = params.cancel;
@@ -57,6 +59,18 @@ if(cancel){
     var queryParams = {};
     var fieldsParams = "fullName, address, number, orderDate, orderStatus, deliveryDate, delivered, items, total";
     var queryString = 'formType = "onlineOrder" and cancelled = "No" and number = "' + number + '" and orderedBy = "' + number + '"';
+    
+    if(!scheduled){
+        var date = new Date();
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        date = formatDate(date)
+        queryString += ' and deliveryDate<date> < "' + date + '"';
+    }else{
+        var date = moment(new Date()).add(1, "day").format("YYYY-MM-DDT00:00:00+0000");
+        queryString += ' and deliveryDate<date> > "' + date + '"';
+    }
 
     queryParams["query"] =  queryString;
     queryParams["fields"] =  fieldsParams;

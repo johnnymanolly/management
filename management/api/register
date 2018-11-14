@@ -1,4 +1,5 @@
 var commons = require('management/api/lib/commonsLib');
+var loginLib = require("/supermarket/login/loginUser");
 var params = {};
 
 if(request.body != null){
@@ -16,7 +17,7 @@ if(typeof params == 'string' && params != null){
     }
 }
 
-var requiredParams = ["number", "password", "email", "firstName", "lastName"];
+var requiredParams = ["password", "email", "firstName", "lastName"];
 
 var isValidParams = commons.validateParamsNonEmpty(params, requiredParams);
 if (isValidParams ["status"] == 'failure') {
@@ -26,34 +27,26 @@ if (isValidParams ["status"] == 'failure') {
 
 var firstName = params.firstName;
 var lastName = params.lastName;
-var login = params.number;
 var email = params.email;
 var password = params.password;
+var number = params.number;
 
 var fields = {
-    id : login,
+   // id : email,
     password: password,
     firstName : firstName,
     lastName: lastName,
     name: firstName + " " + lastName,
-    email: email
+    email: email,
+    login: email,
+    number: number
 }
-
 var saveUser = apsdb.callApi("SaveUser", fields, null);
 if(saveUser.metadata.status == "success"){
-    var tokenResult = apsdb.callApi("GenerateToken",{"apsdb.runAs":login, "apsdb.bindReferrer": false},null);
-    if(tokenResult.metadata.status == "success"){
-        tokenResult["result"]["token"] = tokenResult["result"]["apsdb.authToken"];
-        
-        var token = tokenResult.result["token"];
-    	tokenResult.result["token"] = btoa(authkey + ":" + login + ":" + token);
-        
-        delete tokenResult["result"]["apsdb.authToken"];
-        tokenResult["result"]["user"] = fields;
-        return tokenResult.result
-    }
+    return loginLib.verifyCredentials(email, password);
 }else{
-    return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
+ //   return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
+    return saveUser
 }
 
 

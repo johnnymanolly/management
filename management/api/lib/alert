@@ -1,11 +1,15 @@
 var document = require("document");
-function alert() {
+var log = require("log");
+log.setLevel("INFO");
+
+function alert(from, subject, body) {
 
     var key = toHex("notificationSettings");
     var queryParams = {};
     queryParams["query"] =  'key = "'+ key +'"';
     queryParams["fields"] = "emails, mobiles";
     var results =  document.query(queryParams);
+    log.info("notification document: " +JSON.stringify(results))
     if(results.metadata.status == "failure") {
         return {status : "failure", errorDetails : "an error has occured when quering Log doc key: " + key, errorMsg: results};
     } else if(results.result.documents && results.result.documents.length == 1){
@@ -15,12 +19,11 @@ function alert() {
         var mobilesArray = JSON.parse(doc.mobiles);
         if(typeof emailsArray == "string") emailsArray = [emailsArray];
         if(typeof mobilesArray == "string") mobilesArray = [mobilesArray];
-        
-        var body = "You have a new online order. Click on the link to see the order: https://la-fourchette-libanaise.scriptrapps.io/management/home.html#/onlineOrders"
 
         // Send Email
+        log.info("emailsArray: " +JSON.stringify(emailsArray))
         for(var i = 0; i < emailsArray.length; i++){
-            sendMail(emailsArray[i], "La Fourchette Libanaise", "New Order", body);
+            sendMail(emailsArray[i], from, subject, body);
         }
         // Send SMS
         /*

@@ -5,16 +5,28 @@ myApp.config(wssConfig)
     "col1": [
         {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", "label": "Online Orders", "route":"#/onlineOrders", "active":"false"},
         {"id":"1", "iconClass":"glyphicon glyphicon-time", "label": "Scheduled Orders", "route":"#/scheduledOrders", "active":"false"},
-        {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Online", "route":"#/orderOnline", "active":"false"},
-        {"id":"1", "iconClass":"fa fa-group", "label": "Register New Client", "route":"#/clientRegistration", "active":"false"},
-        {"id":"3", "iconClass":"fa fa-globe", "label": "Track Delivery", "route": "#/maps","active":"false"},
-        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage App Menu", "route": "#/manageAppMenu","active":"false"},
-        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Categories", "route": "#/manageCategories","active":"false"},
+        
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Gallery", "route": "#/manageAppMenu","active":"false"},
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Categories", "route": "#/manageCategories","active":"false"},  
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Items", "route": "#/manageItems","active":"false"},
+       
+       
+     //   {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Online", "route":"#/orderOnline", "active":"false"},
+     //   {"id":"1", "iconClass":"fa fa-group", "label": "Register New Client", "route":"#/clientRegistration", "active":"false"},
+      //  {"id":"6", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Content", "route": "#/manage","active":"false", "sub": "sub"},
+        {"id":"3", "iconClass":"fa fa-globe", "label": "Track Delivery", "route": "#/maps","active":"false"},
         {"id":"5", "iconClass":"glyphicon glyphicon-question-sign", "label": "Suggested Items", "route": "#/suggestions","active":"false"},
         {"id":"6", "iconClass":"fa fa-bell-o", "label": "Promotions", "route": "#/promotions","active":"false"}
-    //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Locally", "route":"#/listTables", "active":"false"},
+        //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Locally", "route":"#/listTables", "active":"false"},
+    	],
+    /*
+    "sub": [
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Items", "route": "#/manageItems","active":"false"},
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Categories", "route": "#/manageCategories","active":"false"},  
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage App Menu", "route": "#/manageAppMenu","active":"false"},
+
     ]
+    */
 })
 
     .constant("routingJson",  {

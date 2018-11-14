@@ -58,6 +58,7 @@ var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
 var category = params.category;
+var publishStatus = params.publishStatus;
 
 var results;
 
@@ -70,9 +71,10 @@ if(params.file){
 }
 
 if(action){
-    var fieldsToSave = {};  
-    for(param in params){
-        fieldsToSave[param] = params[param]
+    var fieldsToSave = {}; 
+    var row = params.row;
+    for(param in row){
+        fieldsToSave[param] = row[param]
     }  
     fieldsToSave["formType"] = "categories";  
     if(action == "add"){
@@ -87,7 +89,9 @@ if(action){
             return  {status : "success"}
         }
     }else if(action == "edit"){
-        log.info(JSON.stringify(fieldsToSave))  
+        log.info(JSON.stringify(fieldsToSave))
+        fieldsToSave = params.row;
+        fieldsToSave["formType"] = "categories";  
         var fieldsToSaveResult = documents.save(fieldsToSave);
         if(fieldsToSaveResult.metadata.status == "failure") {
             return fieldsToSaveResult.metadata;
@@ -113,6 +117,9 @@ if(action){
     if(sortType == null) sortType = "string"
     var fieldsParams = "*";
     var queryString = 'formType = "categories"';
+    if(publishStatus){
+        queryString += ' and publish = "' + publishStatus + '"';
+    }
     if(category){
         queryString += ' and category="'+category+'"';
     }

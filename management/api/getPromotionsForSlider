@@ -69,12 +69,13 @@ if(action){
     for(param in params){
         fieldsToSave[param] = params[param]
     }  
-    fieldsToSave["formType"] = "item"; 
+    fieldsToSave["formType"] = "promotion"; 
     fieldsToSave["meta.types"] = {
         "price": "numeric"
     } 
   if(action == "add"){
     fieldsToSave["publish"] = "Unpublished";  
+  var queryParams = {};
     var fieldsToSaveResult = documents.save(fieldsToSave);
     if(fieldsToSaveResult.metadata.status == "failure") {
       return fieldsToSaveResult.metadata;
@@ -112,7 +113,7 @@ if(action){
   var queryParams = {};
   if(sortType == null) sortType = "string"
   var fieldsParams = "*";
-  var queryString = 'formType = "item" and promotion = "true"';
+  var queryString = 'formType = "promotion"';
   var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
 
   queryParams["count"] = "true";

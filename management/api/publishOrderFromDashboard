@@ -27,11 +27,16 @@ for(obj in params){
     order[obj] = params[obj]
 }
 
+//return JSON.parse(order["items"]);
+
+var orderId = + new Date();
+order["orderId"] =  orderId.toString(16);
+
 order["items"] = JSON.stringify(order["items"]);
 
 order["formType"] = "onlineOrder";
-order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Confirmed" : "Scheduled"
-order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Confirmed" : "Scheduled"
+order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
+order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
 order["delivered"] = "Not delivered";
 order["cancelled"] = "No";
 
@@ -44,10 +49,10 @@ order["meta.types"] = {
 
 
 var registered = false;
-var number = order["number"];
+var email = order["email"];
 var queryParams = {};
-var fieldsParams = "number";
-var queryString = 'formType = "onlineOrder" or formType = "localOrder" and number = "' + number +'"';
+var fieldsParams = "email";
+var queryString = 'formType = "onlineOrder" or formType = "localOrder" and email = "' + email +'"';
 queryParams["resultsPerPage"] = "1";
 queryParams["query"] =  queryString;
 queryParams["fields"] =  fieldsParams;
@@ -61,13 +66,21 @@ if(queryResult.metadata.status == "success" && queryResult.result.documents.leng
 
 order["client"] = (registered) ? "Previous Client" : "New Client";
 
-log.info(JSON.stringify(order))
+log.info("******* items *********" +JSON.stringify(order["items"]))
+
+log.info("******* order *********" +JSON.stringify(order))
 var saveResult = documents.save(order);
 log.info(JSON.stringify(saveResult))
 order["key"] = saveResult.result.document.key;
 var message = {"result": {result : [order], action: "add"}, "id" : "orders-grid"};
 publish("responseChannel", message);
-//alertLib.alert();
+
+var body = "You have a new online order. Click on the link to see the order: https://la-fourchette-libanaise.scriptrapps.io/management/home.html#/onlineOrders";
+
+var from = "E-Shop";
+
+var subject = "New order!";
+alertLib.alert(from, subject, body);
 return {status: "success"}
 
 

@@ -1,23 +1,39 @@
 
 var log = require("log");
 log.setLevel("INFO");
+
 var documents = require("document");
 
 var params = JSON.parse(request.rawBody);
 var keys = params["keys"];
-log.info(keys)
+
 
 var results;
 var queryParams = {};
 var fieldsParams = "*";
-log.info(JSON.stringify(keys))
-var keys = ["2931EDE24B193C6D9F40C503F719B4EB", "1E0548B323C61EC14BDD59DD8612FFA8"];
-var queryString = 'formType = "item" and publish = "Published" and apsdb.documentKey in ' + keys;
+
+
+keys = keys.replace("[", "").replace("]", "").split(", ");
+log.info("keys: " +JSON.stringify(keys));
+
+
+//var keys = ["2931EDE24B193C6D9F40C503F719B4EB", "1E0548B323C61EC14BDD59DD8612FFA8"];
+var queryString = 'formType = "item" and publish = "Published" and apsdb.documentKey in ' +JSON.stringify(keys);
+/*
+for(var x = 0; x < keys.length; x++){
+    if(x == keys.length - 1){
+        queryString += '"' + keys[x] + '"';
+    }else{
+        queryString += '"' + keys[x] + '", ';
+    }
+    
+}
+queryString += ']';
+*/
 queryParams["query"] =  queryString;
 queryParams["fields"] =  fieldsParams;
 
 log.info(JSON.stringify(queryParams))
 results = documents.query(queryParams);
-return results
 return results.result.documents
 

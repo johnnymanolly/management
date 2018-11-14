@@ -1,0 +1,53 @@
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+var alertLib = require("management/api/lib/alert");
+
+var params = {};
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+log.info("params : "+JSON.stringify(params));
+
+var email = params.email;
+var fullName = params.fullName;
+var number = params.number;
+var address = params.address;
+var message = params.message;
+
+var body = "";
+
+body = "From : " + email;
+body += ", <br> Full Name : " + fullName;
+body += ", <br> Number : " + number;
+body += ", <br> Address : " + address;
+body += ", <br> Message : " + message;
+
+
+var from = email;
+
+var subject = "New message!";
+alertLib.alert(from, subject, body);
+return {status: "success"}
+
+
+
+
+
+
+
+
+
+

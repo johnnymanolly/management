@@ -51,7 +51,7 @@ if(sortString){
   queryParams["sort"] = sortString;
 }
 if(resultsPerPage){
-  queryParams["resultsPerPage"] = resultsPerPage;
+  queryParams["resultsPerPage"] = "1";
 }
 if(pageNumber){
   queryParams["pageNumber"] = pageNumber;
@@ -59,17 +59,22 @@ if(pageNumber){
 log.info(JSON.stringify(queryParams))
 
 var results = documents.query(queryParams);
-var docs =  results.result.documents;
+log.info("***** results ********" +JSON.stringify(results))
+var docs =  results.result.documents[0];
 
 log.info(JSON.stringify(docs))
-var array = JSON.parse(docs[0].items);
+
+var array = JSON.parse(docs.items);
+
 if(typeof array == "string") array = [JSON.parse(array)];
+
 for(var i = 0; i <= array.length; i++){
     if(typeof array[i] == "string"){
         array[i] = JSON.parse(array[i]);
+    //    array[i]["count"] = i;
     }
 }
-return {documents: array, count: array.length}
+return {documents: array[0], count: array[0].length}
 
 
 

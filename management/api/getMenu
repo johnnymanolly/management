@@ -57,6 +57,7 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
+var publishStatus = params.publishStatus;
 
 var results;
 
@@ -69,9 +70,10 @@ if(params.file){
 }
 
 if(action){
-    var fieldsToSave = {};  
-    for(param in params){
-        fieldsToSave[param] = params[param]
+    var fieldsToSave = {};
+    var row = params.row;
+    for(param in row){
+        fieldsToSave[param] = row[param]
     }  
     fieldsToSave["formType"] = "menu";  
     if(action == "add"){
@@ -112,8 +114,13 @@ if(action){
     if(sortType == null) sortType = "string"
     var fieldsParams = "*";
     var queryString = 'formType = "menu"';
+    if(publishStatus){
+        queryString += ' and publish = "' + publishStatus + '"';
+    }
     var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
-
+	if(sortString == null){
+     //   sortString = "apsdb.creationTime<date:ASC>"
+    }
     queryParams["count"] = "true";
     queryParams["query"] =  queryString;
     queryParams["fields"] =  fieldsParams;

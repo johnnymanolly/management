@@ -15,7 +15,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         function(data, response){
             data = data.documents;
             for(var i = 0; i < data.length; i++){
-                vm.obj.push(data[i].name);
+                vm.obj.push(data[i].name+"-"+data[i].deviceId);
             }
             console.log("success");
         },
@@ -58,7 +58,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
 
     vm.headerItems = headerItemsJson;
     vm.imageSrc = imageSrc;
-    vm.user = {login: (atob(document.cookie.split("=")[1]).split(":")[1])};
+    vm.user = {login: atob($.cookie('device_token').replace("==","")).split(":")[1]};
     vm.menuItems = menuItemsJson;
     vm.items = [];
     vm.mapsSrc = $sce.trustAsResourceUrl('/management/templates/location.html?deviceId='+vm.deliveryDevice);
@@ -66,30 +66,36 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     /* ****************************   ORDERS *************** */
     vm.showOnlyData = [
         {
+            id: "today",
+            label: "Today's orders"  
+        },
+        {
             id: "all",
-            label: "All"  
+            label: "Show All Orders"
         },
         {
-            id: "unassigned",
-            label: "Unassigned"
+            id: "notConfirmed",
+            label: "Not Confimed"
         },
         {
-            id: "confirmed",
+            id: "Confirmed",
             label: "Confirmed"
         },
+        /*
         {
             id: "notDelivered",
             label: "Not delivered"
         },
+        */
         {
-            id: "delivered",
+            id: "Delivered",
             label: "Delivered"
         }
     ]
 
     vm.onSelectShowOnly = function(obj){
-        if(obj.originalObject.label != "All"){
-            vm.gridParams["queryFilter"] = obj.originalObject.label
+        if(obj.originalObject.id != "today"){
+            vm.gridParams["queryFilter"] = obj.originalObject.id
         }else{
             vm.gridParams["queryFilter"] = null
         }
@@ -158,7 +164,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
 
     vm.defaultCellRenderer = function(params){
         if(params.value){
-            return '<span class="ag-cell-inner" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
+            return '<span class="ag-cell-inner" tooltip-placement="top" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
         }else{
             return ''
         }
@@ -169,14 +175,15 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         if(scope.api.getFocusedCell().column.colDef.headerName == "Assignee"){
             var selectedRow = scope.api.getSelectedNodes()[0];
             if(selectedRow.data && !selectedRow.data.assignee && selectedRow.data.cancelled == "No"){
-                var params = selectedRow.data
+                var params = {};
                 params["action"] = "edit";
-                params["assignee"] = vm.user.login;
-                params["orderStatus"] = "Assigned";
+                params["row"] = selectedRow.data;
+                params["row"]["assignee"] = vm.user.login;
+                params["row"]["orderStatus"] = "Assigned";
                 delete params["creationDate"];
                 scope.api.showLoadingOverlay();
                 httpClient
-                    .get('management/api/getOrders', params).then(
+                    .post('management/api/getOrders', params).then(
                     function(data, response){
                         console.log("success");
                         scope.api.hideOverlay();
@@ -192,14 +199,15 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         }else if(scope.api.getFocusedCell().column.colDef.headerName == "Mark as delivered"){
             var selectedRow = scope.api.getSelectedNodes()[0];
             if(selectedRow.data && selectedRow.data.delivered != "Delivered" && selectedRow.data.orderStatus == "Confirmed"){
-                var params = selectedRow.data
+                var params = {};
+                params["row"] = selectedRow.data;
                 params["action"] = "edit";
-                params["orderStatus"] = "Delivered";
-                params["delivered"] = "Delivered";
+                params["row"]["orderStatus"] = "Delivered";
+                params["row"]["delivered"] = "Delivered";
                 delete params["creationDate"];
                 scope.api.showLoadingOverlay();
                 httpClient
-                    .get('management/api/getOrders', params).then(
+                    .post('management/api/getOrders', params).then(
                     function(data, response){
                         console.log("success");
                         scope.api.hideOverlay();
@@ -245,52 +253,159 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
 
     /* *********************  ITEMS ***************** */
 
-    vm.uploadImageButtonRenderer = function(params){
-        var data = {data : params.data};
-        if(params.data.key){
-            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
-        }else{
-            return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
-        }
-
+    vm.uploadImageButtonRenderer = function(params)
+    {        
+        if(params.data)
+        {
+            var data = {data : params.data};
+            data.data["formType"] = "item";
+            if(params.data.key){
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
+            }else{
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
+            }
+        }     
+    }
+    vm.categoriesUploadImageButtonRenderer = function(params)
+    {        
+        if(params.data)
+        {
+            var data = {data : params.data};
+            data.data["formType"] = "categories";
+            if(params.data.key){
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
+            }else{
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
+            }
+        }     
+    }
+    vm.galleryUploadImageButtonRenderer = function(params)
+    {        
+        if(params.data)
+        {
+            var data = {data : params.data};
+            data.data["formType"] = "menu";
+            if(params.data.key){
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
+            }else{
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
+            }
+        }     
     }
     vm.viewImageCellRenderer  = function(params){
-        var key = params.data.key;
-        var img = (params.data.image) ? params.data.image : ""; 
-        return '<div><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
-    }
+         if(params.data)
+        {
+            var key = params.data.key;
+            var img = (params.data.image) ? params.data.image : ""; 
+            return '<div><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
+    
+        }
+        }
 
     vm.publishItemCellRenderer = function(params){
-        if(params.value && params.value == "Published"){
-            return '<span class="unpublish">Unpublish</span>'
-        }else if(params.value && params.value == "Unpublished"){
-            return '<button class="confirm-order">Publish</button>'
-        }else{
-            return '<button class="confirm-order disabled">Publish</button>'
+        if(params.value && params.data.name && params.data.subCategory && params.data.price)
+        {
+            if(params.value == "Published")
+            {
+                return '<span class="unpublish">Unpublish</span>'
+            }
+            else if(params.value == "Unpublished")
+            {
+                return '<button class="confirm-order">Publish</button>'
+            }
+            
+        }
+    	else
+        {
+            return '<button class="confirm-order disabled" tooltip-placement="auto" uib-tooltip="Please fill in required field to publish">Publish</button>'
+        }
+    }
+    
+    vm.publishGalleryCellRenderer = function(params){
+        if(params.value && params.data.menu && params.data.categoryType && params.data.image)
+        {
+            if(params.value == "Published")
+            {
+                return '<span class="unpublish">Unpublish</span>'
+            }
+            else if(params.value == "Unpublished")
+            {
+                return '<button class="confirm-order">Publish</button>'
+            }
+            
+        }
+    	else
+        {
+            return '<button class="confirm-order disabled" tooltip-placement="auto" uib-tooltip="Please fill in required field to publish">Publish</button>'
+        }
+    }
+    
+    vm.publishCategoryCellRenderer = function(params){
+        if(params.data.category && params.data.subCategory)
+        {
+            if(params.value == "Published")
+            {
+                return '<span class="unpublish">Unpublish</span>'
+            }
+            else if(params.value == "Unpublished")
+            {
+                return '<button class="confirm-order">Publish</button>'
+            }
+            
+        }
+    	else
+        {
+            return '<button class="confirm-order disabled" tooltip-placement="auto" uib-tooltip="Please fill in required field to publish">Publish</button>'
         }
     }
 
+
     vm.outOfStockItemCellRenderer =  function(params){
-        if(params.value && params.value == "true"){
-            return '<span class="unpublish">Available</span>'
-        }else if(params.value && params.value == "false"){
-            return '<button class="confirm-order">Out of stock</button>'
-        }else{
-            return '<button class="confirm-order disabled">Out of stock</button>'
+        if(params.value)
+        {
+            if(params.value && params.value == "true"){
+                return '<span class="unpublish">Available</span>'
+            }else if(params.value && params.value == "false"){
+                return '<button class="confirm-order">Out of stock</button>'
+            }else{
+                return '<button class="confirm-order disabled">Out of stock</button>'
+        }
+        }
+    }
+    
+     vm.showAsPromotionCellRenderer =  function(params){
+        if(params.value)
+            {
+            if(params.value && params.value == "true"){
+                return '<span class="unpublish">Yes</span>'
+            }else if(params.value && params.value == "false"){
+                return '<button class="confirm-order">No</button>'
+            }else{
+                return '<button class="confirm-order">No</button>'
+            }
+        }
+        else
+        {
+          return '<button class="confirm-order">No</button>'  
         }
     }
     
     vm.manageCategoriesSelectionChanged  = function(scope){
         if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Category"){
             var selectedRow = scope.api.getSelectedNodes()[0];
-            var params = selectedRow.data
+            if(!selectedRow.data.category && !selectedRow.data.subCategory)
+        	{
+                return;
+            }
+            var params = {};
+            params["row"] = selectedRow.data
             params["action"] = "edit";
             var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
-            params["publish"] = action;
+            params["row"]["publish"] = action;
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .get('management/api/getCategories', params).then(
+                .post('management/api/getCategories', params).then(
                 function(data, response){
                     console.log("success");
                     scope.api.hideOverlay();
@@ -305,14 +420,19 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
      vm.manageMenuSelectionChanged  = function(scope){
         if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Menu"){
             var selectedRow = scope.api.getSelectedNodes()[0];
-            var params = selectedRow.data
+            if(!selectedRow.data.menu || !selectedRow.data.categoryType || !selectedRow.data.image)
+        	{
+                return;
+            }
+            var params = {};
+            params["row"] = selectedRow.data
             params["action"] = "edit";
             var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
-            params["publish"] = action;
+            params["row"]["publish"] = action;
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .get('management/api/getMenu', params).then(
+                .post('management/api/getMenu', params).then(
                 function(data, response){
                     console.log("success");
                     scope.api.hideOverlay();
@@ -328,15 +448,20 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     vm.manageItemsSelectionChanged = function(scope){
         if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Item"){
             var selectedRow = scope.api.getSelectedNodes()[0];
-            var params = selectedRow.data
+            if(!selectedRow.data.name || !selectedRow.data.subCategory || !selectedRow.data.price)
+        	{
+                return;
+            }
+            var params = {};
+            params["row"] = selectedRow.data
             params["action"] = "edit";
             var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
-            params["publish"] = action;
-            params["category"] = items[selectedRow.data.subCategory];
+            params["row"]["publish"] = action;
+        //    params["rows"]["category"] = items[selectedRow.data.subCategory];
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .get('management/api/getItems', params).then(
+                .post('management/api/getItems', params).then(
                 function(data, response){
                     console.log("success");
                     scope.api.hideOverlay();
@@ -347,14 +472,34 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
                 });   
         }else if(scope.api.getFocusedCell().column.colDef.headerName == "Out Of Stock"){
             var selectedRow = scope.api.getSelectedNodes()[0];
-            var params = selectedRow.data
+            var params = {};
+            params["row"] = selectedRow.data;
             params["action"] = "edit";
             var outOfStock = (selectedRow.data.outOfStock == "true") ? "false" : "true"; 
-            params["outOfStock"] = outOfStock;
+            params["row"]["outOfStock"] = outOfStock;
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .get('management/api/getItems', params).then(
+                .post('management/api/getItems', params).then(
+                function(data, response){
+                    console.log("success");
+                    scope.api.hideOverlay();
+                },
+                function(err) {
+                    console.log(err);
+                    scope.api.hideOverlay();
+                });   
+        }else if(scope.api.getFocusedCell().column.colDef.headerName == "Show as Promotion"){
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            var params = {};
+            params["row"] = selectedRow.data
+            params["action"] = "edit";
+            var promotion = (selectedRow.data.promotion == "true") ? "false" : "true"; 
+            params["row"]["promotion"] = promotion;
+            delete params["creationDate"];
+            scope.api.showLoadingOverlay();
+            httpClient
+                .post('management/api/getItems', params).then(
                 function(data, response){
                     console.log("success");
                     scope.api.hideOverlay();
@@ -412,7 +557,15 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     }
 
     vm.onDeliveryDeviceSet = function(data, scope){
-        vm.deliveryDevice = data.originalObject.deviceId;
+        if(typeof data == 'string')
+        {
+			vm.deliveryDevice = data;
+        }
+        else
+        {
+			vm.deliveryDevice = data.originalObject.deviceId;
+        }
+        $('#myModal').modal('hide');
         vm.mapsSrc = $sce.trustAsResourceUrl('/management/templates/location.html?deviceId='+vm.deliveryDevice);
     }
 
@@ -553,12 +706,11 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     }
 
     vm.onDeliveryOrderSetTime = function(date){
-        vm.deliveryOrderDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');;
+        vm.deliveryOrderDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');
     }
 
     vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
-        {headerName: "Brand", field: "brand", hide: true},
         {headerName: "Category", field: "category", cellEditor: "select", hide: true,
          cellEditorParams: {
              values: categories
@@ -569,16 +721,15 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
              values: vm.sub_cats
          }},
         {headerName: "Brand", field: "brand"},
-        {headerName: "Description", field: "description"},
+        {headerName: "Description", field: "description", cellEditor: 'agLargeTextCellEditor'},
         {headerName: "Price", field: "price"},
+        {headerName: "Price Offer", field: "priceOffer"},
+        {headerName: "Unit", field: "unit"},
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
             return vm.uploadImageButtonRenderer(params);
         }},
         {headerName: "Image (200 x 200)", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
-        }},
-        {headerName: "File", field: "file", hide: true, cellRenderer: function (params) {  
-            return vm.getFile(params);
         }},
         {headerName: "Barcode ID", field: "barcodeID", hide: "true"},
         {headerName: "Barcode image", field: "barcode", hide: "true", editable : false, cellRenderer: function (params) {  
@@ -587,9 +738,13 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         {headerName: "Publish Item", field: "publish", editable : false, cellRenderer: function (params) {  
             return vm.publishItemCellRenderer(params);
         }},
-        {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
-            return vm.outOfStockItemCellRenderer(params);
-        }}];
+      //  {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
+      //      return vm.outOfStockItemCellRenderer(params);
+      //  }},
+        {headerName: "Show as Promotion", field: "promotion", editable : false, cellRenderer: function (params) {  
+            return vm.showAsPromotionCellRenderer(params);
+        }}
+    ];
     
     vm.manageCategoriesColDef = [
         {headerName: "Category Name", field: "category", cellEditor: "select",
@@ -598,25 +753,34 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
          }},
         {headerName: "Form Type", field: "formType", hide: true},
         {headerName: "Sub Category Name", field: "subCategory"},
+        /*
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
-            return vm.uploadImageButtonRenderer(params);
+            return vm.categoriesUploadImageButtonRenderer(params);
         }},
         {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
+        */
         {headerName: "Publish Category", field: "publish", editable : false, cellRenderer: function (params) {  
-            return vm.publishItemCellRenderer(params);
+            return vm.publishCategoryCellRenderer(params);
         }}
         ];
     
       vm.manageMenuColDef = [
         {headerName: "Menu Name", field: "menu"},
+        {headerName: "Category Type", field: "categoryType", cellEditor: "select", editable : true,
+         cellEditorParams: {  
+             values : ["Food", "Drinks", "Fruits", "Veggies", "Others"]
+        }},
         {headerName: "Form Type", field: "formType", hide: true},
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
-            return vm.uploadImageButtonRenderer(params);
+            return vm.galleryUploadImageButtonRenderer(params);
         }},
         {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
+        }},
+        {headerName: "Publish Menu", field: "publish", editable : false, cellRenderer: function (params) {  
+            return vm.publishGalleryCellRenderer(params);
         }}
         ];
 
@@ -632,6 +796,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     ];
 
     vm.onlineOrdersColDef = [
+        {headerName: "Order Id", field: "orderId", editable : false},
         {headerName: "Name", field: "fullName", editable : false, cellStyle: function(params) {
             if (params.data.client=='Previous Client') {
                 return {"color" : 'green', "font-weight": 'bold'};
@@ -640,10 +805,10 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
             }
         }},
         {headerName: "Address", field: "address", editable : false, hide: false},
-        {headerName: "Maps", field: "location", editable : false, cellRenderer: function (params) {  
+        {headerName: "Maps", field: "location", editable : false, hide: true,  cellRenderer: function (params) {  
             return vm.viewLocation(params);
         }},
-        {headerName: "Number", field: "number", editable : false,},
+        {headerName: "Number", field: "number", editable : false},
         {headerName: "Total", field: "total", hide: true},
         {headerName: "Ordered By", field: "orderedBy", hide: true},
         {headerName: "Client", field: "client",  hide: true, cellStyle: function(params) {
@@ -654,7 +819,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
             }
         }},
 
-        {headerName: "Order date", field: "orderDate", editable : false, hide: true, cellRenderer: function (params) {  
+        {headerName: "Creation date", field: "creation_Date", editable : false, cellRenderer: function (params) {  
             return vm.dateRenderer(params);
         }}, 
 
@@ -676,7 +841,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         {headerName: "View Order", editable : false, cellRenderer: function (params) {  
             return vm.viewOrder(params);
         }},
-        {headerName: "Delivery man", field: "deliveredBy", cellEditor: "select", editable : true,
+        {headerName: "Tracking Delivery", field: "deliveredBy", cellEditor: "select", editable : true,
          cellEditorParams: {  
              values : vm.obj
          }},

@@ -1,11 +1,12 @@
 <scriptr-grid 
-              columns-definition='vm.scheduledOrdersColDef' 
+              columns-definition='vm.onlineOrdersColDef' 
               enable-sorting='true'
               default-cell-renderer="vm.defaultCellRenderer"   
               api = 'management/api/getOrders'
               api-params='vm.scheduledGridParams'   
               grid-height='calc(100vh - 104px)'
               pagination="true"
+              row-height='30'
               msg-tag="orders-grid"   
               enable-col-resize="true"   
               suppress-filter='true'

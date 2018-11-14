@@ -42,7 +42,8 @@ if(rows["upload"] == "image"){
     rows["barcode"] = img[0].fileName;
 }
 rows["meta.types"] = {
-    "price": "numeric"
+    "price": "numeric",
+    "priceOffer": "numeric"
 }
 if(rows.action){
     delete rows.action

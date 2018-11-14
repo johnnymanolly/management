@@ -27,7 +27,8 @@ var password = params.password;
 
 var fields = {
     "apsdb.update": "true",
-    id : number,
+    login : email,
+    number : number,
     firstName : firstName,
     lastName: lastName,
     name: firstName + " " + lastName,
@@ -39,8 +40,13 @@ if(password){
 }
 log.info("fields: "+JSON.stringify(fields))
 var saveUser = apsdb.callApi("SaveUser", fields, null);
+log.info("saveUser result : "+JSON.stringify(saveUser))
 if(saveUser.metadata.status == "success"){
-    return saveUser
+    var getUser = apsdb.callApi("GetUser",{"login":email},null);
+    if(getUser.metadata.status == "success"){
+       getUser.result['status'] = getUser.metadata.status;
+       return getUser.result
+    }
 }else{
     return {status: "failure", errorCode: saveUser.metadata.errorCode, errorDetails: saveUser.metadata.errorDetail}
 }

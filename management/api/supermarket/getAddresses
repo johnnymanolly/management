@@ -1,36 +1,7 @@
-/**
- * Gets data for the grid.
- * 
- *  @param columnName
- *  @param resultsPerPage
- *  @param pageNumber
- *  @param sort
- *  @param sortType
- *  @param queryFilter
- *  @param queryType
- *  @param sortingColumnName
- *  @param filterColumnName
- *  @param action
- * 
- * @return On success: { "status" : "success" }
- *         On failure: { "status" : "failure", "errorDetail" : "[error message]" }
- */
-
 var log = require("log");
 log.setLevel("INFO");
 var documents = require("document");
 
-/* create dummy data
-for(var i = 1; i <= 100; i++){
-  var fields = {};
-  fields["formType"] = "car";
-  fields["name"] = "name_"+i;
-  fields["model"] = "model_"+i;
-  fields["price"] = "price_"+i;
-  documents.save(fields);
-}
-return
-*/
 var params = {};
 if(request.body != null){
 	params = request.body;
@@ -57,6 +28,7 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
+var login = params.login;
 
 var results;
 
@@ -64,17 +36,25 @@ if(params.action){
     delete params.action
 }
 
+if(params.file){
+    delete params.file;
+}
+
+var parameters = {};
+for(obj in params){
+    parameters[obj] = params[obj]
+}
+
 if(action){
-    var fieldsToSave = {};  
-    for(param in params){
-        fieldsToSave[param] = params[param]
-    }  
-    fieldsToSave["formType"] = "item"; 
-    fieldsToSave["meta.types"] = {
-        "price": "numeric"
-    } 
+     parameters["formType"] = "address";   
+  var fieldsToSave = parameters.row;  
+  
   if(action == "add"){
-    fieldsToSave["publish"] = "Unpublished";  
+      
+
+      
+    fieldsToSave["formType"] = "address";   
+    log.info("*****"+JSON.stringify(fieldsToSave))
     var fieldsToSaveResult = documents.save(fieldsToSave);
     if(fieldsToSaveResult.metadata.status == "failure") {
       return fieldsToSaveResult.metadata;
@@ -82,27 +62,18 @@ if(action){
       return  {status : "success"}
     }
   }else if(action == "edit"){
-      log.info(JSON.stringify(fieldsToSave))
     var fieldsToSaveResult = documents.save(fieldsToSave);
     if(fieldsToSaveResult.metadata.status == "failure") {
       return fieldsToSaveResult.metadata;
     }else{
-      if(fieldsToSave["notification"] && fieldsToSave["notification"] != "" && fieldsToSave["publish"] == "Published"){
-        var users = apsdb.callApi("ListUsers", {"apsdb.attributes": "*"}, null);
-        users = users.result.users;
-        var keys = []
-        for(var i = 0; i <  users.length; i++){
-            keys.push(users[i]["GCMKey"][0])
-        }
-         return  {status : "success", notification: fieldsToSave["notification"], keys: keys}
-      }    
-        
       return  {status : "success"}
     }
   }else if(action == "delete"){
-    if(params.keys){
+    if(parameters.keys){
       var keys = params.keys;
+      if(typeof keys == 'string') keys = [keys]
       for(var i = 0; i < keys.length; i++){
+          log.info("**keys***"+keys[i])
         documents.delete(keys[i]);
       }
     } 
@@ -112,7 +83,7 @@ if(action){
   var queryParams = {};
   if(sortType == null) sortType = "string"
   var fieldsParams = "*";
-  var queryString = 'formType = "item" and promotion = "true"';
+  var queryString = 'formType = "address" and login = "'+login+'"';
   var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
 
   queryParams["count"] = "true";
@@ -120,7 +91,7 @@ if(action){
   queryParams["fields"] =  fieldsParams;
 
   if(queryFilter){
-    var filterQuery = (filterColumnName == null)? " and name like \"" +queryFilter+ "%\" or description like \"" +queryFilter+ "%\"" : "and ("+filterColumnName+"<"+sortType+">" + " like \"" +queryFilter+ "%\")";
+    var filterQuery = (filterColumnName == null)? " and (name like \"" +queryFilter+ "%\" or number like \"" +queryFilter+ "%\" or primaryAddress like \"" +queryFilter+ "%\" or secondaryAddress like \"" +queryFilter+ "%\")" : "and ("+filterColumnName+"<"+sortType+">" + " like \"" +queryFilter+ "%\")";
     queryParams["query"] += filterQuery;
   }
 
