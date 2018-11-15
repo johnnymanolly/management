@@ -1,21 +1,20 @@
+<style>
+    
+    .angucomplete-dropdown {
+        width: 200px!important;
+    }
+    
+    .set-filter-width{
+        width: 200px;
+    }
+    
+</style>
+
 <div class="col-xs-12 mrgt13">
     <div class="row">
-        <div class="col-sm-6">
-            <scriptr-date-time-picker
-                                      type="range"
-                                      start-date-config="{ startView:'day', minView:'day' }"
-                                      end-date-config="{ startView:'day', minView:'day' }"
-                                      date-helper="vm.dateHelper"      
-                                      on-set-time="vm.onSetTime" 
-                                      start-date-class = "col-xs-12 col-sm-6"
-                                      end-date-class = "col-xs-12 col-sm-6"
-                                      start-date-on-set-time="vm.ordersStartDateOnSetTime"
-                                      end-date-on-set-time="vm.ordersEndDateOnSetTime"
-                                      >
-            </scriptr-date-time-picker> 
-        </div>
+        
         <div class="col-sm-2 mrgr20">
-            <div class="input-group">
+            <div class="input-group set-width">
                 <scriptr-autocomplete
                                       id="ordersList"                
                                       placeholder="Filter by status"
@@ -34,7 +33,23 @@
                 </scriptr-autocomplete>
             </div>
         </div>  
-           <div class="col-sm-2">
+        
+        <div class="col-sm-6">
+            <scriptr-date-time-picker
+                                      type="range"
+                                      start-date-config="{ startView:'day', minView:'day' }"
+                                      end-date-config="{ startView:'day', minView:'day' }"
+                                      date-helper="vm.dateHelper"      
+                                      on-set-time="vm.onSetTime" 
+                                      start-date-class = "col-xs-12 col-sm-6"
+                                      end-date-class = "col-xs-12 col-sm-6"
+                                      start-date-on-set-time="vm.ordersStartDateOnSetTime"
+                                      end-date-on-set-time="vm.ordersEndDateOnSetTime"
+                                      >
+            </scriptr-date-time-picker> 
+        </div>
+        
+           <!--div class="col-sm-2">
             <div class="input-group">
                 <scriptr-autocomplete
                                       id="deliveryFilter"                
@@ -56,7 +71,7 @@
                                           input-class="form-control form-control-small">
                 </scriptr-autocomplete>
             </div>
-        </div> 
+        </div--> 
     </div>
 </div>
 <scriptr-grid 

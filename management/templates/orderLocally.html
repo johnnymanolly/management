@@ -1,0 +1,43 @@
+<div class="row col-xs-12 local-mrg">
+    <div class="col-sm-1">
+        <div ng-click="vm.tableSelected = false" class="pdr0"><a class="back-to-panel btn-block btn btn-info" ng-href="#/listTables"><i class="fa fa-arrow-circle-left"></i> Back </a></div> 
+    </div>
+    <div class="col-sm-3 table-mrg">
+        <span><b>{{vm.selectedTable}}</b></span>
+    </div>
+
+<div class="text-center loading" ng-show="vm.showLocalOrdersLoading"><i class="fa fa-spinner fa-spin fa-3x"></i></div>
+<div class="col-xs-12" ng-show="vm.showError"><div class="alert" ng-class="'alert-' + ( vm.message.type || 'warning')">{{vm.message.content}}</div></div>
+
+    <div class="row col-xs-12">
+        <div class="col-sm-12">
+            <div ng-show="vm.tableSelected">
+                <scriptr-autocomplete
+                                      id="orderList"                
+                                      placeholder="Add Items"
+                                      on-send-order="vm.sendLocalOrder"
+                                      on-mark-as="vm.onMarkAsPaid"
+                                      show-mark-as="true"
+                                      pause="400"
+                                      mrgl="-15"
+                                      search-fields="name"
+                                      set-class="col-xs-12 col-sm-3"
+                                      selected-object="vm.onSelect"
+                                      title-field="name"
+                                      clear-selected="true"                
+                                      description-field="category"  
+                                      objects="vm.defaultSetOrders"
+                                      image-field="pic"
+                                      list-selected-object="true"                
+                                      minlength="0"
+                                      text-no-results="No results"                
+                                      text-searching="Searching..."
+                                      transport="https"
+                                      on-format-data="vm.orderListCallback"
+                                      api="management/api/getItemsforMobileApp"
+                                      input-class="form-control form-control-small">
+                </scriptr-autocomplete>
+            </div>
+        </div>
+    </div>
+</div>

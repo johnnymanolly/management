@@ -10,14 +10,18 @@ myApp.config(wssConfig)
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Categories", "route": "#/manageCategories","active":"false"},  
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Items", "route": "#/manageItems","active":"false"},
        
-       
-     //   {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Online", "route":"#/orderOnline", "active":"false"},
-     //   {"id":"1", "iconClass":"fa fa-group", "label": "Register New Client", "route":"#/clientRegistration", "active":"false"},
-      //  {"id":"6", "iconClass":"glyphicon glyphicon-cloud-upload", "label": "Manage Content", "route": "#/manage","active":"false", "sub": "sub"},
+        {"id":"1", "iconClass":"fa fa-group", "label": "Register New Client", "route":"#/clientRegistration", "active":"false"},
         {"id":"3", "iconClass":"fa fa-globe", "label": "Track Delivery", "route": "#/maps","active":"false"},
         {"id":"5", "iconClass":"glyphicon glyphicon-question-sign", "label": "Suggested Items", "route": "#/suggestions","active":"false"},
-        {"id":"6", "iconClass":"fa fa-bell-o", "label": "Promotions", "route": "#/promotions","active":"false"}
-        //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Locally", "route":"#/listTables", "active":"false"},
+        {"id":"6", "iconClass":"fa fa-bell-o", "label": "Promotions", "route": "#/promotions","active":"false"},
+
+        
+        {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Online", "route":"#/orderOnline", "active":"false"},
+        {"id":"1", "iconClass":"glyphicon glyphicon-edit", "label": "Order Locally", "route":"#/listTables", "active":"false"},
+        {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", "label": "Local Orders", "route":"#/localOrders", "active":"false"},
+        {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", "label": "Served Tables", "route":"#/servedTables", "active":"false"},
+
+        
     	],
     /*
     "sub": [
@@ -32,6 +36,10 @@ myApp.config(wssConfig)
     .constant("routingJson",  {
     "params": [
         {"route": "listTables", "template": "/management/templates/listTables.html"},
+        {"route": "servedTables", "template": "/management/templates/servedTables.html"},
+        {"route": "localOrders", "template": "/management/templates/localOrders.html"},
+        {"route": "clients", "template": "/management/templates/clients.html"},
+        {"route": "orderLocally", "template": "/management/templates/orderLocally.html"},
         {"route": "clientRegistration", "template": "/management/templates/clients.html"},
         {"route": "onlineOrders", "template": "/management/templates/onlineOrders.html"},
         {"route": "scheduledOrders", "template": "/management/templates/scheduledOrders.html"},
@@ -44,7 +52,6 @@ myApp.config(wssConfig)
         {"route": "suggestions", "template": "/management/templates/suggestedItems.html"},  
         {"route": "promotions", "template": "/management/templates/promotions.html"},
         {"route": "user_management", "template": "/management/templates/userManagement.html"},
-        {"route": "logs", "template": "/management/templates/orders.html"},
         {"route": "delivery", "template": "/management/templates/deliveryTable.html"},
         {"route": "notification", "template": "/management/templates/notificationSettings.html", controller: "notificationCtrl as vm"},
         {"route": "logout", "template": "/management/logout.html"}  
@@ -55,7 +62,7 @@ myApp.config(wssConfig)
     "items": [ {"id":"5", "iconClass":"fa fa-dashboard", "label": "Reports", "route": "#/stats","active":"false"}],
     "subitems": [{"id":"5", "iconClass":"fa fa-dashboard", "label": "Notification Settings", "route": "#/notification","active":"false"},
                  {"id":"6", "iconClass":"fa fa-user", "label": "User Management", "route": "#/user_management","active":"false"}],  
-    "appname" : "Cashier",
+    "appname" : "",
     "logout": {"icon": "fa fa-sign-out", "label": "Logout", "route":"#/logout"}
 })
     .constant("imageSrc", imageSrc)

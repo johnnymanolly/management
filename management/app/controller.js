@@ -9,6 +9,256 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     var endDate = moment(new Date()).format("YYYY-MM-DDT23:59:59+0000");    
     vm.gridParams["endDate"] = endDate;
     vm.scheduledGridParams["startDate"] = moment(new Date()).add(1, "day").format("YYYY-MM-DDT00:00:00+0000");
+    
+    vm.tables = [];
+    var tablesCount = 24;
+    
+    vm.$onInit = function() {
+        console.log("hello");
+
+        for(var x = 1; x <= tablesCount; x++){
+            var table = {};
+            table["id"] = x;
+            table["label"] = "Table " + x;
+            table["imgSrc"] = imageSrc.table;
+            vm.tables.push(table);
+        }
+
+    }
+    
+    vm.slickConfig = {
+        enabled: true,
+        autoplay: true,
+        draggable: false,
+        autoplaySpeed: 3000,
+        method: {},
+        event: {
+            beforeChange: function (event, slick, currentSlide, nextSlide) {
+            },
+            afterChange: function (event, slick, currentSlide, nextSlide) {
+            }
+        }
+    };
+    
+   vm.onTableSelect = function(table){
+        vm.tableSelected = true;
+        vm.selectedTable = table.label;
+        vm.selectedTableId = table.id;
+        $location.url("/orderLocally");
+        if(table.busy){
+            vm.showLocalOrdersLoading = true; 
+            var params = {tableId : table.id}  
+            httpClient
+                .get('management/api/getTableOrderById', params).then(
+                function(data, response){
+                    console.log("success");
+                    var items = data;
+                    for(var i = 0; i < items.length; i++){
+                        items[i]["icon"] = "glyphicon glyphicon-glass";
+                    }
+
+                    vm.defaultSetOrders = items;
+                    vm.showLocalOrdersLoading = false;
+                },
+                function(err) {
+                    console.log(err);
+                    vm.showLocalOrdersLoading = false;
+                });  
+        }else{
+            vm.defaultSetOrders = [];
+        }
+    }
+    
+    vm.sendLocalOrder = function(items, self){
+        var objects = JSON.parse(JSON.stringify(items));
+        var newObjects = JSON.parse(JSON.stringify(self.newObjects));
+        for(var i = 0; i < objects.length; i++){
+            delete objects[i]["pic"];
+            delete objects[i]["icon"];
+            delete objects[i]["id"];
+        }
+        for(var i = 0; i < newObjects.length; i++){
+            delete newObjects[i]["pic"];
+            delete newObjects[i]["icon"];
+            delete newObjects[i]["id"];
+        }
+        var params = {};
+        params["tableId"] = vm.selectedTableId;
+        params["assignee"] = vm.user.login;
+        params["total"] = self.total;
+        params["totalNewItems"] = self.totalNewObjects;
+        params["items"] = objects;
+        params["newItems"] = newObjects;
+        vm.showLocalOrdersLoading = true;
+        httpClient
+            .get('management/api/publishLocalOrderFromDashboard', params).then(
+            function(data, response){
+                console.log("success");
+                vm.showLocalOrdersLoading = false;
+                self.objects = [];
+                vm.showAlert("success", "The order has been sent.");
+                $location.url("/listTables");
+                vm.updatetables();
+            },
+            function(err) {
+                console.log(err);
+                vm.showLocalOrdersLoading = false;
+            }); 
+    }
+
+    vm.onMarkAsPaid = function(){
+        var params = {tableId: vm.selectedTableId, tableStatus: "paid"}
+        vm.showLocalOrdersLoading = true;
+        httpClient
+            .get('management/api/getTableOrderById', params).then(
+            function(data, response){
+                console.log("success");
+                vm.showLocalOrdersLoading = false;
+                self.objects = [];
+                $location.url("/listTables");
+                vm.updatetables();
+            },
+            function(err) {
+                console.log(err);
+                vm.showLocalOrdersLoading = false;
+            });  
+    }
+    
+    
+    vm.localOrdersStartDateOnSetTime = function(date){
+        vm.localOrdersStartDate = moment(date).format('YYYY-MM-DD');
+        if(vm.localOrdersStartDate != null && vm.localOrdersEndDate != null){
+            var params = {startDate : vm.localOrdersStartDate, endDate : vm.localOrdersEndDate};
+            $scope.$broadcast('updateGridData', {params: params});
+        }
+    }
+    vm.localOrdersEndDateOnSetTime = function(date){
+        vm.localOrdersEndDate = moment(date).format('YYYY-MM-DD');
+        if(vm.localOrdersStartDate != null && vm.localOrdersEndDate != null){
+            var params = {startDate : vm.localOrdersStartDate, endDate : vm.localOrdersEndDate};
+            $scope.$broadcast('updateGridData', {params: params});
+        }
+    }
+
+    vm.servedTablesStartDateOnSetTime = function(date){
+        vm.servedTablesStartDate = moment(date).format('YYYY-MM-DD');
+        if(vm.servedTablesStartDate != null && vm.servedTablesEndDate != null){
+            var params = {startDate : vm.servedTablesStartDate, endDate : vm.servedTablesEndDate};
+            $scope.$broadcast('updateGridData', {params: params});
+        }
+    }
+    vm.servedTablesEndDateOnSetTime = function(date){
+        vm.servedTablesEndDate = moment(date).format('YYYY-MM-DD');
+        if(vm.servedTablesStartDate != null && vm.servedTablesEndDate != null){
+            var params = {startDate : vm.servedTablesStartDate, endDate : vm.servedTablesEndDate};
+            $scope.$broadcast('updateGridData', {params: params});
+        }
+    }
+    
+    vm.updatetables = function(){
+        vm.tableSelected = false;
+        vm.showLocalOrdersLoading = true;
+        var params = {};
+        httpClient
+            .get('management/api/getLocalOrders', params).then(
+            function(data, response){
+                console.log("success");
+                for(var x = 0; x < vm.tables.length; x++){
+                    vm.tables[x]["busy"] = false;
+                }
+                for(var y = 0; y < data.length; y++){
+                    vm.tables[data[y].tableId - 1]["busy"] = true; 
+                }
+                vm.showLocalOrdersLoading = false;
+            },
+            function(err) {
+                console.log(err);
+                vm.showLocalOrdersLoading = false;
+            });  
+    }
+    
+    
+    vm.confirmReservationSelectionChanged = function(scope, selectedRow){
+
+        if(scope.api.getFocusedCell().column.colDef.headerName == "Confirm Reservation"){
+            var selectedRow = scope.api.getSelectedNodes()[0];
+            if(selectedRow.data && selectedRow.data.confirmed != "Confirmed"){
+                //  var self = vm;
+                var params = selectedRow.data;
+                params["action"] = "edit";
+                params["confirmed"] = "Confirmed";
+                delete params["creationDate"];
+                scope.api.showLoadingOverlay();
+                httpClient
+                    .get('management/api/getReservations', params).then(
+                    function(data, response){
+                        console.log("success");
+                        vm.pushreservationNotification(data);
+                        scope.api.hideOverlay();
+                    },
+                    function(err) {
+                        console.log(err);
+                        scope.api.hideOverlay();
+                    });   
+            }
+        }
+
+    }
+
+    vm.pushreservationNotification = function(data){
+        if(data.GCMKey){
+            var url = 'https://android.googleapis.com/gcm/send';
+            var params = {
+                "to" : data.GCMKey,
+                "data" : {
+                    "m" : "Your reservation has been confirmed"
+                },
+            }
+            var token = 'AIzaSyCE-ZDpyp1gDmpnSr78TVDZYiqvBGtVCnQ';
+            httpClient
+                .post(url, params, null, url, token).then(
+                function(data, response){
+                    console.log("success");
+                    vm.showAlert("success", "A notification has been sent to the client that the reservation is confirmed.");
+                },
+                function(err) {
+                    console.log(err);
+                    vm.showAlert("danger", "An error has occurred");
+                });    
+        }
+    }
+    
+    vm.confirmReservationButtonRenderer = function(params){
+        if(params.value && params.value == "Confirmed"){
+            return '<span class="processed-by">'+params.value+'</span>'
+        }else{
+            return '<button class="confirm-order">Confirm order</button>'
+        }
+    }
+    
+    
+    vm.viewLocalOrder = function(params){
+        return '<div><a target="_blank" href="/management/templates/viewLocalOrder.html?table='+params.data.tableId+'&assignee='+params.data.assignee+'&orderDate='+params.data.orderDate+'&key='+params.data.key+'&totalNewItems='+params.data.totalNewItems+'">view order</a></div>' 
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
 
     httpClient
         .get('management/api/getDeliveryMotors', {}).then(
@@ -708,6 +958,20 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
     vm.onDeliveryOrderSetTime = function(date){
         vm.deliveryOrderDate = moment(date).format('YYYY-MM-DDTHH:mm:ss+0000');
     }
+    
+     vm.reservationColDef = [
+        {headerName: "Name", field: "fullName"},
+        {headerName: "Number", field: "number"},
+        {headerName: "Client", field: "client", hide: true},
+        {headerName: "Reservation date", field: "reservationDate"},
+        {headerName: "Reservation time", field: "reservationTime"},
+        {headerName: "Persons", field: "numberOfPersons"},
+        {headerName: "Comments", field: "comments"},
+        {headerName: "Cancelled", field: "cancelled"},
+        {headerName: "Confirm Reservation", field: "confirmed", editable : false, cellRenderer: function (params) {  
+            return vm.confirmReservationButtonRenderer(params);
+        }}
+    ];
 
     vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
@@ -743,6 +1007,26 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
       //  }},
         {headerName: "Show as Promotion", field: "promotion", editable : false, cellRenderer: function (params) {  
             return vm.showAsPromotionCellRenderer(params);
+        }}
+    ];
+    
+    vm.localOrdersColDef = [
+        {headerName: "Table", field: "tableId"},
+        {headerName: "Total Order Amount (€)", field: "totalNewItems"},
+        {headerName: "Order Date", field: "orderDate"},
+        {headerName: "Ordered By", field: "assignee"},
+        {headerName: "View Order", editable : false, cellRenderer: function (params) {  
+            return vm.viewLocalOrder(params);
+        }}
+    ];
+    
+     vm.servedTablesColDef = [
+        {headerName: "Table", field: "tableId"},
+        {headerName: "Total (€)", field: "total"},
+        {headerName: "Order Date", field: "orderDate"},
+        {headerName: "Ordered By", field: "assignee"},
+        {headerName: "View Order", editable : false, cellRenderer: function (params) {  
+            return vm.viewOccupiedTableOrders(params);
         }}
     ];
     
@@ -801,7 +1085,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
             if (params.data.client=='Previous Client') {
                 return {"color" : 'green', "font-weight": 'bold'};
             } else {
-                return {"color": 'red', "font-weight": 'bold'};
+                return {"color": '#c83834', "font-weight": 'bold'};
             }
         }},
         {headerName: "Address", field: "address", editable : false, hide: false},
@@ -819,7 +1103,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
             }
         }},
 
-        {headerName: "Creation date", field: "creation_Date", editable : false, cellRenderer: function (params) {  
+        {headerName: "Creation date", field: "orderedDate", editable : false, cellRenderer: function (params) {  
             return vm.dateRenderer(params);
         }}, 
 
@@ -841,13 +1125,15 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         {headerName: "View Order", editable : false, cellRenderer: function (params) {  
             return vm.viewOrder(params);
         }},
+        /*
         {headerName: "Tracking Delivery", field: "deliveredBy", cellEditor: "select", editable : true,
          cellEditorParams: {  
              values : vm.obj
          }},
         {headerName: "Mark as delivered", field: "delivered", editable : false, cellRenderer: function (params) {  
             return vm.markAsDelivered(params);
-        }}]
+        }}
+        */]
 
     vm.getdeliveryDevices = function(){
         return {values : ["johnny"]}
@@ -1001,7 +1287,7 @@ myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClie
         params["orderedBy"] = vm.user.login;
         params["total"] = self.total;
         params["items"] = objects;
-        params["orderDate"] = moment(new Date).format('YYYY-MM-DDTHH:mm:ss+0000');
+        params["orderedDate"] = moment(new Date).format('YYYY-MM-DDTHH:mm:ss+0000');
         params["deliveryDate"] = vm.deliveryOrderDate || params["orderDate"];
         vm.showLoading = true;
         httpClient

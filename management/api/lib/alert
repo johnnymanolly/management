@@ -15,16 +15,24 @@ function alert(from, subject, body) {
     } else if(results.result.documents && results.result.documents.length == 1){
         var doc =  results.result.documents[0];
 
-        var emailsArray = JSON.parse(doc.emails);
-        var mobilesArray = JSON.parse(doc.mobiles);
-        if(typeof emailsArray == "string") emailsArray = [emailsArray];
-        if(typeof mobilesArray == "string") mobilesArray = [mobilesArray];
+        if(doc.emails)
+        {
+			var emailsArray = JSON.parse(doc.emails);
+            if(typeof emailsArray == "string") emailsArray = [emailsArray];
+            if(typeof mobilesArray == "string") mobilesArray = [mobilesArray];
 
-        // Send Email
-        log.info("emailsArray: " +JSON.stringify(emailsArray))
-        for(var i = 0; i < emailsArray.length; i++){
-            sendMail(emailsArray[i], from, subject, body);
+            // Send Email
+            log.info("emailsArray: " +JSON.stringify(emailsArray))
+            for(var i = 0; i < emailsArray.length; i++){
+                sendMail(emailsArray[i], from, subject, body);
+            }
         }
+        
+        
+       /* if(doc.mobiles)
+        	var mobilesArray = JSON.parse(doc.mobiles);
+        */
+        
         // Send SMS
         /*
             for(var y = 0; y < mobilesArray.length; y++){

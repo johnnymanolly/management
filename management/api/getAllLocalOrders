@@ -3,26 +3,17 @@ log.setLevel("INFO");
 var documents = require("document");
 var params = {};
 
-if(request.body != null)
-{
+if(request.body != null){
 	params = request.body;
-}
-else if(request.parameters.body)
-{
+}else if(request.parameters.body){
 	params = request.parameters.body;
-}
-else
-{
+} else {
   params = request.parameters;
 }
-if(typeof params == 'string' && params != null)
-{
-  	try
-    {
+if(typeof params == 'string' && params != null){
+  	try{
     	params = JSON.parse(params);   
-    }
-    catch(e)
-    {
+    }catch(e){
       	return "INVALID OR MISSING PARAMETER";
     }
 }
@@ -31,8 +22,7 @@ var startDate = params.startDate;
 var endDate = params.endDate;
 var location = params.location;
 
-if(startDate == null || typeof startDate == 'undefined')
-{
+if(startDate == null || typeof startDate == 'undefined'){
   startDate =  new Date();
   startDate.setHours(0);
   startDate.setMinutes(0);
@@ -56,8 +46,6 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
-var deliveryFilter = params.deliveryFilter;
-var number = params.number;
 
 var results;
 
@@ -65,104 +53,68 @@ if(params.action){
     delete params.action
 }
 
-if(action)
-{
-  if(action == "add")
-  {
+if(action){
+  if(action == "add"){
       
-  }
-  else if(action == "edit")
-  {
+  }else if(action == "edit"){
       var queryParams = {};
       queryParams["query"] =  'key = "'+ key +'"';
       queryParams["fields"] = "*";
       var orderQueryResults = documents.query(queryParams);
-      if(orderQueryResults.metadata.status == "failure")
-      {
+      if(orderQueryResults.metadata.status == "failure") {
           return {status : "failure", errorDetails : "an error has occured when quering order document: " + key, errorMsg: orderQueryResults};
       } 
       
-      var updateParams = JSON.parse(JSON.stringify(params.row));
-      updateParams["update"] = "true";
-      updateParams["formType"] = "onlineOrder";
+      var updateParams = JSON.parse(JSON.stringify(params));
+      updateParams["items"] = "";
+      updateParams["formType"] = "localOrder";
+      updateParams["orderStatus"] = "paid";
       updateParams["meta.types"] = {
           "orderDate" : "date",
-          "deliveryDate": "date",
-          "total" : "numeric",
           "items" : "text"
       }
       var fieldsToSave = updateParams;
       var fieldsToSaveResult = documents.save(fieldsToSave);
-      if(fieldsToSaveResult.metadata.status == "failure")
-      {
+      if(fieldsToSaveResult.metadata.status == "failure") {
           return fieldsToSaveResult.metadata;
-      }
-      else
-      {
+      }else{
+          fieldsToSave["key"] = fieldsToSave.key;
+          fieldsToSave["creationDate"] = orderQueryResults.result.documents[0]["creationDate"];
           var message = {"result": "success", "id" : "orders-grid"};
           publish("responseChannel", message);
           return  {status :"success"}
       }
-  }
-  else if(action == "delete")
-  {
+  }else if(action == "delete"){
       
   }
-}
-else
-{
+}else{
     var queryParams = {};
     if(sortType == null) sortType = "string"
-    var fieldsParams = "name, address, number, client, fullName, orderedBy, orderedDate, deliveryDate, cancelled, assignee, orderStatus, delivered, location, scheduled, total, deliveredBy, formType, additionalInformation, orderId";
-    var queryString = 'formType = "onlineOrder"';
-    if(number)
-    {
-        queryString += ' and number= "' + number + '"';
-    }
+    var fieldsParams = "tableId, totalNewItems, assignee, orderDate";
+    var queryString = 'formType = "localOrder"';
     var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
     
     queryParams["count"] = "true";
     queryParams["query"] =  queryString;
     queryParams["fields"] =  fieldsParams;
 
-    
-    
-   
-    if(queryFilter && queryFilter == 'notConfirmed')
-    {
-      var filterQuery = ' and (orderStatus != "Confirmed" and orderStatus != "Delivered")';
+    if(queryFilter){
+      var filterQuery = " and (tableId like \"" +queryFilter+ "%\" or assignee like \"" +queryFilter+ "%\")";
       queryParams["query"] += filterQuery;
     }
-    else if(queryFilter && queryFilter != 'all')
-    {
-      var filterQuery = " and (orderId like \"" +queryFilter+ "%\" or fullName like \"" +queryFilter+ "%\" or address like \"" +queryFilter+ "%\" or number like \"" +queryFilter+ "%\" or orderStatus like \"" +queryFilter+ "%\" or delivered like \"" +queryFilter+ "%\")";
-      queryParams["query"] += filterQuery;
-    }
-   
     
-    if(deliveryFilter)
-    {
-        queryParams["query"] += ' and deliveredBy like "' + deliveryFilter + '%\"';
-    }
-    
-    if(!queryFilter)
-    {
-        queryParams["query"] += ' and deliveryDate<date> > "' + startDate + '"';
-        if(endDate != null && typeof endDate != 'undefined')
-        {
-            queryParams["query"] += ' and deliveryDate<date> <= "' + endDate + '"';
-        }
+    queryParams["query"] += ' and orderDate<date> > "' + startDate + '"';
+    if(endDate != null && typeof endDate != 'undefined'){
+        queryParams["query"] += ' and orderDate<date> <= "' + endDate + '"';
     }
 
-    if(sortString)
-    {
+    if(sortString){
       queryParams["sort"] = sortString;
     }
     if(resultsPerPage){
       queryParams["resultsPerPage"] = resultsPerPage;
     }
-    if(pageNumber)
-    {
+    if(pageNumber){
       queryParams["pageNumber"] = pageNumber;
     }
     log.info(JSON.stringify(queryParams))
@@ -171,13 +123,11 @@ else
     return results.result
 }
 
-function atLeastTwoDigits (value)
-{
+function atLeastTwoDigits (value) {
 	return value < 10 ? "0" + value : value;
 }
 
-function formatDate(date)
-{
+function formatDate(date){
   var formattedDate = date.getFullYear()
                     + "-" + atLeastTwoDigits(date.getMonth() + 1)
                     + "-" + atLeastTwoDigits(date.getDate())
@@ -188,5 +138,24 @@ function formatDate(date)
   formattedDate += atLeastTwoDigits((Math.abs(date.getTimezoneOffset()) / 60)) + "00";
   return formattedDate
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

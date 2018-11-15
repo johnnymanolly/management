@@ -1,0 +1,37 @@
+
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var queryParams = {};
+var fieldsParams = "*";
+var queryString = 'formType = "table" and tableStatus = "busy"';
+
+queryParams["count"] = "true";
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+log.info(JSON.stringify(queryParams))
+results = documents.query(queryParams);
+
+var orders = results.result.documents; 
+return orders
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -30,7 +30,8 @@ for(obj in params){
 //return JSON.parse(order["items"]);
 
 var orderId = + new Date();
-order["orderId"] =  orderId.toString(16);
+orderId = orderId.toString(16);
+order["orderId"] =  orderId;
 
 order["items"] = JSON.stringify(order["items"]);
 
@@ -81,7 +82,7 @@ var from = "E-Shop";
 
 var subject = "New order!";
 alertLib.alert(from, subject, body);
-return {status: "success"}
+return {status: "success", orderKey: saveResult.result.document.key, orderId: orderId}
 
 
 

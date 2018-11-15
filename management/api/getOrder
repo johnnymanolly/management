@@ -34,7 +34,7 @@ var filterColumnName = params.filterColumnName;
 var key = params.key;
 var queryParams = {};
 if(sortType == null) sortType = "string"
-var fieldsParams = "items";
+var fieldsParams = "*";
 var queryString = 'formType = "onlineOrder" and key="'+key+'"';
 var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
 
@@ -60,11 +60,11 @@ log.info(JSON.stringify(queryParams))
 
 var results = documents.query(queryParams);
 log.info("***** results ********" +JSON.stringify(results))
-var docs =  results.result.documents[0];
+var doc =  results.result.documents[0];
 
-log.info(JSON.stringify(docs))
+log.info(JSON.stringify(doc))
 
-var array = JSON.parse(docs.items);
+var array = JSON.parse(doc.items);
 
 if(typeof array == "string") array = [JSON.parse(array)];
 
@@ -74,7 +74,9 @@ for(var i = 0; i <= array.length; i++){
     //    array[i]["count"] = i;
     }
 }
-return {documents: array[0], count: array[0].length}
+delete doc.items;
+if(doc["orderStatus"] == "Assigned") doc["orderStatus"] = "Pending.."
+return {status: "success", documents: array[0], count: array[0].length, details: doc}
 
 
 
