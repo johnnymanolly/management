@@ -66,8 +66,8 @@ if(params.action){
 
 if(action){
     var fieldsToSave = {};  
-    for(param in params){
-        fieldsToSave[param] = params[param]
+    for(param in params.rows){
+        fieldsToSave[param] = params["rows"][param]
     }  
     fieldsToSave["formType"] = "item"; 
     fieldsToSave["meta.types"] = {

@@ -58,7 +58,7 @@ if(params.file){
 }
 
 if(action){
-  var fieldsToSave = params;  
+  var fieldsToSave = params.row;  
   fieldsToSave["formType"] = "client"; 
   fieldsToSave["meta.types"] = {
       "price": "numeric"

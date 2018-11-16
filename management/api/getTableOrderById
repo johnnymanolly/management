@@ -1,0 +1,111 @@
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var params = {};
+
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var queryParams = {};
+var key = toHex("localOrder"+params["tableId"]);
+var fieldsParams = "items";
+var queryString = 'key = "'+ key +'"';
+
+queryParams["count"] = "true";
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+if(params["tableStatus"] == "paid"){
+    var queryParams = {};
+    queryParams["query"] =  'key = "'+ key +'"';
+    queryParams["fields"] = "*";
+    var orderQueryResults = documents.query(queryParams);
+    if(orderQueryResults.metadata.status == "failure") {
+        return {status : "failure", errorDetails : "an error has occured when quering order document: " + key, errorMsg: orderQueryResults};
+    } 
+    var tableResults = orderQueryResults.result.documents[0];
+    var servedTablesFields = {};
+    servedTablesFields["items"] = tableResults.items;
+    servedTablesFields["formType"] = "servedTable";
+    servedTablesFields["total"] = tableResults.total;
+    servedTablesFields["tableId"] = tableResults.tableId;
+    servedTablesFields["assignee"] = tableResults.assignee;
+    servedTablesFields["orderDate"] = tableResults.orderDate;
+    
+    servedTablesFields["meta.types"] = {
+        "orderDate" : "date",
+        "items" : "text"
+    }
+    log.info(JSON.stringify(servedTablesFields))
+    var servedTablesFieldsResult = documents.save(servedTablesFields);
+    if(servedTablesFieldsResult.metadata.status == "failure") {
+        return servedTablesFieldsResult.metadata;
+    }
+    var updateParams = JSON.parse(JSON.stringify(params));
+   
+    updateParams["items"] = [];
+    delete updateParams["newItems"];
+    updateParams["key"] = key;
+    updateParams["formType"] = "table";
+    updateParams["update"] = "true";
+    updateParams["meta.types"] = {
+        "orderDate" : "date",
+        "items" : "text"
+    }
+    var fieldsToSave = updateParams;
+    var fieldsToSaveResult = documents.save(fieldsToSave);
+    if(fieldsToSaveResult.metadata.status == "failure") {
+        return fieldsToSaveResult.metadata;
+    }else{
+        return  {status :"success"}
+    }
+}else{
+    var results = documents.query(queryParams);
+
+    var orders = results.result.documents; 
+    var docs =  results.result.documents;
+
+    var array = JSON.parse(docs[0].items);
+    if(typeof array == "string") array = [JSON.parse(array)];
+    for(var i = 0; i <= array.length; i++){
+        if(typeof array[i] == "string"){
+            array[i] = JSON.parse(array[i]);
+        }
+    }
+    return array  
+}
+
+
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
+}
+
+
+
+
+
