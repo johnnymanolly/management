@@ -1,4 +1,3 @@
-
 myApp.controller('appCtrl', function($scope, $timeout, $location, $sce, httpClient, headerItemsJson, menuItemsJson, imageSrc, categories) {
     var vm = this;
     vm.obj = [""];
