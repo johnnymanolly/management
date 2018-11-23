@@ -1,18 +1,26 @@
 <style>
-    
+
     .angucomplete-dropdown {
         width: 200px!important;
+        height: 220px!important;
     }
-    
+
     .set-filter-width{
         width: 200px;
     }
-    
+
 </style>
 
 <div class="col-xs-12 mrgt13">
+
     <div class="row">
-        
+
+        <div class="col-sm-2 mrgr20">
+            <div class="input-group"> 
+                <input style="width: 200px;" type="text" class="form-control remove-focus" ng-change="vm.onServerFilterChanged()" ng-model="vm.serverFilterText" placeholder="Search" />
+            </div>
+        </div>
+
         <div class="col-sm-2 mrgr20">
             <div class="input-group set-width">
                 <scriptr-autocomplete
@@ -33,7 +41,7 @@
                 </scriptr-autocomplete>
             </div>
         </div>  
-        
+
         <div class="col-sm-6">
             <scriptr-date-time-picker
                                       type="range"
@@ -46,30 +54,30 @@
                                       >
             </scriptr-date-time-picker> 
         </div>
-        
-           <!--div class="col-sm-2">
-            <div class="input-group">
-                <scriptr-autocomplete
-                                      id="deliveryFilter"                
-                                          placeholder="Filter by delivery"
-                                          pause="400"
-                                          class=""
-                                          search-fields="name,deviceId"
-                                          title-field="name,deviceId"
-                                          description-field="vehicleType"                
-                                          minlength="0"
-                                          image-field="pic"
-                                          text-no-results="No results"                
-                                          text-searching="Searching..."
-                                          image-field="img"
-                                          transport="https"
-                                          api="management/api/getDeliveryMotors"
-                                          on-format-data="vm.onDeliveryFilterData"
-                                          selected-object="vm.onDeliveryfilterSet"   
-                                          input-class="form-control form-control-small">
-                </scriptr-autocomplete>
-            </div>
-        </div--> 
+
+        <!--div class="col-sm-2">
+<div class="input-group">
+<scriptr-autocomplete
+id="deliveryFilter"                
+placeholder="Filter by delivery"
+pause="400"
+class=""
+search-fields="name,deviceId"
+title-field="name,deviceId"
+description-field="vehicleType"                
+minlength="0"
+image-field="pic"
+text-no-results="No results"                
+text-searching="Searching..."
+image-field="img"
+transport="https"
+api="management/api/getDeliveryMotors"
+on-format-data="vm.onDeliveryFilterData"
+selected-object="vm.onDeliveryfilterSet"   
+input-class="form-control form-control-small">
+</scriptr-autocomplete>
+</div>
+</div--> 
     </div>
 </div>
 <scriptr-grid 
@@ -78,16 +86,16 @@
               default-cell-renderer="vm.defaultCellRenderer"   
               api = 'management/api/getOrders'
               api-params='vm.gridParams'   
-              grid-height='calc(100vh - 166px)'
+              grid-height='calc(100vh - 136px)'
               pagination="true"
               msg-tag="orders-grid"   
               enable-col-resize="true"   
               suppress-filter='true'
               cell-editable='true'
-              row-height='30'
-              enable-client-side-filter='true'
+              row-height='40'
+              enable-client-side-filter='false'
               suppress-filter='false'
-              enable-server-side-filter='true' 
+              enable-server-side-filter='false' 
               enable-server-side-sorting='true'
               row-model-type='infinite'
               row-model-selection='multiple'

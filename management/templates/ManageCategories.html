@@ -6,18 +6,14 @@
 </style>
 
 <div style="margin-top:60px;">
-    <scriptr-grid columns-definition='vm.manageItemsColDef' 
-                  api='management/api/products'
+    <scriptr-grid columns-definition='vm.manageMenuColDef' 
+                  api='management/api/categories'
                   default-cell-renderer="vm.defaultCellRenderer"   
-                  msg-tag="item-grid"   
+                  msg-tag="menu-grid"   
                   add-label="Add"
                   delete-label="Delete"
                   enable-delete-row='true'
                   on-add-row-click="vm.onAddRowClick"
-                  export-exclude-fields='["image", "formType", "barcode", "barcodeID"]'
-                  enable-export='true'
-                  enable-import="true"
-                  cell-editor=""
                   row-height="40"   
                   row-model-type='infinite'
                   pagination="true"
@@ -32,17 +28,8 @@
                   row-model-selection='multiple'
                   on-publish="vm.onPublish"
                   on-promotion="vm.onPromotion"
-                  on-cell-clicked='vm.manageItemsSelectionChanged'
+                  on-cell-clicked='vm.manageMenuSelectionChanged'
                   pagination-page-size='50'
                   transport='https'>
     </scriptr-grid>
-</div>    
-
-
-
-
-
-
-
-
-
+</div>

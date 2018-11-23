@@ -1,24 +1,26 @@
-<scriptr-grid 
-              columns-definition='vm.onlineOrdersColDef' 
-              enable-sorting='true'
-              default-cell-renderer="vm.defaultCellRenderer"   
-              api = 'management/api/getOrders'
-              api-params='vm.scheduledGridParams'   
-              grid-height='calc(100vh - 104px)'
-              pagination="true"
-              row-height='30'
-              msg-tag="orders-grid"   
-              enable-col-resize="true"   
-              suppress-filter='true'
-              cell-editable='false'
-              enable-client-side-filter='true'
-              suppress-filter='false'
-              enable-server-side-filter='true' 
-              enable-server-side-sorting='true'
-              row-model-type='infinite'
-              row-model-selection='multiple'
-              pagination-page-size='20'
-              enable-delete-row='false'
-              on-cell-clicked='vm.onSelectionChanged'  
-              transport='wss'>
-</scriptr-grid>
+<div style="margin-top:60px;">
+    <scriptr-grid 
+                  columns-definition='vm.onlineOrdersColDef' 
+                  enable-sorting='true'
+                  default-cell-renderer="vm.defaultCellRenderer"   
+                  api = 'management/api/getOrders'
+                  api-params='vm.scheduledGridParams'   
+                  grid-height='calc(100vh - 115px)'
+                  pagination="true"
+                  row-height='40'
+                  msg-tag="orders-grid"   
+                  enable-col-resize="true"   
+                  suppress-filter='true'
+                  cell-editable='false'
+                  enable-client-side-filter='true'
+                  suppress-filter='false'
+                  enable-server-side-filter='true' 
+                  enable-server-side-sorting='true'
+                  row-model-type='infinite'
+                  row-model-selection='multiple'
+                  pagination-page-size='20'
+                  enable-delete-row='false'
+                  on-cell-clicked='vm.onSelectionChanged'  
+                  transport='wss'>
+    </scriptr-grid>
+</div>

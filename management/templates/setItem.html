@@ -1,0 +1,137 @@
+<style>
+    .wrap-pic-w > img {
+        margin: 5px;
+        width: 255px;
+        height: 233px;
+    }
+    .form-control {
+        width: 100%;
+    }
+
+    .btn-upload {
+        margin-top: -0px;
+    }
+    .no-image-prod {
+        text-align: center;
+        margin-top: 173px;
+        position: absolute;
+        margin-left: 64px;
+    }
+    .img-click {
+        cursor: pointer;
+    }
+    .img-border {
+        border: 3px solid green;
+    }
+    .set-opacity {
+		 opacity: 0.4;
+	}
+    .default-img {
+            margin: 97px;
+            position: absolute;
+            font-size: 25px;
+            font-weight: 600;
+    }
+</style>
+
+
+<div class="container-fluid" style="overflow-y: auto;height: 100%;">
+    <!--div class="row pdt20 mrgb50">
+<div class="col-xs-10 heading">Preview Mode</div>
+</div-->
+    <div class="row col-xs-12" style="margin-top: 10px">
+        <div class="col-xs-6">
+            <div id="alert_msg">
+                <div id="alert_msg_content" class="alert">
+                </div>
+            </div>
+            <div style="margin-bottom: 73px;">
+                <div style="width:50%;float:left;">
+                    <div>
+                        <span><b>Choose Sub Category *</b></span>
+                    </div>
+                    <div style="margin-top:7px">
+                        <scriptr-autocomplete
+                                              id="subcats"                
+                                              placeholder="Search.."
+                                              pause="400"
+                                              search-fields="value"
+                                              title-field="value"
+                                              description-field="name"                
+                                              minlength="0"
+                                              api="management/api/getCategories"
+                                              on-format-data="vm.setSubcatsFormatData"
+                                              text-no-results="No results"                
+                                              text-searching="Searching..."
+                                              image-field="img"
+                                              transport="wss"
+                                              selected-object="vm.onSelect"   
+                                              input-class="form-control form-control-small">
+                        </scriptr-autocomplete>
+                    </div>
+                </div>
+                <div style="width:50%;float:right;margin-top:7px">
+                    <button  ng-click="vm.submit()" style="margin-top: 20px;margin-left: 5px;float:right;" type="submit" class="btn btn-success" ng-class="(vm.showLoadingSubmit) ? 'is-disabled': ''">
+                        <i ng-if="vm.showLoadingSubmit" class="fa fa-spinner fa-spin fa-1x"></i>
+                        <span> {{vm.showLoadingSubmit ? 'Loading ..' : 'Save'}}</span>
+                    </button>
+                     <button ng-click="vm.newItem()" style="margin-top: 20px;float:right;" class="btn btn-success">
+                        <span>Add New Item</span>
+                    </button>
+                </div>
+            </div>
+            <form name="ngform">                    
+                <div style="margin-top: 12px;" html-class="bls" sf-options="vm.frmGlobalOptions" sf-schema="vm.itemSchema" sf-form="vm.itemForm" sf-model="vm.itemModel"></div>
+                <!-- div class="pdt20">
+<button style="margin-top: 20px;" type="submit" class="btn btn-success" ng-class="(vm.showLoadingSubmit) ? 'is-disabled': ''">
+<i ng-if="vm.showLoadingSubmit" class="fa fa-spinner fa-spin fa-1x"></i>
+<span> {{vm.showLoadingSubmit ? 'Loading ..' : 'Save'}}</span>
+</button>
+</div -->
+            </form>
+        </div>
+        <div class="col-xs-6" style="padding-left:0px;padding-right:0px;">
+            <div class="fl-l">
+                <div>
+                    <div class="col-centered" style="width:310px;">
+                        <button class="success-btn btn-upload" upload-button upload-button url="/management/api/products" data="vm.data" on-upload="vm.onUpload(data)" on-success="vm.onSuccess" ng-class="(vm.showLoadingDelete  || vm.selected_frame == null) ? 'is-disabled': ''">
+                            <i ng-if="vm.showLoadingUpload" class="fa fa-spinner fa-spin fa-1x"></i>
+                            <span> {{vm.showLoadingUpload ? 'Loading ..' : 'Upload'}}</span>
+                        </button>
+                        <button ng-click="vm.setMainImage()" class="success-btn" ng-class="(vm.showLoadingMain || vm.selected_frame == null || vm.selectedImgSrc == '/') ? 'is-disabled': ''">
+                            <i ng-if="vm.showLoadingMain" class="fa fa-spinner fa-spin fa-1x"></i>
+                            <span> {{vm.showLoadingMain ? 'Loading ..' : 'Set as default'}}</span>
+                        </button>
+                        <button ng-click="vm.delete()" class="danger-btn" ng-class="(vm.showLoadingDelete  || vm.selected_frame == null 
+
+  || vm.selectedImgSrc == '/') ? 'is-disabled': ''">
+                            <i ng-if="vm.showLoadingDelete" class="fa fa-spinner fa-spin fa-1x"></i>
+                            <span> {{vm.showLoadingDelete ? 'Loading ..' : 'Delete'}}</span>
+                        </button>
+                    </div>
+                    <div style="text-align:center;margin: 26px;"><b>Preview Images</b></div>
+                </div>
+                <div style="margin-top:30px;" class="text-center loading" ng-show="vm.loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+                <div>
+                    <!--p class="no-image-prod" ng-if="!vm.image">No Image Uploaded.</p-->
+                    <div class="wrap-pic-w" style="margin-top: 30px;">
+                        
+                        <span ng-if="vm.default_img == 0" class="default-img">Default</span>
+                        <img class="img-click" ng-click="vm.onImgSelect(0);" ng-src="{{vm.imgSrc1}}" ng-class="{'img-border' : vm.selected_frame == 0, 'set-opacity' : vm.default_img == 0}"/>
+                        
+                        <span ng-if="vm.default_img == 1" class="default-img">Default</span>
+                        <img class="img-click" ng-click="vm.onImgSelect(1);" ng-src="{{vm.imgSrc2}}" ng-class="{'img-border' : vm.selected_frame == 1,'set-opacity' : vm.default_img == 1}"/>
+                        
+                        <span ng-if="vm.default_img == 2" class="default-img">Default</span>  
+                        <img class="img-click" ng-click="vm.onImgSelect(2);" ng-src="{{vm.imgSrc3}}" ng-class="{'img-border' : vm.selected_frame == 2,'set-opacity' : vm.default_img == 2}"/>
+                        
+                        <span ng-if="vm.default_img == 3" class="default-img">Default</span>
+                        <img class="img-click" ng-click="vm.onImgSelect(3);" ng-src="{{vm.imgSrc4}}" ng-class="{'img-border' : vm.selected_frame == 3,'set-opacity' : vm.default_img == 3}"/>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

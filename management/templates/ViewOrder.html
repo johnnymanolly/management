@@ -1,0 +1,158 @@
+<!-- content page -->
+<div class="">
+    <div class="container-fluid">  
+        <div style="margin-top:30px;" class="text-center loading" ng-show="vm.loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+        <form ng-show="!vm.loading">
+            <div class="row col-xs-12" style="margin-top:8px;">
+                <div class="col-xs-12" ng-show="vm.showError"><div class="alert" ng-class="'alert-' + ( vm.message.type || 'warning')">{{vm.message.content}}</div></div>
+                <div class="col-xs-6">
+                    <div>
+                        <div class="">
+                            <span class="">
+                                Ordered Date : 
+                            </span>
+
+                            <span class="">
+                                {{vm.orderedDate}}
+                            </span>
+                        </div>
+                        <div class="">
+                            <span class="">
+                                Delivery Date : 
+                            </span>
+
+                            <span class="">
+                                {{vm.deliveryDate}}
+                            </span>
+                        </div>
+                        <div class="">
+                            <span class="">
+                                Full Name :
+                            </span>
+
+                            <span class="">
+                                {{vm.fullName}}
+                            </span>
+                        </div>
+                        <div class="">
+                            <span class="">
+                                Phone Number :
+                            </span>
+
+                            <span class="">
+                                {{vm.number}}
+                            </span>
+                        </div>
+                        <div class="">
+                            <span class="">
+                                Address :
+                            </span>
+
+                            <span class="">
+                                {{vm.address}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="fl-r">
+                        <div class="">
+                            <span>
+                                Order ID :
+                            </span>
+                            <span class="">
+                                <b>{{vm.orderId}}</b>
+                            </span>
+                        </div>
+
+                        <div class="">
+                            <span class="">
+                                Order Status : 
+                            </span>
+
+                            <span ng-if="vm.orderStatus == 'Confirmed' || vm.orderStatus == 'Delivered'" style="color:green;font-weight:bold;" class="">
+                                {{vm.orderStatus}}
+                            </span>
+
+                            <span ng-if="vm.orderStatus != 'Confirmed' && vm.orderStatus != 'Delivered'" class="">
+                                <span style="color:red;">  {{vm.orderStatus}} </span>
+                            </span>
+                        </div>
+
+                        <div>
+                            <span class="">
+                                Payment Method : 
+                            </span>
+
+                            <span class="">
+                                {{vm.payment_method}}
+                            </span>
+                        </div>
+
+                        <div class="">
+                            <span class="">
+                                Total Items
+                            </span>
+
+                            <span class="">
+                                {{vm.total_items}}
+                            </span>
+                        </div>
+
+                        <div class="">
+                            <span class="">
+                                Total Amount
+                            </span>
+
+                            <span class="">
+                                €{{vm.total_amount}}
+                            </span>
+                        </div>
+                        <div ng-if="vm.orderStatus != 'Delivered'">
+                            <button ng-if="vm.orderStatus != 'Confirmed'" ng-click="vm.confirmOrder()" class="success-btn" ng-class="(vm.showLoadingConfirmed) ? 'is-disabled': ''">
+                                <i ng-if="vm.showLoadingConfirmed" class="fa fa-spinner fa-spin fa-1x"></i>
+                                <span> {{vm.showLoadingConfirmed ? 'Loading ..' : 'Confirm Order'}}</span>
+                            </button>
+                               <button ng-if="vm.orderStatus == 'Confirmed'" ng-click="vm.markAsDelivered()" class="success-btn" ng-class="(vm.showLoadingDelivered) ? 'is-disabled': ''">
+                                <i ng-if="vm.showLoadingDelivered" class="fa fa-spinner fa-spin fa-1x"></i>
+                                <span> {{vm.showLoadingDelivered ? 'Loading ..' : 'Mark delivered'}}</span>
+                            </button>
+                            <button ng-if="vm.orderStatus != 'Rejected'" ng-click="vm.rejectOrder()" class="danger-btn" ng-class="(vm.showLoadingRejected) ? 'is-disabled': ''">
+                                <i ng-if="vm.showLoadingRejected" class="fa fa-spinner fa-spin fa-1x"></i>
+                                <span> {{vm.showLoadingRejected ? 'Loading ..' : 'Reject Order'}}</span>
+                            </button>
+                         
+                        </div>
+                        <div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+                <scriptr-grid columns-definition='vm.colDefs' 
+                              api='management/api/getOrder'
+                              api-params='vm.apiParams'    
+                              row-model-type='infinite'
+                              pagination="false"
+                              grid-height='calc(100vh - 220px)'
+                              cell-editable='false'
+                              row-height="25"    
+                              suppress-filter='true'    
+                              enable-client-side-filter='false'
+                              enable-server-side-filter='false' 
+                              enable-client-side-sorting='true'
+                              enable-server-side-sorting='false'
+                              row-model-selection='multiple'
+                              pagination-page-size='200'
+                              on-format-data="vm.formatData"    
+                              transport='https'>
+                </scriptr-grid>
+
+            </div>
+        </form>
+    </div>
+</div>
