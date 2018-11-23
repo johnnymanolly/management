@@ -1,0 +1,6 @@
+var login = require("/management/api/clients/loginUser");
+var id= request.parameters["email"];
+var password = request.parameters["password"];
+
+
+return login.verifyCredentials(id,password);

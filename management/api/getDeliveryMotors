@@ -1,36 +1,9 @@
-/**
- * Gets data for the grid.
- * 
- *  @param columnName
- *  @param resultsPerPage
- *  @param pageNumber
- *  @param sort
- *  @param sortType
- *  @param queryFilter
- *  @param queryType
- *  @param sortingColumnName
- *  @param filterColumnName
- *  @param action
- * 
- * @return On success: { "status" : "success" }
- *         On failure: { "status" : "failure", "errorDetail" : "[error message]" }
- */
+
 
 var log = require("log");
 log.setLevel("INFO");
 var documents = require("document");
 
-/* create dummy data
-for(var i = 1; i <= 100; i++){
-  var fields = {};
-  fields["formType"] = "car";
-  fields["name"] = "name_"+i;
-  fields["model"] = "model_"+i;
-  fields["price"] = "price_"+i;
-  documents.save(fields);
-}
-return
-*/
 var params = {};
 if(request.body != null){
 	params = request.body;
