@@ -64,6 +64,7 @@ var queryType = params.queryType;
 var sortingColumnName = params.sortingColumnName;
 var filterColumnName = params.filterColumnName;
 var action = params.action;
+var catKey = params.catKey;
 var subCategory = params.subCategory;
 var category = params.category;
 var sortingFilter = params.sortingFilter;
@@ -187,6 +188,9 @@ if(action){
     }
     if(category){
         queryString += ' and category="'+category+'"';
+    }
+    if(catKey){
+        queryString += ' and catKey="'+catKey+'"';
     }
     if(promotion){
         queryString += ' and promotion= "true"';

@@ -36,8 +36,9 @@ order["orderId"] =  orderId;
 order["items"] = JSON.stringify(order["items"]);
 
 order["formType"] = "onlineOrder";
-order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
-order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
+//order["orderStatus"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
+//order["scheduled"] = ( dateFormatter.moment(order["orderDate"]).day() == dateFormatter.moment(order["deliveryDate"]).day()) ? "Pending.." : "Scheduled"
+order["orderStatus"] = "Pending..";
 order["delivered"] = "Not delivered";
 order["cancelled"] = "No";
 
