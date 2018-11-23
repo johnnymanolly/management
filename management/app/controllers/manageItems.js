@@ -1,12 +1,14 @@
 myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
-{
-   var vm = this;
-    
-   vm.sub_cats = [];
-    
-   getSubCats(); 
-    
-   vm.manageItemsColDef = [
+                 {
+    var vm = this;
+
+    vm.productsApiUrl = "management/api/products";
+
+    vm.sub_cats = [];
+
+    getSubCats(); 
+
+    vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
         {headerName: "Category", field: "category", cellEditor: "select", hide: true,
          cellEditorParams: {
@@ -17,8 +19,8 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
          cellEditorParams: {
              values: vm.sub_cats
          }},
-        {headerName: "Brand", field: "brand"},
-        {headerName: "Description", field: "description", cellEditor: 'agLargeTextCellEditor'},
+        {headerName: "Brand", field: "brand", hide: true},
+        {headerName: "Description", field: "description",  hide: true, cellEditor: 'agLargeTextCellEditor'},
         {headerName: "Price", field: "price"},
         {headerName: "Price Offer", field: "priceOffer"},
         {headerName: "Unit", field: "unit"},
@@ -32,113 +34,142 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
         {headerName: "Barcode image", field: "barcode", hide: "true", editable : false, cellRenderer: function (params) {  
             return vm.viewBarcodeCellRenderer(params);
         }},
+        /*
         {headerName: "Publish Item", field: "publish", editable : false, cellRenderer: function (params) {  
             return vm.publishItemCellRenderer(params);
         }},
-      //  {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
-      //      return vm.outOfStockItemCellRenderer(params);
-      //  }},
-        {headerName: "Show as Promotion", field: "promotion", editable : false, cellRenderer: function (params) {  
-            return vm.showAsPromotionCellRenderer(params);
+        */
+        //  {headerName: "Out Of Stock", field: "outOfStock", editable : false, cellRenderer: function (params) {  
+        //      return vm.outOfStockItemCellRenderer(params);
+        //  }},
+        {headerName: "Edit", editable : false, cellRenderer: function (params) { 
+            return vm.editCellRenderer(params);
+
+        }},
+        {headerName: "Publish", field: "publish", editable : false, cellRenderer: function (params) {  
+            return vm.publishCellRenderer(params);
+        }},
+        {headerName: "Promotion", field: "promotion", editable : false, cellRenderer: function (params) {  
+            return vm.promotionCellRenderer(params);
         }}
     ]; 
-    
+
+    vm.editCellRenderer = function(params)
+    {
+        if(params.data)
+        {
+            var data = '?key='+params.data.key;
+
+            return '<div class="ag-cell-inner"><span><a href="#/setItem'+data+'"><i class="fa fa-edit"></i> Edit</a></span></div>';  
+        }
+
+    }
+
     vm.uploadImageButtonRenderer = function(params)
     {        
         if(params.data)
         {
             var data = {data : params.data};
-            data.data["formType"] = "item";
-            if(params.data.key){
-                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
+            if(params.data.image)
+            {
+                data.data["replace_image"] = params.data.image;
+            }
+
+
+            if(params.data.key)
+            {
+                return '<div class="success-btn btn-upload ag-cell-inner" upload-button upload-button url="/'+vm.productsApiUrl+'?action=set" data="data" on-upload="$ctrl.onUpload()" on-success="$ctrl.onSuccess()">Upload</div>'
             }
             else
             {
-                return '<div class="btn-edited btn btn-primary btn-upload mrgt1" ng-click="$ctrl.stopEditing()">Upload</div>'
+                return '<div class="btn-edited btn btn-primary btn-upload mrgt1 ag-cell-inner" ng-click="$ctrl.stopEditing()">Upload</div>'
             }
-        }     
+        }    
     }
-    
+
     vm.viewImageCellRenderer  = function(params)
     {
         if(params.data)
         {
             var key = params.data.key;
             var img = (params.data.image) ? params.data.image : ""; 
-            return '<div><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
-    
+            return '<div class="ag-cell-inner"><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
+
         }
     }
-    
+
     vm.viewBarcodeCellRenderer  = function(params)
     {
         var key = params.data.key;
         var img = params.data.barcode; 
         return ''
     }    
-    
-    vm.publishItemCellRenderer = function(params)
+
+    vm.publishCellRenderer = function(params)
     {
-        if(params.value && params.data.name && params.data.subCategory && params.data.price)
+        if(params.data)
         {
-            if(params.value == "Published")
+            if(params.data.name && params.data.subCategory && params.data.price)
             {
-                return '<span class="unpublish">Unpublish</span>'
+                if(params.value == "Published")
+                {
+                    return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishData(data)" type="checkbox" checked><span class="slider round"></span></label>'
+                }
+                else if(params.value == "Unpublished" || typeof params.value == 'undefined')
+                {
+                    return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishData(data)" type="checkbox"><span class="slider round"></span></label>'
+                }
             }
-            else if(params.value == "Unpublished")
+            else
             {
-                return '<button class="confirm-order">Publish</button>'
+                return '<label tooltip-placement="left" uib-tooltip="No Image Uploaded!" id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishData(data)" type="checkbox" disabled><span class="slider silder-disabled round"></span></label>'
             }
-            
         }
-    	else
-        {
-            return '<button class="confirm-order disabled" tooltip-placement="auto" uib-tooltip="Please fill in required field to publish">Publish</button>'
-        }
+
     }
-    
+
     vm.outOfStockItemCellRenderer =  function(params)
     {
         if(params.value)
         {
             if(params.value && params.value == "true")
             {
-                return '<span class="unpublish">Available</span>'
+                return '<span class="unpublish ag-cell-inner">Available</span>'
             }
             else if(params.value && params.value == "false")
             {
-                return '<button class="confirm-order">Out of stock</button>'
+                return '<button class="publish ag-cell-inner">Out of stock</button>'
             }
             else
             {
-                return '<button class="confirm-order disabled">Out of stock</button>'
-        	}
+                return '<button class="publish disabled ag-cell-inner">Out of stock</button>'
+            }
         }
     }
-    
-    vm.showAsPromotionCellRenderer =  function(params)
+
+    vm.promotionCellRenderer =  function(params)
     {
-        if(params.value)
+        if(params.data)
         {
             if(params.value && params.value == "true")
             {
-                return '<span class="unpublish">Yes</span>'
+                return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishPromotion(data)" type="checkbox" checked><span class="slider round"></span></label>'
             }
             else if(params.value && params.value == "false")
             {
-                return '<button class="confirm-order">No</button>'
+                return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishPromotion(data)" type="checkbox"><span class="slider round"></span></label>'
             }
             else
             {
-                return '<button class="confirm-order">No</button>'
+                return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input ng-click="$ctrl.publishPromotion(data)" type="checkbox"><span class="slider round"></span></label>'
             }
         }
         else
         {
-          return '<button class="confirm-order">No</button>'  
+            return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input type="checkbox" disabled><span class="slider slider-disabled round"></span></label>'
         }
     }
-    
+
     vm.defaultCellRenderer = function(params)
     {
         if(params.value)
@@ -150,53 +181,25 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
             return ''
         }
     }
-    
+
     vm.manageItemsSelectionChanged = function(scope)
     {
-        if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Item")
-        {
-            var selectedRow = scope.api.getSelectedNodes()[0];
-            if(!selectedRow.data.name || !selectedRow.data.subCategory || !selectedRow.data.price)
-        	{
-                return;
-            }
-            var params = {};
-            params["row"] = selectedRow.data
-            params["action"] = "edit";
-            var action = (selectedRow.data.publish == "Published") ? "Unpublished" : "Published"; 
-            params["row"]["publish"] = action;
-        //    params["rows"]["category"] = items[selectedRow.data.subCategory];
-            delete params["creationDate"];
-            scope.api.showLoadingOverlay();
-            httpClient
-                .post('management/api/getItems', params).then(
-                function(data, response)
-                {
-                    console.log("success");
-                    scope.api.hideOverlay();
-                },
-                function(err) 
-                {
-                    console.log(err);
-                    scope.api.hideOverlay();
-                });   
-        }
-        else if(scope.api.getFocusedCell().column.colDef.headerName == "Out Of Stock")
+        if(scope.api.getFocusedCell().column.colDef.field == "outOfStock")
         {
             var selectedRow = scope.api.getSelectedNodes()[0];
             var params = {};
             params["row"] = selectedRow.data;
-            params["action"] = "edit";
+            params["action"] = "set";
             var outOfStock = (selectedRow.data.outOfStock == "true") ? "false" : "true"; 
             params["row"]["outOfStock"] = outOfStock;
-            delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .post('management/api/getItems', params).then(
+                .post(vm.productsApiUrl, params).then(
                 function(data, response)
                 {
                     console.log("success");
                     scope.api.hideOverlay();
+                    scope.api.refreshInfiniteCache();
                 },
                 function(err) 
                 {
@@ -204,54 +207,99 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
                     scope.api.hideOverlay();
                 });   
         }
-        else if(scope.api.getFocusedCell().column.colDef.headerName == "Show as Promotion")
-        {
-            var selectedRow = scope.api.getSelectedNodes()[0];
-            var params = {};
-            params["row"] = selectedRow.data
-            params["action"] = "edit";
-            var promotion = (selectedRow.data.promotion == "true") ? "false" : "true"; 
-            params["row"]["promotion"] = promotion;
-            delete params["creationDate"];
-            scope.api.showLoadingOverlay();
-            httpClient
-                .post('management/api/getItems', params).then(
-                function(data, response)
-                {
-                    console.log("success");
-                    scope.api.hideOverlay();
-                },
-                function(err) 
-                {
-                    console.log(err);
-                    scope.api.hideOverlay();
-                });   
-        }
+        
     }
-    
+
+    vm.onAddRowClick = function()
+    {
+        $location.url('/setItem')
+    }
+
     function getSubCats()
     {
-         var items = {};
-         httpClient
+
+        httpClient
             .get('management/api/getCategories', {}).then(
             function(data, response){
                 data = data.documents;
+
                 for(var i = 0; i < data.length; i++)
                 {
-                    vm.sub_cats.push(data[i].subCategory);
-                    items[data[i].subCategory] = {};
-                    items[data[i].subCategory] = (data[i].category);
+                    if(data[i].subCats)
+                    {
+                        var subCats = data[i].subCats;
+                        if(typeof subCats == 'string') subCats = [subCats];
+                        for(var x = 0; x < subCats.length; x++)
+                        {
+                            vm.sub_cats.push(subCats[x]);  
+                        }
+
+                    }
 
                 }
-                console.log("success");
+
+                //    vm.subCats = _.union.apply(_, vm.sub_cats);
+                //   vm.sub_cats.push("d");
+                console.log(vm.sub_cats);
             },
             function(err) 
             {
                 console.log(err);
             });  
-    
+
     }
 
-    
-   
+    vm.onPublish = function(data, scope)
+    {
+        var params = {};
+        params["row"] = data
+        params["action"] = "set";
+        var action = (data.publish == "Published") ? "Unpublished" : "Published"; 
+        params["row"]["publish"] = action;
+
+        scope.api.showLoadingOverlay();
+        httpClient
+            .post(vm.productsApiUrl, params).then(
+            function(data, response)
+            {
+                console.log("success");
+                scope.api.hideOverlay();
+                scope.api.refreshInfiniteCache();
+            },
+            function(err) 
+            {
+                console.log(err);
+                scope.api.hideOverlay();
+            });   
+    }
+
+    vm.onPromotion = function(data, scope)
+    {
+        var params = {};
+        params["row"] = data
+        params["action"] = "set";
+        var promotion = (data.promotion == "true") ? "false" : "true"; 
+        params["row"]["promotion"] = promotion;
+        
+        scope.api.showLoadingOverlay();
+        httpClient
+            .post(vm.productsApiUrl, params).then(
+            function(data, response)
+            {
+                console.log("success");
+                scope.api.hideOverlay();
+                scope.api.refreshInfiniteCache();
+            },
+            function(err) 
+            {
+                console.log(err);
+                scope.api.hideOverlay();
+            });    
+
+
+    }
+
+
+
+
 });

@@ -6,20 +6,18 @@ myApp.config(wssConfig)
         {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", 		"label": "Online Orders", 	 	"route":"#/onlineOrders"},
         {"id":"1", "iconClass":"glyphicon glyphicon-time", 			"label": "Scheduled Orders", 	"route":"#/scheduledOrders"},
         
-        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Gallery", 	 	"route": "#/manageAppMenu"},
-        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Categories",	"route": "#/manageCategories"},  
+        {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Categories", 	"route": "#/manageCategories"}, 
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Items", 	  	"route": "#/manageItems"},
-       
-        {"id":"1", "iconClass":"fa fa-group", 						"label": "Register New Client", "route":"#/clientRegistration"},
-        {"id":"3", "iconClass":"fa fa-globe", 						"label": "Track Delivery", 		"route": "#/maps"},
+         
+  //      {"id":"3", "iconClass":"fa fa-globe", 						"label": "Track Delivery", 		"route": "#/maps"},
         {"id":"5", "iconClass":"glyphicon glyphicon-question-sign", "label": "Suggested Items", 	"route": "#/suggestions"},
         {"id":"6", "iconClass":"fa fa-bell-o", 						"label": "Promotions", 			"route": "#/promotions"},
 
-        
-        {"id":"1", "iconClass":"glyphicon glyphicon-edit", 			"label": "Order Online", 		"route":"#/orderOnline"},
-        {"id":"1", "iconClass":"glyphicon glyphicon-edit", 			"label": "Order Locally", 		"route":"#/listTables"},
-        {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", 		"label": "Local Orders", 		"route":"#/localOrders"},
-        {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", 		"label": "Served Tables", 		"route":"#/servedTables"},
+    //    {"id":"1", "iconClass":"fa fa-group", 						"label": "Register New Client", "route":"#/clientRegistration"},
+    //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", 			"label": "Order Online", 		"route":"#/orderOnline"},
+    //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", 			"label": "Order Locally", 		"route":"#/listTables"},
+    //    {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", 		"label": "Local Orders", 		"route":"#/localOrders"},
+    //    {"id":"1", "iconClass":"glyphicon glyphicon-list-alt", 		"label": "Served Tables", 		"route":"#/servedTables"},
 
     	]
 
@@ -30,10 +28,12 @@ myApp.config(wssConfig)
         
         {"route": "onlineOrders", 		 "template": "/management/templates/onlineOrders.html",       controller: "showOrdersCtl as vm"},
         {"route": "scheduledOrders", 	 "template": "/management/templates/scheduledOrders.html",	  controller: "showScheduledOrdersCtl as vm"},
+        {"route": "viewOrder", 		 	 "template": "/management/templates/ViewOrder.html",       	  controller: "viewOrderCtl as vm"},
         
-        {"route": "manageAppMenu", 		 "template": "/management/templates/manageAppMenu.html",	  controller: "manageGalleryCtl as vm"},
-        {"route": "manageCategories", 	 "template": "/management/templates/manageCategories.html",	  controller: "manageCategoriesCtl as vm"},
+        {"route": "manageCategories",    "template": "/management/templates/ManageCategories.html",	  controller: "manageCategoriesCtl as vm"},
+        {"route": "setCategory", 	     "template": "/management/templates/SetCategory.html",        controller: "setCategoryCtl as vm"},
         {"route": "manageItems", 		 "template": "/management/templates/manageItems.html", 		  controller: "manageItemsCtl as vm"},
+        {"route": "setItem", 	     	 "template": "/management/templates/setItem.html",        	  controller: "setItemCtl as vm"},
         
         {"route": "clientRegistration",  "template": "/management/templates/clients.html", 			  controller: "clientsCtl as vm"},
         {"route": "maps", 				 "template": "/management/templates/locationIFrame.html", 	  controller: "locattionIFrameCtl as vm"},
@@ -70,6 +70,7 @@ myApp.config(wssConfig)
     "logout": {"icon": "fa fa-sign-out", 		  "label": "Logout", 				"route":"#/logout"}
 })
     .constant("imageSrc", imageSrc)
+	.constant("schemaForms", schemaForms)
 	.constant("categories", ["Bakery","Beverages and Juices", "Alcohol", "Chilled","Deli Meat", "Fruits and Vegetables", "Health and Beauty", "Others"])
     .config(function($routeProvider, routingJson){
     for(var i = 0; i < routingJson.params.length; i++){

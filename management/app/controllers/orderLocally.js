@@ -102,6 +102,28 @@ myApp.controller('orderLocallyCtl', function($scope, $location, $routeParams, ht
             });  
     }
     
+    vm.updatetables = function(){
+        vm.tableSelected = false;
+        vm.showLocalOrdersLoading = true;
+        var params = {};
+        httpClient
+            .get('management/api/getLocalOrders', params).then(
+            function(data, response){
+                console.log("success");
+                for(var x = 0; x < vm.tables.length; x++){
+                    vm.tables[x]["busy"] = false;
+                }
+                for(var y = 0; y < data.length; y++){
+                    vm.tables[data[y].tableId - 1]["busy"] = true; 
+                }
+                vm.showLocalOrdersLoading = false;
+            },
+            function(err) {
+                console.log(err);
+                vm.showLocalOrdersLoading = false;
+            });  
+    }
+    
     vm.orderListCallback = function(data)
     {
         var items = [];

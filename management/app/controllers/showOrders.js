@@ -9,6 +9,11 @@ myApp.controller('showOrdersCtl', function($scope, $location, httpClient)
     var endDate = moment(new Date()).format("YYYY-MM-DDT23:59:59+0000");    
     vm.gridParams["endDate"] = endDate;
     
+    vm.onServerFilterChanged = function()
+    {
+        $scope.$broadcast('onExternalServerFilterChanged', vm.serverFilterText);
+    }
+    
     vm.showOnlyData = [
         {
             id: "today",
@@ -107,9 +112,11 @@ myApp.controller('showOrdersCtl', function($scope, $location, httpClient)
             }
         }},
         {headerName: "Cancelled", field: "cancelled", editable : false, hide: true},
+        /*
         {headerName: "Assignee", field: "assignee", editable : false, cellRenderer: function (params) {  
             return vm.assignToMeButtonRenderer(params);
         }},
+        */
         {headerName: "Status", field: "orderStatus", editable : false, cellRenderer: function (params) {  
             return vm.statusRenderer(params);
         }},
@@ -169,15 +176,27 @@ myApp.controller('showOrdersCtl', function($scope, $location, httpClient)
         
         vm.statusRenderer = function(params)
         {
-            return '<span class="ag-cell-inner" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
+            if(params.value == "Pending..")
+            {
+				return '<span class="ag-cell-inner pending" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
+            }
+            else if(params.value == "Rejected")
+            {
+               return '<span class="ag-cell-inner confirm-order" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>' 
+            }
+            else
+            { 
+                return '<span class="ag-cell-inner processed-by" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>' 
+            }
+            
         }
 
     
     	vm.viewOrder  = function(params)
         {
-            if(params.data && params.data.assignee)
+            if(params.data)
             {
-                return '<div><a target="_blank" href="/management/templates/viewOnlineOrder.html?number='+params.data.number+'&name='+params.data.fullName+'&assignee='+params.data.assignee+'&client='+params.data.client+'&orderDate='+params.data.orderDate+'&address='+params.data.address+'&key='+params.data.key+'&status='+params.data.orderStatus+'&total='+params.data.total+'&deliveryDate='+params.data.deliveryDate+'&orderedBy='+params.data.orderedBy+'&onlineOrderSource=true">view order</a></div>' 
+                return '<div class="ag-cell-inner"><a href="#/viewOrder?key='+params.data.key+'">view order</a></div>' 
             }
             else
             {

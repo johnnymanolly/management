@@ -1,31 +1,34 @@
-myApp.controller('manageGalleryCtl', function($scope, $location, httpClient)
+myApp.controller('manageCategoriesCtl', function($scope, $location, httpClient)
 {
+    
     var vm = this;
     
-    vm.manageMenuColDef = [
-        {headerName: "Menu Name", field: "menu"},
-        {headerName: "Category Type", field: "categoryType", cellEditor: "select", editable : true,
-         cellEditorParams: {  
-             values : ["Food", "Drinks", "Fruits", "Veggies", "Others"]
-        }},
+	vm.manageCategoriesColDef = [
+        {headerName: "Category Name", field: "category", cellEditor: "select",
+         cellEditorParams: {
+             values: vm.cats
+         }},
         {headerName: "Form Type", field: "formType", hide: true},
+        {headerName: "Sub Category Name", field: "subCategory"},
+        /*
         {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
-            return vm.galleryUploadImageButtonRenderer(params);
+            return vm.categoriesUploadImageButtonRenderer(params);
         }},
         {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
-        {headerName: "Publish Menu", field: "publish", editable : false, cellRenderer: function (params) {  
-            return vm.publishGalleryCellRenderer(params);
+        */
+        {headerName: "Publish Category", field: "publish", editable : false, cellRenderer: function (params) {  
+            return vm.publishCategoryCellRenderer(params);
         }}
         ];
     
-    vm.galleryUploadImageButtonRenderer = function(params)
+    vm.categoriesUploadImageButtonRenderer = function(params)
     {        
         if(params.data)
         {
             var data = {data : params.data};
-            data.data["formType"] = "menu";
+            data.data["formType"] = "categories";
             if(params.data.key)
             {
                 return '<div class="btn-edited btn btn-primary btn-upload mrgt1" upload-button url="/management/api/uploadImage?upload=image" data="data" on-upload="$ctrl.onUpload(data)">Upload</div>'
@@ -48,9 +51,9 @@ myApp.controller('manageGalleryCtl', function($scope, $location, httpClient)
         }
     }
     
-    vm.publishGalleryCellRenderer = function(params)
+    vm.publishCategoryCellRenderer = function(params)
     {
-        if(params.value && params.data.menu && params.data.categoryType && params.data.image)
+        if(params.data.category && params.data.subCategory)
         {
             if(params.value == "Published")
             {
@@ -80,12 +83,12 @@ myApp.controller('manageGalleryCtl', function($scope, $location, httpClient)
         }
     }
     
-    vm.manageMenuSelectionChanged  = function(scope)
+    vm.manageCategoriesSelectionChanged  = function(scope)
     {
-        if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Menu")
+        if(scope.api.getFocusedCell().column.colDef.headerName == "Publish Category")
         {
             var selectedRow = scope.api.getSelectedNodes()[0];
-            if(!selectedRow.data.menu || !selectedRow.data.categoryType || !selectedRow.data.image)
+            if(!selectedRow.data.category && !selectedRow.data.subCategory)
         	{
                 return;
             }
@@ -97,7 +100,7 @@ myApp.controller('manageGalleryCtl', function($scope, $location, httpClient)
             delete params["creationDate"];
             scope.api.showLoadingOverlay();
             httpClient
-                .post('management/api/getMenu', params).then(
+                .post('management/api/getCategories', params).then(
                 function(data, response)
                 {
                     console.log("success");
@@ -110,5 +113,5 @@ myApp.controller('manageGalleryCtl', function($scope, $location, httpClient)
                 });   
         }
     }
- 
+    
 });
