@@ -5,39 +5,85 @@
     }
 </style>
 
-<div style="margin-top:60px;">
-    <scriptr-grid columns-definition='vm.manageItemsColDef' 
-                  api='management/api/products'
-                  default-cell-renderer="vm.defaultCellRenderer"   
-                  msg-tag="item-grid"   
-                  add-label="Add"
-                  delete-label="Delete"
-                  enable-delete-row='true'
-                  on-add-row-click="vm.onAddRowClick"
-                  export-exclude-fields='["image", "formType", "barcode", "barcodeID"]'
-                  enable-export='true'
-                  enable-import="true"
-                  cell-editor=""
-                  row-height="40"   
-                  row-model-type='infinite'
-                  pagination="true"
-                  grid-height='calc(100vh - 109px)'
-                  enable-col-resize="true"     
-                  enable-add-row='true'
-                  cell-editable='true'
-                  enable-client-side-filter='true'
-                  enable-server-side-filter='true' 
-                  enable-client-side-sorting='false'
-                  enable-server-side-sorting='true'
-                  row-model-selection='multiple'
-                  on-publish="vm.onPublish"
-                  on-promotion="vm.onPromotion"
-                  on-cell-clicked='vm.manageItemsSelectionChanged'
-                  pagination-page-size='50'
-                  transport='https'>
-    </scriptr-grid>
-</div>    
+<div class="col-xs-12 mrgt13">
 
+    <div class="row">
+        
+        <div class="col-sm-2 mrgr20">
+            <div class="input-group set-width">
+                <scriptr-autocomplete
+                                      id="catList"                
+                                      placeholder="Filter by categories"
+                                      pause="400"
+                                      search-fields="id"
+                                      title-field="name"             
+                                      minlength="0"                          
+                                      text-no-results="No results"                
+                                      text-searching="Searching..."
+                                      transport="https"
+                                      api="management/api/categories"
+                                      on-format-data="vm.onCatsFilterData"
+                                      selected-object="vm.onCatsfilterSet"   
+                                      input-class="form-control form-control-small">
+                </scriptr-autocomplete>
+            </div>
+        </div>  
+        
+         <div class="col-sm-2 mrgr20">
+            <div class="input-group set-width">
+                <scriptr-autocomplete
+                                      id="catList"                
+                                      placeholder="Filter by categories"
+                                      pause="400"
+                                      search-fields="id"
+                                      title-field="subCat" 
+                                      description-field="cat" 
+                                      minlength="0"                          
+                                      text-no-results="No results"                
+                                      text-searching="Searching..."
+                                      transport="https"
+									  local-data="vm.subCatsData"
+                                      selected-object="vm.onSubCatsfilterSet"   
+                                      input-class="form-control form-control-small">
+                </scriptr-autocomplete>
+            </div>
+        </div> 
+
+        <div style="margin-top:60px;">
+            <scriptr-grid columns-definition='vm.manageItemsColDef' 
+                          api='management/api/products'
+                          default-cell-renderer="vm.defaultCellRenderer"   
+                          msg-tag="item-grid"   
+                          add-label="Add"
+                          delete-label="Delete"
+                          enable-delete-row='true'
+                          on-add-row-click="vm.onAddRowClick"
+                          export-exclude-fields='["image", "formType", "barcode", "barcodeID"]'
+                          enable-export='true'
+                          enable-import="true"
+                          cell-editor=""
+                          row-height="40"   
+                          row-model-type='infinite'
+                          pagination="true"
+                          grid-height='calc(100vh - 109px)'
+                          enable-col-resize="true"     
+                          enable-add-row='true'
+                          cell-editable='true'
+                          enable-client-side-filter='true'
+                          enable-server-side-filter='true' 
+                          enable-client-side-sorting='false'
+                          enable-server-side-sorting='true'
+                          row-model-selection='multiple'
+                          on-publish="vm.onPublish"
+                          on-promotion="vm.onPromotion"
+                          on-cell-clicked='vm.manageItemsSelectionChanged'
+                          pagination-page-size='50'
+                          transport='https'>
+            </scriptr-grid>
+        </div>    
+
+    </div>
+</div>
 
 
 
