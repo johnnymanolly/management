@@ -56,6 +56,7 @@ var publishStatus = params.publishStatus;
 var promotion = params.promotion;
 var selected_frame = params.selected_frame;
 var replace_image = params.replace_image;
+var catKey = params.catKey;
 
 var fromValue = params.fromValue;
 var toValue = params.toValue;
@@ -248,8 +249,8 @@ else
             queryString += ' )';
         }
     }
-    if(category){
-        queryString += ' and category="'+category+'"';
+    if(catKey){
+        queryString += ' and catKey="'+catKey+'"';
     }
     if(promotion){
         queryString += ' and promotion= "true"';
@@ -293,6 +294,11 @@ else
 
     return results.result
 }
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 
 function getGalleryName(subCat)
 {

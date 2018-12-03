@@ -1,5 +1,5 @@
 var commons = require('management/api/lib/commonsLib');
-var loginLib = require("/supermarket/login/loginUser");
+var loginLib = require("/management/api/clients/loginUser");
 var params = {};
 
 if(request.body != null){
