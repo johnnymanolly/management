@@ -7,15 +7,73 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
     vm.sub_cats = [];
 
     getSubCats(); 
+    
+    vm.onCatsFilterData = function(data)
+    {
+        /*
+        var filter = [];
+        filter.push({key: "all", name: "all"});
+        filter.push(data.documents);
+        return filter;
+        */
+        var array = [];
+        var datas = data.documents;
+        for(var i = 0; i < datas.length; i++)
+        {
+            if(datas[i].subCats)
+            {
+                var subCats = datas[i].subCats;
+                if(typeof subCats == 'string') subCats = [subCats];
+                for(var x = 0; x < subCats.length; x++)
+                {
+                    var obj = {};
+                    obj["key"] = datas[i]["key"];
+                    obj["cat"] = datas[i]["name"];
+                    obj["subCat"] = subCats[x];
+                    array.push(obj);
+                }                    
+            }
+        }
+        vm.subCatsData = array;
+        
+        return data.documents;
+    }
+    
+    vm.onCatsfilterSet = function(obj)
+    {
+        vm.gridParams = {};
+        
+        if(obj.originalObject.key != "all")
+        {
+            vm.gridParams["catKey"] = obj.originalObject.key
+        }
+        else
+        {
+            vm.gridParams["queryFilter"] = null
+        }
+        $scope.$broadcast('updateGridData', {params: vm.gridParams});
+    }
+    
+    vm.onSubCatsfilterSet = function(obj)
+    {
+        vm.gridParams = {};
+        
+        if(obj.originalObject.key != "all")
+        {
+            vm.gridParams["subCategory"] = obj.originalObject.subCat
+        }
+        else
+        {
+            vm.gridParams["queryFilter"] = null
+        }
+        $scope.$broadcast('updateGridData', {params: vm.gridParams});
+    }
 
     vm.manageItemsColDef = [
         {headerName: "Name", field: "name"},
-        {headerName: "Category", field: "category", cellEditor: "select", hide: true,
-         cellEditorParams: {
-             values: []
-         }},
+        {headerName: "Category", field: "category", hide: false, editable : false},
         {headerName: "Form Type", field: "formType", hide: true},
-        {headerName: "Sub Category", field: "subCategory", cellEditor: "select",
+        {headerName: "Sub Category", field: "subCategory", cellEditor: "select", editable : false,
          cellEditorParams: {
              values: vm.sub_cats
          }},
@@ -24,10 +82,10 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
         {headerName: "Price", field: "price"},
         {headerName: "Price Offer", field: "priceOffer"},
         {headerName: "Unit", field: "unit"},
-        {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
+        {headerName: "Upload Image", hide: true, editable : false, cellRenderer: function (params) {  
             return vm.uploadImageButtonRenderer(params);
         }},
-        {headerName: "Image (200 x 200)", field: "image", editable : false, cellRenderer: function (params) {  
+        {headerName: "Default Image", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
         {headerName: "Barcode ID", field: "barcodeID", hide: "true"},
@@ -93,7 +151,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
         {
             var key = params.data.key;
             var img = (params.data.image) ? params.data.image : ""; 
-            return '<div class="ag-cell-inner"><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
+            return '<div class="ag-cell-inner"><a target="_blank" href="https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
 
         }
     }
@@ -149,7 +207,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
 
     vm.promotionCellRenderer =  function(params)
     {
-        if(params.data)
+        if(params.data && params.data.priceOffer)
         {
             if(params.value && params.value == "true")
             {
@@ -166,7 +224,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
         }
         else
         {
-            return '<label id="publish_'+params.data.key+'" style="top: 25%;" class="switch"><input type="checkbox" disabled><span class="slider slider-disabled round"></span></label>'
+            return '<label tooltip-placement="left" uib-tooltip="No price offer set!" style="top: 25%;" class="switch"><input type="checkbox" disabled><span class="slider slider-disabled round"></span></label>'
         }
     }
 
@@ -219,7 +277,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
     {
 
         httpClient
-            .get('management/api/getCategories', {}).then(
+            .get('management/api/categories', {}).then(
             function(data, response){
                 data = data.documents;
 

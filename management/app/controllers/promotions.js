@@ -4,18 +4,19 @@ myApp.controller('promotionCtl', function($scope, httpClient)
     
     vm.promotionColDef = [
         {headerName: "Name", field: "name"},
-        //  {headerName: "Brand", field: "brand"},
-        //    {headerName: "Category", field: "category"},
+        {headerName: "Category", field: "category", hide: false, editable : false},
+        {headerName: "Sub Category", field: "subCategory"},
         {headerName: "Description", field: "description"},
         {headerName: "Price (€)", field: "price"},
-        {headerName: "Upload Image", editable : false, cellRenderer: function (params) {  
+        {headerName: "Price Offer", field: "priceOffer"},
+        {headerName: "Upload Image", editable : false, hide: true, cellRenderer: function (params) {  
             return vm.promotionUploadImageButtonRenderer(params);
         }},
         {headerName: "Image", field: "image",editable : false, cellRenderer: function (params) {  
             return vm.promotionViewImageCellRenderer(params);
         }},
-        {headerName: "Notification Message", field: "notification"},
-        {headerName: "Publish Promotion", field: "publish", editable : false, cellRenderer: function (params) {  
+        {headerName: "Notification Message", field: "notification", hide: true},
+        {headerName: "Publish Promotion", field: "publish", editable : false, hide: true, cellRenderer: function (params) {  
             return vm.promotionPublishItemCellRenderer(params);
         }}];
     

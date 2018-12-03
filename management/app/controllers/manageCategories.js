@@ -106,7 +106,7 @@ myApp.controller('manageCategoriesCtl', function($scope, $location, $timeout, ht
         {
             var key = params.data.key;
             var img = (params.data.image) ? params.data.image : ""; 
-            return '<div class="ag-cell-inner"><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/PF35EDE24C/GetFile?apsws.time=1493564512784&apsws.authSig=5b79a9b6edfc57904b07e2b1d5fa653a&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
+            return '<div class="ag-cell-inner"><a target="_blank" href="https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
 
         }
     }

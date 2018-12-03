@@ -66,6 +66,7 @@ myApp.config(wssConfig)
         {"id":"5", "iconClass":"fa fa-dashboard", "label": "Notification Settings", "route": "#/notification","active":"false"},
         {"id":"6", "iconClass":"fa fa-user", 	  "label": "User Management", 		"route": "#/user_management","active":"false"}
     ],  
+    "logo": "",
     "appname" : "",
     "logout": {"icon": "fa fa-sign-out", 		  "label": "Logout", 				"route":"#/logout"}
 })
