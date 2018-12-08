@@ -1,4 +1,4 @@
-myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, httpClient, schemaForms, dataService)
+myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, httpClient, schemaForms, dataService, account, time, authSig)
                  {
     var vm = this;
 
@@ -23,7 +23,7 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
         if($routeParams.image)
         {
             vm.image = $routeParams.image;
-            vm.imgSrc = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+            vm.imgSrc = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
         }    
         if($routeParams.name)
         {
@@ -49,7 +49,7 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
         vm.showLoadingUpload = false;
         vm.image = resp.response.data.response.result.fileName;
         vm.key = resp.response.data.response.result.key;
-        vm.imgSrc = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+        vm.imgSrc = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
     }
 
     vm.delete = function()

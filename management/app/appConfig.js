@@ -70,6 +70,9 @@ myApp.config(wssConfig)
     "appname" : "",
     "logout": {"icon": "fa fa-sign-out", 		  "label": "Logout", 				"route":"#/logout"}
 })
+	.constant("account", "PF35EDE24C")
+	.constant("time", "1493564512784")
+	.constant("authSig", "5b79a9b6edfc57904b07e2b1d5fa653a")
     .constant("imageSrc", imageSrc)
 	.constant("schemaForms", schemaForms)
 	.constant("categories", ["Bakery","Beverages and Juices", "Alcohol", "Chilled","Deli Meat", "Fruits and Vegetables", "Health and Beauty", "Others"])

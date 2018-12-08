@@ -1,4 +1,4 @@
-myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpClient, schemaForms, dataService)
+myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpClient, schemaForms, dataService, dataService, account, time, authSig)
                  {
     var vm = this;
     
@@ -65,7 +65,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
                 {
                     vm.default_img = 0;
                 }
-                vm.imgSrc1 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[0]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+                vm.imgSrc1 = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[0]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
             }
             
             if(vm.images.length > 1)
@@ -74,7 +74,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
                 {
                     vm.default_img = 1;
                 }
-                vm.imgSrc2 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[1]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+                vm.imgSrc2 = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[1]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
             }
             
             if(vm.images.length > 2)
@@ -83,7 +83,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
                 {
                     vm.default_img = 2;
                 } 
-               vm.imgSrc3 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[2]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore"; 
+               vm.imgSrc3 = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[2]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
             }
             
             if(vm.images.length > 3)
@@ -92,7 +92,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
                 {
                     vm.default_img = 3;
                 }
-                vm.imgSrc4 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[3]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+                vm.imgSrc4 = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.images[3]+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
             }
      
         }    
@@ -150,10 +150,11 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         vm.image = resp.response.data.response.result.fileName;
         vm.key = resp.response.data.response.result.key;
         var selected_frame = resp.response.data.response.result.selected_frame;
+        var img_link = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
         if(selected_frame == 0)
         {
             vm.images[0] = resp.response.data.response.result.fileName;
-            vm.imgSrc1 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+            vm.imgSrc1 = img_link;
             if(selected_frame == 0 && vm.selected_frame == 0)
             {
                 vm.selectedImgSrc = vm.imgSrc1;
@@ -163,7 +164,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         if(selected_frame == 1)
         {
             vm.images[1] = resp.response.data.response.result.fileName;
-            vm.imgSrc2 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+            vm.imgSrc2 = img_link;
             if(selected_frame == 0 && vm.selected_frame == 0)
             {
                 vm.selectedImgSrc = vm.imgSrc2;
@@ -172,7 +173,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         if(selected_frame == 2)
         {
             vm.images[2] = resp.response.data.response.result.fileName;
-            vm.imgSrc3 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+            vm.imgSrc3 =  img_link;
             if(selected_frame == 0 && vm.selected_frame == 0)
             {
                 vm.selectedImgSrc = vm.imgSrc3;
@@ -181,7 +182,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         if(selected_frame == 3)
         {
             vm.images[3] = resp.response.data.response.result.fileName;
-            vm.imgSrc4 = "https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
+            vm.imgSrc4 =  img_link;
             if(selected_frame == 0 && vm.selected_frame == 0)
             {
                 vm.selectedImgSrc = vm.imgSrc4;

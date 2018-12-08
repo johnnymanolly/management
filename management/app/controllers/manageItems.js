@@ -1,4 +1,4 @@
-myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
+myApp.controller('manageItemsCtl', function($scope, $location, httpClient, account, time, authSig)
                  {
     var vm = this;
 
@@ -151,7 +151,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient)
         {
             var key = params.data.key;
             var img = (params.data.image) ? params.data.image : ""; 
-            return '<div class="ag-cell-inner"><a target="_blank" href="https://web.scriptr.io/apsdb/rest/WFD499DDB3/GetFile?apsws.time=1543232599796&apsws.authSig=a2fb22cc1557dd6cd34de201d0c440b0&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
+            return '<div class="ag-cell-inner"><a target="_blank" href=" https://web.scriptr.io/apsdb/rest/' + account + '/GetFile?apsws.time=' + time + '&apsws.authSig=' + authSig + '&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName='+img+'&apsdb.fieldName=attachments&apsdb.documentKey='+key+'&apsdb.store=DefaultStore">'+img+'</a></div>'
 
         }
     }
