@@ -48,6 +48,7 @@ var filterColumnName = params.filterColumnName;
 var action = params.action;
 var deliveryFilter = params.deliveryFilter;
 var number = params.number;
+var login = params.login;
 
 var results;
 
@@ -95,8 +96,8 @@ if(action){
     if(sortType == null) sortType = "string"
     var fieldsParams = "*";
     var queryString = 'formType = "onlineOrder"';
-    if(number){
-        queryString += ' and number= "' + number + '"';
+    if(login){
+        queryString += ' and login= "' + login + '"';
     }
     var sortString = (sortingColumnName && sortingColumnName != "" && sortingColumnName != "undefined") ? sortingColumnName+"<"+sortType+":"+sort+">" : null;
     

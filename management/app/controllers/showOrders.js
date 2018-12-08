@@ -178,15 +178,15 @@ myApp.controller('showOrdersCtl', function($scope, $location, httpClient)
         {
             if(params.value == "Pending..")
             {
-				return '<span class="ag-cell-inner pending" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>'
+				return '<span class="ag-cell-inner pending">'+params.value+'</span>'
             }
             else if(params.value == "Rejected")
             {
-               return '<span class="ag-cell-inner confirm-order" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>' 
+               return '<span class="ag-cell-inner confirm-order">'+params.value+'</span>' 
             }
             else
             { 
-                return '<span class="ag-cell-inner processed-by" tooltip-placement="auto" uib-tooltip="'+ params.value +'">'+params.value+'</span>' 
+                return '<span class="ag-cell-inner processed-by">'+params.value+'</span>' 
             }
             
         }
