@@ -342,6 +342,14 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
                     array.push(obj);
                 }                    
             }
+            else
+            {
+                var obj = {};
+                obj["key"] = data[i]["key"];
+                obj["name"] = data[i]["name"];
+                obj["value"] = data[i]["name"];
+                array.push(obj); 
+            }
         }
         return array;
     }
