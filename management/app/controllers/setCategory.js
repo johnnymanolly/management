@@ -41,12 +41,12 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
 
     vm.onUpload = function(data)
     {
-        vm.showLoadingUpload = true;
+        vm.showLoading = true;
     }
 
     vm.onSuccess = function(resp)
     {
-        vm.showLoadingUpload = false;
+        vm.showLoading = false;
         vm.image = resp.response.data.response.result.fileName;
         vm.key = resp.response.data.response.result.key;
         vm.imgSrc = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
@@ -58,26 +58,26 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
         params.action = "delete";
         params.key = vm.key;
         params.attachment = vm.image;
-        vm.showLoadingDelete = true;
+        vm.showLoading = true;
         httpClient
             .get('management/api/categories', params).then(
             function(data, response)
             {
                 console.log("success");
-                vm.showLoadingDelete = false;   
+                vm.showLoading = false;   
                 vm.image = null;
                 vm.imgSrc = "/";
             },
             function(err) 
             {
                 console.log(err);
-                vm.showLoadingDelete = false; 
+                vm.showLoading = false; 
             });   
     }
 
     vm.submit = function(form)
     {
-        if(!vm.categoryModel.name || !vm.categoryModel.type)
+        if(!vm.categoryModel.name)
         {
             dataService.showAlert("warning", "Please fill in required fields.", "alert_msg", true);
             return;
@@ -95,14 +95,14 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
         params["row"]["subCats"] = vm.categoryModel.subCats;
 
 
-        vm.showLoadingSubmit = true;
+        vm.showLoading = true;
         httpClient
             .post('management/api/categories', params).then(
             function(data, response)
             {
                 console.log("success");
                 dataService.showAlert("success", "Successfully updated category.", "alert_msg", true);
-                vm.showLoadingSubmit = false;   
+                vm.showLoading = false;   
                 vm.key = data.key;
 
                 if(vm.key)
@@ -115,7 +115,7 @@ myApp.controller('setCategoryCtl', function($scope, $routeParams, $location, htt
             function(err) 
             {
                 console.log(err);
-                vm.showLoadingSubmit = false; 
+                vm.showLoading = false; 
             });   
     }
     

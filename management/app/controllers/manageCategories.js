@@ -32,7 +32,7 @@ myApp.controller('manageCategoriesCtl', function($scope, $location, $timeout, ht
 
     vm.manageMenuColDef = [
         {headerName: "Category Name", field: "name"},
-        {headerName: "Category Type", field: "type", cellEditor: "select", editable : false,
+        {headerName: "Category Type", field: "type", hide: true, cellEditor: "select", editable : false,
          cellEditorParams: {  
              values : ["Food", "Drinks", "Fruits", "Veggies", "Others"]
          }},
@@ -43,8 +43,12 @@ myApp.controller('manageCategoriesCtl', function($scope, $location, $timeout, ht
         {headerName: "Image", field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
-        {headerName: "Edit", editable : false, cellRenderer: function (params) { 
+        {headerName: "Edit Category", editable : false, cellRenderer: function (params) { 
             return vm.editCellRenderer(params);
+
+        }},
+        {headerName: "Manage Items", editable : false, cellRenderer: function (params) { 
+            return vm.manageItemsCellRenderer(params);
 
         }},
         {headerName: "Publish", field: "publish", editable : false, cellRenderer: function (params) {  
@@ -82,6 +86,21 @@ myApp.controller('manageCategoriesCtl', function($scope, $location, $timeout, ht
         }
 
     }
+    
+    vm.manageItemsCellRenderer = function(params)
+    {
+        if(params.data)
+        {
+            var data = '?catKey='+params.data.key;
+            if(params.data.name)
+            {
+                data += '&name='+params.data.name;
+            }
+
+            return '<div class="ag-cell-inner"><span><a href="#/manageItems'+data+'"><i class="fa fa-edit"></i> Manage Items</a></span></div>';  
+        }
+
+    }
 
     vm.uploadImageButtonRenderer = function(params)
     {        
@@ -115,7 +134,7 @@ myApp.controller('manageCategoriesCtl', function($scope, $location, $timeout, ht
     {
         if(params.data)
         {
-            if(params.data.name && params.data.type && params.data.image)
+            if(params.data.name && params.data.image)
             {
                 if(params.value == "Published")
                 {

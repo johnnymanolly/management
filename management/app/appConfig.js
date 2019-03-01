@@ -8,10 +8,16 @@ myApp.config(wssConfig)
         
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Categories", 	"route": "#/manageCategories"}, 
         {"id":"4", "iconClass":"glyphicon glyphicon-cloud-upload",  "label": "Manage Items", 	  	"route": "#/manageItems"},
+            
+        {"id":"5", "iconClass":"fa fa-dashboard", "label": "Settings", "route": "#/settings","active":"false"},
+        {"id":"5", "iconClass":"fa fa-dashboard", "label": "Notification Settings", "route": "#/notification","active":"false"},
+        
+        {"id":"6", "iconClass":"fa fa-user", 	  "label": "User Management", 		"route": "#/user_management","active":"false"},
+        {"id":"5", "iconClass":"fa fa-dashboard", "label": "Reports", 				"route": "#/stats","active":"false"},
          
   //      {"id":"3", "iconClass":"fa fa-globe", 						"label": "Track Delivery", 		"route": "#/maps"},
-        {"id":"5", "iconClass":"glyphicon glyphicon-question-sign", "label": "Suggested Items", 	"route": "#/suggestions"},
-        {"id":"6", "iconClass":"fa fa-bell-o", 						"label": "Promotions", 			"route": "#/promotions"},
+       // {"id":"5", "iconClass":"glyphicon glyphicon-question-sign", "label": "Suggested Items", 	"route": "#/suggestions"},
+     //   {"id":"6", "iconClass":"fa fa-bell-o", 						"label": "Promotions", 			"route": "#/promotions"},
 
     //    {"id":"1", "iconClass":"fa fa-group", 						"label": "Register New Client", "route":"#/clientRegistration"},
     //    {"id":"1", "iconClass":"glyphicon glyphicon-edit", 			"label": "Order Online", 		"route":"#/orderOnline"},
@@ -47,6 +53,8 @@ myApp.config(wssConfig)
         {"route": "servedTables", 		 "template": "/management/templates/servedTables.html", 	  controller: "servedTablesCtl as vm"},
         
         {"route": "orderLocally", 		 "template": "/management/templates/orderLocally.html",		  controller: "orderLocallyCtl as vm"},
+        
+        {"route": "settings", 		 	 "template": "/management/templates/Settings.html",		  		  controller: "settingsCtl as vm"},
 
         {"route": "stats", 			     "template": "/management/templates/statsIFrame.html"},
         
@@ -60,19 +68,19 @@ myApp.config(wssConfig)
 })
     .constant("headerItemsJson", {
     "items": [
-        {"id":"5", "iconClass":"fa fa-dashboard", "label": "Reports", 				"route": "#/stats","active":"false"}
+   //     {"id":"5", "iconClass":"fa fa-dashboard", "label": "Reports", 				"route": "#/stats","active":"false"}
     ],
     "subitems": [
-        {"id":"5", "iconClass":"fa fa-dashboard", "label": "Notification Settings", "route": "#/notification","active":"false"},
-        {"id":"6", "iconClass":"fa fa-user", 	  "label": "User Management", 		"route": "#/user_management","active":"false"}
+      //  {"id":"5", "iconClass":"fa fa-dashboard", "label": "Notification Settings", "route": "#/notification","active":"false"},
+     //   {"id":"6", "iconClass":"fa fa-user", 	  "label": "User Management", 		"route": "#/user_management","active":"false"}
     ],  
     "logo": "",
     "appname" : "",
     "logout": {"icon": "fa fa-sign-out", 		  "label": "Logout", 				"route":"#/logout"}
 })
-	.constant("account", "PF35EDE24C")
-	.constant("time", "1493564512784")
-	.constant("authSig", "5b79a9b6edfc57904b07e2b1d5fa653a")
+	.constant("account", "C1AC9FA481")
+	.constant("time", "1544382860900")
+	.constant("authSig", "bffc5c18b95083fd9757f04cf5a5a14b")
     .constant("imageSrc", imageSrc)
 	.constant("schemaForms", schemaForms)
 	.constant("categories", ["Bakery","Beverages and Juices", "Alcohol", "Chilled","Deli Meat", "Fruits and Vegetables", "Health and Beauty", "Others"])

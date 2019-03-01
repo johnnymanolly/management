@@ -117,6 +117,7 @@ myApp.controller('showOrdersCtl', function($scope, $location, httpClient)
             return vm.assignToMeButtonRenderer(params);
         }},
         */
+        {headerName: "Order Type", field: "orderType", editable : false},
         {headerName: "Status", field: "orderStatus", editable : false, cellRenderer: function (params) {  
             return vm.statusRenderer(params);
         }},

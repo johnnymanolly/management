@@ -126,6 +126,7 @@ myApp.controller('orderLocallyCtl', function($scope, $location, $routeParams, ht
     
     vm.orderListCallback = function(data)
     {
+        data = data.documents;
         var items = [];
         for(var i = 0; i < data.length; i++)
         {

@@ -1,12 +1,21 @@
-myApp.controller('manageItemsCtl', function($scope, $location, httpClient, account, time, authSig)
+myApp.controller('manageItemsCtl', function($scope, $location, $routeParams, httpClient, account, time, authSig)
                  {
     var vm = this;
 
     vm.productsApiUrl = "management/api/products";
 
     vm.sub_cats = [];
+    vm.gridParams = {};
 
     getSubCats(); 
+    
+    if($routeParams.catKey)
+    {
+        vm.defaultSetObject = {key: $routeParams.catKey}
+        vm.gridParams["catKey"] = $routeParams.catKey
+        
+        
+    }
     
     vm.onCatsFilterData = function(data)
     {
@@ -35,6 +44,16 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient, accou
             }
         }
         vm.subCatsData = array;
+        
+        if($routeParams.catKey)
+    	{
+            var obj = {};
+            obj['key'] = $routeParams.catKey;
+            obj['name'] = $routeParams.name;
+      //      obj['subCat'] = $routeParams.name;
+            
+            $scope.$broadcast('angucomplete-alt:changeInput', "catList", obj);
+        }
         
         return data.documents;
     }
@@ -73,19 +92,20 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient, accou
         {headerName: "Name", field: "name"},
         {headerName: "Category", field: "category", hide: false, editable : false},
         {headerName: "Form Type", field: "formType", hide: true},
-        {headerName: "Sub Category", field: "subCategory", cellEditor: "select", editable : false,
+        {headerName: "Sub Category", field: "subCategory",  hide: true, cellEditor: "select", editable : false,
          cellEditorParams: {
              values: vm.sub_cats
          }},
         {headerName: "Brand", field: "brand", hide: true},
         {headerName: "Description", field: "description",  hide: true, cellEditor: 'agLargeTextCellEditor'},
         {headerName: "Price", field: "price"},
-        {headerName: "Price Offer", field: "priceOffer"},
+        {headerName: "After Discount", field: "discount"},
+        {headerName: "Special Price Offer", field: "priceOffer"},
         {headerName: "Unit", field: "unit"},
         {headerName: "Upload Image", hide: true, editable : false, cellRenderer: function (params) {  
             return vm.uploadImageButtonRenderer(params);
         }},
-        {headerName: "Default Image", field: "image", editable : false, cellRenderer: function (params) {  
+        {headerName: "Default Image", hide: true, field: "image", editable : false, cellRenderer: function (params) {  
             return vm.viewImageCellRenderer(params);
         }},
         {headerName: "Barcode ID", field: "barcodeID", hide: "true"},
@@ -107,7 +127,7 @@ myApp.controller('manageItemsCtl', function($scope, $location, httpClient, accou
         {headerName: "Publish", field: "publish", editable : false, cellRenderer: function (params) {  
             return vm.publishCellRenderer(params);
         }},
-        {headerName: "Promotion", field: "promotion", editable : false, cellRenderer: function (params) {  
+        {headerName: "Promotion", field: "promotion", hide: true, editable : false, cellRenderer: function (params) {  
             return vm.promotionCellRenderer(params);
         }}
     ]; 

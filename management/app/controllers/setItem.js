@@ -108,6 +108,10 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         {
             vm.itemModel.price =  parseInt(product.price);
         }
+        if(product.halfPortionPrice)
+        {
+            vm.itemModel.halfPortionPrice =  parseInt(product.halfPortionPrice);
+        }
         if(product.priceOffer)
         {
             vm.itemModel.priceOffer =  parseInt(product.priceOffer);
@@ -119,6 +123,30 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         if(product.description)
         {
             vm.itemModel.description =  product.description;
+        }
+        if(product.default_ingredients)
+        {
+            vm.itemModel.default_ingredients =  product.default_ingredients;
+        }
+        if(product.extra_ingredients)
+        {
+            vm.itemModel.extra_ingredients =  product.extra_ingredients;
+        }
+        if(product.calories)
+        {
+            vm.itemModel.calories =  parseInt(product.calories);
+        }
+        if(product.fat)
+        {
+            vm.itemModel.fat =  parseInt(product.fat);
+        }
+        if(product.carbs)
+        {
+            vm.itemModel.carbs =  parseInt(product.carbs);
+        }
+        if(product.protein)
+        {
+            vm.itemModel.protein =  parseInt(product.protein);
         }
 
         if(product.subCategory)
@@ -141,14 +169,19 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
             vm.data["replace_image"] = vm.images[vm.selected_frame];
         }
         
-        vm.showLoadingUpload = true;
+        vm.showLoading = true;
     }
 
     vm.onSuccess = function(resp)
     {
-        vm.showLoadingUpload = false;
+        vm.showLoading = false;
         vm.image = resp.response.data.response.result.fileName;
         vm.key = resp.response.data.response.result.key;
+        if(vm.key)
+        {
+            vm.data["row"] = {};
+            vm.data["row"] = JSON.stringify({key: vm.key});
+        }
         var selected_frame = resp.response.data.response.result.selected_frame;
         var img_link = "https://web.scriptr.io/apsdb/rest/" + account + "/GetFile?apsws.time=" + time + "&apsws.authSig=" + authSig + "&apsws.responseType=json&apsws.authMode=simple&apsdb.fileName="+vm.image+"&apsdb.fieldName=attachments&apsdb.documentKey="+vm.key+"&apsdb.store=DefaultStore";
         if(selected_frame == 0)
@@ -214,13 +247,13 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
             params.attachment = vm.images[3]; 
         } 
 
-        vm.showLoadingDelete = true;
+        vm.showLoading = true;
         httpClient
             .get('management/api/products', params).then(
             function(data, response)
             {
                 console.log("success");
-                vm.showLoadingDelete = false;  
+                vm.showLoading = false;  
                 if(data.selected_frame == 0)
                 {
                     vm.imgSrc1 = "/";
@@ -241,7 +274,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
             function(err) 
             {
                 console.log(err);
-                vm.showLoadingDelete = false; 
+                vm.showLoading = false; 
             });   
     }
 
@@ -264,7 +297,14 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
         params["row"]["brand"] = vm.itemModel.brand; 
         params["row"]["unit"] = vm.itemModel.unit;
         params["row"]["price"] = vm.itemModel.price;
+        params["row"]["halfPortionPrice"] = vm.itemModel.halfPortionPrice;
         params["row"]["description"] = vm.itemModel.description;
+        params["row"]["default_ingredients"] = vm.itemModel.default_ingredients;
+        params["row"]["extra_ingredients"] = vm.itemModel.extra_ingredients;
+        params["row"]["calories"] = vm.itemModel.calories;
+        params["row"]["fat"] = vm.itemModel.fat;
+        params["row"]["carbs"] = vm.itemModel.carbs;
+        params["row"]["protein"] = vm.itemModel.protein;
         params["row"]["catKey"] = vm.selectedSubCat["key"];
         params["row"]["category"] = vm.selectedSubCat["name"];
         params["row"]["subCategory"] = vm.selectedSubCat["value"];
@@ -274,14 +314,14 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
 			params["row"]["priceOffer"] = vm.itemModel.priceOffer.toFixed(2);
         }
 
-        vm.showLoadingSubmit = true;
+        vm.showLoading = true;
         httpClient
             .post('management/api/products', params).then(
             function(data, response)
             {
                 console.log("success");
                 dataService.showAlert("success", "Successfully updated Product.", "alert_msg", true);
-                vm.showLoadingSubmit = false;   
+                vm.showLoading = false;   
                 vm.key = data.key;
 
                 if(vm.key)
@@ -294,7 +334,7 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
             function(err) 
             {
                 console.log(err);
-                vm.showLoadingSubmit = false; 
+                vm.showLoading = false; 
             });   
     }
     
@@ -367,19 +407,19 @@ myApp.controller('setItemCtl', function($scope, $routeParams, $location, httpCli
        params["row"]["key"] = vm.key;
        params["row"]["image"] = vm.images[vm.selected_frame];
        params["selected_frame"] = vm.selected_frame;
-       vm.showLoadingMain = true;
+       vm.showLoading = true;
         httpClient
             .get('management/api/products', params).then(
             function(data, response)
             {
                 console.log("success");
                 vm.default_img = data.selected_frame;
-                vm.showLoadingMain = false;  
+                vm.showLoading = false;  
             },
             function(err) 
             {
                 console.log(err);
-                vm.showLoadingMain = false; 
+                vm.showLoading = false; 
             });   
     }
     
