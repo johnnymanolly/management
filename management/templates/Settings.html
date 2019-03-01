@@ -1,0 +1,75 @@
+<style>
+
+    .form-control {
+        width: 50%;
+        border-top-right-radius: 4px!important;
+    	border-bottom-right-radius: 4px!important;
+    }
+
+    .script-text {
+        margin-right: 10px;
+        background: #f9f9f9;
+        cursor: default;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: auto;
+        display: inherit;
+
+    }
+
+
+</style>
+
+
+<div class="container-fluid" style="overflow-y: auto;height: 100%;">
+    <div class="row pdt20 mrgb50">
+        <div class="col-xs-10 heading">Settings</div>
+    </div>
+    <div class="row col-xs-12" style="margin-bottom: 20px">
+        <div class="col-xs-12" id="alert_msg">
+            <div id="alert_msg_content" class="alert">
+            </div>
+        </div>
+        <form  name="ngform">
+            <div class="col-xs-6">
+                <div html-class="bls" sf-options="vm.frmGlobalOptions" sf-schema="vm.settingsSchema" sf-form="vm.settingsForm" sf-model="vm.settingsModel"></div>
+                <div>            
+                    <button ng-click="vm.submit()" class="btn btn-success" ng-class="(vm.showLoadingSubmit) ? 'is-disabled': ''">
+                        <i ng-if="vm.showLoadingSubmit" class="fa fa-spinner fa-spin fa-1x"></i>
+                        <span> {{vm.showLoadingSubmit ? 'Loading ..' : 'Save'}}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-6" style="margin-left: 0px;margin-bottom: 15px;">
+                <label>Set Your Delivery Areas</label>
+                <div class="col-sm-12">
+                    <div>
+
+                        <scriptr-autocomplete
+                                              id="codeList"                
+                                              placeholder="Add postal codes"
+                                              pause="400"
+                                              search-fields="code,municip"
+                                              selected-object="vm.onSelect"
+                                              title-field="code"
+                                              clear-selected="true"                
+                                              description-field="municip"  
+                                              objects="vm.codes"
+                                              list-selected-object="true"                
+                                              minlength="0"
+                                              text-no-results="No results"                
+                                              text-searching="Searching..."
+                                              transport="https"
+                                              on-format-data="vm.callback"
+
+                                              api="management/api/getPostalCodes"
+                                              input-class="form-control form-control-small">
+                        </scriptr-autocomplete>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>

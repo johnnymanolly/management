@@ -1,6 +1,16 @@
+<style>
+    .ag-header-cell-resize {
+        width: 1px;
+        background-color: #a2a2a2;
+    }
+</style>
+
 <!-- content page -->
 <div class="">
     <div class="container-fluid">  
+        <div class="row pdt20 mrgb50">
+            <div class="col-xs-10 heading">View Order</div>
+        </div>
         <div style="margin-top:30px;" class="text-center loading" ng-show="vm.loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
         <form ng-show="!vm.loading">
             <div class="row col-xs-12" style="margin-top:8px;">
@@ -43,7 +53,7 @@
                                 {{vm.number}}
                             </span>
                         </div>
-                        <div class="">
+                        <div ng-if="vm.orderType == 'delivery'" class="">
                             <span class="">
                                 Address :
                             </span>
@@ -108,20 +118,23 @@
                                 €{{vm.total_amount}}
                             </span>
                         </div>
-                        <div ng-if="vm.orderStatus != 'Delivered'">
-                            <button ng-if="vm.orderStatus != 'Confirmed'" ng-click="vm.confirmOrder()" class="success-btn" ng-class="(vm.showLoadingConfirmed) ? 'is-disabled': ''">
+                        <div ng-if="vm.orderStatus != 'Delivered'" style="margin-top: 10px;">
+                            <button ng-if="vm.orderStatus != 'Confirmed' && vm.orderStatus != 'Rejected'" ng-click="vm.confirmOrder()" class="success-btn" ng-class="(vm.showLoadingConfirmed) ? 'is-disabled': ''">
                                 <i ng-if="vm.showLoadingConfirmed" class="fa fa-spinner fa-spin fa-1x"></i>
                                 <span> {{vm.showLoadingConfirmed ? 'Loading ..' : 'Confirm Order'}}</span>
                             </button>
-                               <button ng-if="vm.orderStatus == 'Confirmed'" ng-click="vm.markAsDelivered()" class="success-btn" ng-class="(vm.showLoadingDelivered) ? 'is-disabled': ''">
+                            <button ng-if="vm.orderStatus == 'Confirmed'" ng-click="vm.markAsDelivered()" class="success-btn" ng-class="(vm.showLoadingDelivered) ? 'is-disabled': ''">
                                 <i ng-if="vm.showLoadingDelivered" class="fa fa-spinner fa-spin fa-1x"></i>
                                 <span> {{vm.showLoadingDelivered ? 'Loading ..' : 'Mark delivered'}}</span>
                             </button>
-                            <button ng-if="vm.orderStatus != 'Rejected'" ng-click="vm.rejectOrder()" class="danger-btn" ng-class="(vm.showLoadingRejected) ? 'is-disabled': ''">
+                            <button ng-if="vm.orderStatus != 'Rejected'" ng-click="vm.open()" class="danger-btn" ng-class="(vm.showLoadingRejected) ? 'is-disabled': ''">
                                 <i ng-if="vm.showLoadingRejected" class="fa fa-spinner fa-spin fa-1x"></i>
                                 <span> {{vm.showLoadingRejected ? 'Loading ..' : 'Reject Order'}}</span>
                             </button>
-                         
+                             <button ng-if="vm.orderStatus == 'Rejected'" ng-click="vm.openRejectedOrder()" class="danger-btn" ng-class="(vm.showLoadingRejected) ? 'is-disabled': ''">
+                                <span> View Rejection</span>
+                            </button>
+
                         </div>
                         <div>
 
@@ -140,8 +153,10 @@
                               pagination="false"
                               grid-height='calc(100vh - 220px)'
                               cell-editable='false'
-                              row-height="25"    
+                              row-height="40"    
+                              scope="vm.scope"
                               suppress-filter='true'    
+                              enable-col-resize="true"  
                               enable-client-side-filter='false'
                               enable-server-side-filter='false' 
                               enable-client-side-sorting='true'
@@ -149,6 +164,7 @@
                               row-model-selection='multiple'
                               pagination-page-size='200'
                               on-format-data="vm.formatData"    
+                              default-cell-renderer="vm.defaultCellRenderer"   
                               transport='https'>
                 </scriptr-grid>
 

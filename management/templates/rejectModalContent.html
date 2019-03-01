@@ -1,0 +1,48 @@
+<style>
+    .modal-dialog {
+        width: 50%!important;
+    }
+
+    .modal-footer {
+        border-top: none!important;
+    }
+</style>
+
+<div class="modal-header">
+    <h3>Reject Order</h3>
+</div>
+<div class="modal-body">
+    <h4>Say which item is not available</h4>
+    <div>
+        <scriptr-grid columns-definition='vm.colDefs' 
+                      api='management/api/getOrder'
+                      api-params='vm.apiParams'    
+                      row-model-type='infinite'
+                      grid-height='300'
+                      scope="vm.scope"
+                      pagination="false"
+                      default-cell-renderer="vm.defaultCellRenderer"   
+                      cell-editable='false'
+                      row-height="40"    
+                      on-format-data="vm.formatData"  
+                      suppress-filter='true'    
+                      enable-client-side-filter='false'
+                      enable-server-side-filter='false' 
+                      enable-client-side-sorting='true'
+                      enable-server-side-sorting='false'
+                      row-model-selection='multiple'
+                      pagination-page-size='200'
+                      transport='https'>
+        </scriptr-grid>
+    </div>
+    <span>Any additional comments for client?</span>
+    <div>
+        <textarea ng-model="comments" rows="4" cols="50">
+        </textarea>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+</div>

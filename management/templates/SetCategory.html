@@ -20,11 +20,11 @@
 
 
 <div class="container-fluid" style="overflow-y: auto;height: 100%;">
-    <!--div class="row pdt20 mrgb50">
-<div class="col-xs-10 heading">Preview Mode</div>
-</div-->
+    <div class="row pdt20 mrgb50">
+        <div class="col-xs-10 heading">Set Category</div>
+    </div>
     <div class="row col-xs-12" style="margin-top: 20px;margin-bottom: 20px">
-        <div class="col-xs-6">
+        <div class="col-xs-6" style="margin-left: -15px;">
             <div class="col-xs-12" id="alert_msg">
                 <div id="alert_msg_content" class="alert">
                 </div>
@@ -34,12 +34,12 @@
                     <div html-class="bls" sf-options="vm.frmGlobalOptions" sf-schema="vm.categorySchema" sf-form="vm.categoryForm" sf-model="vm.categoryModel"></div>
                 </div>
                 <div class="pdt20">            
-                     <button ng-click="vm.newCat()" class="btn btn-success">
+                    <button ng-click="vm.newCat()" class="btn btn-success">
                         <span>Add New Category</span>
                     </button>
-                    <button ng-click="vm.submit()" class="btn btn-success" ng-class="(vm.showLoadingSubmit) ? 'is-disabled': ''">
-                        <i ng-if="vm.showLoadingSubmit" class="fa fa-spinner fa-spin fa-1x"></i>
-                        <span> {{vm.showLoadingSubmit ? 'Loading ..' : 'Save'}}</span>
+                    <button ng-click="vm.submit()" class="btn btn-success" ng-class="(vm.showLoading) ? 'is-disabled': ''">
+                        <!--i ng-if="vm.showLoading" class="fa fa-spinner fa-spin fa-1x"></i-->
+                        <span> {{vm.showLoading ? 'Loading ..' : 'Save'}}</span>
                     </button>
                 </div>
             </form>
@@ -48,13 +48,13 @@
             <div class="fl-r">
                 <div>
                     <div class="col-centered" style="width:204px;">
-                        <button class="success-btn btn-upload" upload-button upload-button url="/management/api/categories" data="vm.data" on-upload="vm.onUpload(data)" on-success="vm.onSuccess" ng-class="(vm.showLoadingDelete) ? 'is-disabled': ''">
-                            <i ng-if="vm.showLoadingUpload" class="fa fa-spinner fa-spin fa-1x"></i>
-                            <span> {{vm.showLoadingUpload ? 'Loading ..' : 'Upload'}}</span>
+                        <button class="success-btn btn-upload" upload-button upload-button url="/management/api/categories" data="vm.data" on-upload="vm.onUpload(data)" on-success="vm.onSuccess" ng-class="(vm.showLoading) ? 'is-disabled': ''">
+                            <!--i ng-if="vm.showLoading" class="fa fa-spinner fa-spin fa-1x"></i-->
+                            <span> {{vm.showLoading ? 'Loading ..' : 'Upload'}}</span>
                         </button>
-                        <button ng-click="vm.delete()" class="danger-btn" ng-class="(vm.showLoadingDelete) ? 'is-disabled': ''">
-                            <i ng-if="vm.showLoadingDelete" class="fa fa-spinner fa-spin fa-1x"></i>
-                            <span> {{vm.showLoadingDelete ? 'Loading ..' : 'Delete'}}</span>
+                        <button ng-click="vm.delete()" class="danger-btn" ng-class="(vm.showLoading) ? 'is-disabled': ''">
+                            <!--i ng-if="vm.showLoading" class="fa fa-spinner fa-spin fa-1x"></i-->
+                            <span> {{vm.showLoading ? 'Loading ..' : 'Delete'}}</span>
                         </button>
                     </div>
                     <div style="text-align:center;margin: 26px;"><b>Preview Image</b></div>

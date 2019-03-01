@@ -3,6 +3,10 @@
     .btn-upload {
         background: green;
     }
+    .ag-header-cell-resize {
+        width: 1px;
+        background-color: #a2a2a2;
+    }
 </style>
 
 <div class="col-xs-12 mrgt13">
@@ -15,11 +19,12 @@
                                       id="catList"                
                                       placeholder="Filter by categories"
                                       pause="400"
-                                      search-fields="id"
+                                      search-fields="key"
                                       title-field="name"             
                                       minlength="0"                          
                                       text-no-results="No results"                
                                       text-searching="Searching..."
+                                      default-set-object="vm.defaultSetObject"
                                       transport="https"
                                       api="management/api/categories"
                                       on-format-data="vm.onCatsFilterData"
@@ -29,7 +34,7 @@
             </div>
         </div>  
         
-         <div class="col-sm-2 mrgr20">
+         <!--div class="col-sm-2 mrgr20">
             <div class="input-group set-width">
                 <scriptr-autocomplete
                                       id="catList"                
@@ -47,7 +52,7 @@
                                       input-class="form-control form-control-small">
                 </scriptr-autocomplete>
             </div>
-        </div> 
+        </div--> 
 
         <div style="margin-top:60px;">
             <scriptr-grid columns-definition='vm.manageItemsColDef' 
@@ -59,8 +64,8 @@
                           enable-delete-row='true'
                           on-add-row-click="vm.onAddRowClick"
                           export-exclude-fields='["image", "formType", "barcode", "barcodeID"]'
-                          enable-export='true'
-                          enable-import="true"
+                          enable-export='false'
+                          enable-import="false"
                           cell-editor=""
                           row-height="40"   
                           row-model-type='infinite'
@@ -68,13 +73,14 @@
                           grid-height='calc(100vh - 109px)'
                           enable-col-resize="true"     
                           enable-add-row='true'
-                          cell-editable='true'
+                          cell-editable='false'
                           enable-client-side-filter='true'
                           enable-server-side-filter='true' 
                           enable-client-side-sorting='false'
                           enable-server-side-sorting='true'
                           row-model-selection='multiple'
                           on-publish="vm.onPublish"
+                          api-params="vm.gridParams"
                           on-promotion="vm.onPromotion"
                           on-cell-clicked='vm.manageItemsSelectionChanged'
                           pagination-page-size='50'
