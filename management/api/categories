@@ -149,6 +149,7 @@ else
         queryParams["query"] += filterQuery;
     }
 
+    sortString = 'creationTime<date:ASC>';
     if(sortString)
     {
         queryParams["sort"] = sortString;

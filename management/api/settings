@@ -1,0 +1,101 @@
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var params = {};
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var action = params.action;
+var discount = params.discount;
+
+var results;
+
+
+if(action)
+{
+    var fieldsToSave = {};
+    var data = params;
+    if(typeof data == 'string') data = JSON.parse(data);
+    for(param in data)
+    {
+        if(param != 'action')
+        {
+            fieldsToSave[param] = data[param]
+        }
+        
+    }  
+    fieldsToSave["formType"] = "settings";  
+    fieldsToSave["key"] = toHex("settings");
+    if(action == "set")
+    {
+        
+        log.info(JSON.stringify(fieldsToSave))  
+        var fieldsToSaveResult = documents.save(fieldsToSave);
+        
+        if(fieldsToSaveResult.metadata.status == "failure" && fieldsToSaveResult.metadata.errorCode == "INVALID_APPEND_NEW_DOCUMENT")
+        {
+
+            var fieldsToSave = {};
+            fieldsToSave["key"] = toHex("settings");
+            fieldsToSave["formType"] = "settings";
+            fieldsToSave["productKey"] = [key];  
+
+            var fieldsToSaveResult = documents.save(fieldsToSave);
+
+        }
+        else if(fieldsToSaveResult.metadata.status == "failure")  
+        {
+            return fieldsToSaveResult.metadata;  
+        }    
+        else
+        {
+            return  {status : "success"}
+        }
+
+    }
+
+}
+else
+{
+    var queryParams = {};
+    var fieldsParams = "*";
+    var key = toHex("settings");
+    var queryString = 'formType = "settings" and key = "' +key + '"';
+    
+    queryParams["query"] =  queryString;
+    queryParams["fields"] =  fieldsParams;
+   
+    log.info(JSON.stringify(queryParams))
+    results = documents.query(queryParams);
+
+    return results.result
+}
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
+}
+

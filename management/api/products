@@ -230,7 +230,8 @@ else
 {
     var queryParams = {};
     if(sortType == null) sortType = "string"
-    var fieldsParams = "attachments, brand, category, description, image, key, name, price, priceOffer, unit, subCategory, publish, promotion";
+    //attachments, brand, category, description, extra_ingredients, default_ingredients, image, key, name, price, priceOffer, unit, subCategory, publish, promotion
+    var fieldsParams = "*";
     var queryString = 'formType = "item"';
     if(publishStatus){
         queryString += ' and publish = "' + publishStatus + '"';
@@ -291,14 +292,47 @@ else
 
     log.info(JSON.stringify(queryParams))
     results = documents.query(queryParams);
-
+    
+    var discount = getDiscountValue();
+    
+    if(discount)
+    {
+        var ratio = parseInt(discount) / 100;
+		for(var i = 0; i < results.result.documents.length; i++)
+        {
+            var after_discount_price = parseFloat(results.result.documents[i]["price"]) - ( parseFloat(results.result.documents[i]["price"]) * ratio);
+            results.result.documents[i]["discount"] = Math.round(after_discount_price * 100) / 100;
+			
+        }
+    }
+    
     return results.result
+
+    
 }
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function getDiscountValue(subCat)
+{
+    queryParams = {};
+    var key = toHex("settings");
+    queryParams["query"] = 'formType = "settings" and key = "' + key + '"';
+    queryParams["fields"] =  "*";
+    var results = documents.query(queryParams);
+
+    if(results.result.documents)
+    {
+        if(results.result.documents[0].discountEnabled == "true")
+        {
+            return results.result.documents[0].discount;
+        }
+		
+    }
+
+}
 
 function getGalleryName(subCat)
 {
@@ -308,4 +342,18 @@ function getGalleryName(subCat)
     var results = documents.query(queryParams);
 
     return results
+}
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
 }

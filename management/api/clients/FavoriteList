@@ -37,7 +37,8 @@ var return_keys = params.return_keys;
 var keys = params.keys;
 var key = params.key;
 var action = params.action;
-var login = params.login;
+
+var login = request.user.id;
 
 var results;
 

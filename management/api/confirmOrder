@@ -31,6 +31,8 @@ if(orderQueryResults.metadata.status == "failure") {
 } 
 var updateParams = orderQueryResults.result.documents[0];
 updateParams["orderStatus"] = params["orderStatus"];
+updateParams["rejectionDetails"] = params["rejectionDetails"];
+
 updateParams["formType"] = "onlineOrder";
 updateParams["meta.types"] = {
     "orderDate" : "date",

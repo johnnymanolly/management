@@ -1,0 +1,63 @@
+
+var log = require("log");
+log.setLevel("INFO");
+var documents = require("document");
+
+var params = {};
+if(request.body != null){
+    params = request.body;
+}else if(request.parameters.body){
+    params = request.parameters.body;
+} else {
+    params = request.parameters;
+}
+if(typeof params == 'string' && params != null){
+    try{
+        params = JSON.parse(params);   
+    }catch(e){
+        return "INVALID OR MISSING PARAMETER";
+    }
+}
+
+var code = params.code;
+
+var queryParams = {};
+var fieldsParams = "*";
+var key = toHex("settings");
+var queryString = 'formType = "settings" and key = "' +key + '"';
+
+queryParams["query"] =  queryString;
+queryParams["fields"] =  fieldsParams;
+
+log.info(JSON.stringify(queryParams))
+results = documents.query(queryParams);
+
+if(results.result.documents && results.result.documents[0].postalCodes)
+{
+    var postalCodes = JSON.parse(results.result.documents[0].postalCodes);
+    for(var i = 0; i < postalCodes.length; i++)
+    {
+        var postalCode = postalCodes[i]["code"];
+		if(postalCode == code)
+        {
+            return true;
+        }
+    }
+}
+
+return false;
+
+function toHex(input){
+    try { hexcase } catch(e) { hexcase=0; }
+    var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+    var output = "";
+    var x;
+    for(var i = 0; i < input.length; i++)
+    {
+        x = input.charCodeAt(i);
+        output += hex_tab.charAt((x >>> 4) & 0x0F)
+            + hex_tab.charAt( x & 0x0F);
+    }
+    return output;
+}
+

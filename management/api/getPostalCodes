@@ -1,0 +1,1002 @@
+return [
+  {
+    "code": 3011,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3012,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3013,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3015,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3016,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3017,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3020,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3021,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3022,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3025,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3026,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3027,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3030,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3031,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3032,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3035,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3036,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3040,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3041,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3042,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3045,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3046,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3047,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3048,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3050,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3051,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3052,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3055,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3056,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3060,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3061,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3065,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3066,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3067,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3070,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3071,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3075,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3076,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3077,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3080,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3081,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3082,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3083,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3085,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3086,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3087,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3090,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3091,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3095,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3096,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3100,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3101,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3105,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3106,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3107,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3110,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3111,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3112,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3113,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3115,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3116,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3117,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3118,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3119,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3120,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 3150,
+    "municip": "Lemesos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4000,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4001,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4002,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4003,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4004,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4005,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4006,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4007,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4008,
+    "municip": "Mesa Geitonia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4040,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4041,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4042,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4043,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4044,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4045,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4046,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4047,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4048,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4049,
+    "municip": "Germasogeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4100,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4101,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4102,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4103,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4104,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4105,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4106,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4107,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4108,
+    "municip": "Agios Athanasios",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4130,
+    "municip": "Pano Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4131,
+    "municip": "Pano Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4150,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4151,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4152,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4153,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4154,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4155,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4156,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4157,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4158,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4159,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4170,
+    "municip": "Kato Polemidia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4180,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4181,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4182,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4183,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4184,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4185,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4186,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4187,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4188,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4189,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4190,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4191,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4192,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4193,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4194,
+    "municip": "Ypsonas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4500,
+    "municip": "Kellaki",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4502,
+    "municip": "Asgata",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4504,
+    "municip": "Vasa Kellakiou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4505,
+    "municip": "Prastio Kellakiou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4506,
+    "municip": "Eptagoneia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4509,
+    "municip": "Vikla",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4520,
+    "municip": "Parekklisia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4521,
+    "municip": "Agios Tychon",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4522,
+    "municip": "Akrounta",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4523,
+    "municip": "Armenochori",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4524,
+    "municip": "Monagroulli",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4525,
+    "municip": "Moni",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4527,
+    "municip": "Mouttagiaka",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4528,
+    "municip": "Pentakomo",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4529,
+    "municip": "Pyrgos Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4530,
+    "municip": "Foinikaria",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4531,
+    "municip": "Mouttagiaka Touristiki Periochi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4532,
+    "municip": "Agios Tychon Touristiki Periochi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4533,
+    "municip": "Parekklisia Touristiki Periochi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4534,
+    "municip": "Pyrgos Lemesou Touristiki Periochi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4540,
+    "municip": "Paramytha",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4541,
+    "municip": "Apesia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4542,
+    "municip": "Apsiou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4545,
+    "municip": "Korfi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4546,
+    "municip": "Limnatis",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4549,
+    "municip": "Palodeia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4550,
+    "municip": "Spitali",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4551,
+    "municip": "Fasoula Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4560,
+    "municip": "Louvaras",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4562,
+    "municip": "Agios Pavlos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4563,
+    "municip": "Arakapas",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4564,
+    "municip": "Dierona",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4565,
+    "municip": "Zoopigi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4566,
+    "municip": "Kalo Chorio Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4600,
+    "municip": "Avdimou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4601,
+    "municip": "Prastio Avdimou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4603,
+    "municip": "Anogyra",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4604,
+    "municip": "Paramali",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4607,
+    "municip": "Pissouri",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4620,
+    "municip": "Episkopi Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4630,
+    "municip": "Erimi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4631,
+    "municip": "Kantou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4632,
+    "municip": "Kolossi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4636,
+    "municip": "Synoikismos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4640,
+    "municip": "Akrotiri",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4645,
+    "municip": "Asomatos Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4651,
+    "municip": "Trachoni Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4652,
+    "municip": "Tserkezoi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4700,
+    "municip": "Pachna",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4710,
+    "municip": "Agios Amvrosios Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4711,
+    "municip": "Agios Therapon",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4712,
+    "municip": "Alassa",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4713,
+    "municip": "Zanakia",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4715,
+    "municip": "Kivides Pano",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4716,
+    "municip": "Lofou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4717,
+    "municip": "Souni",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4730,
+    "municip": "Trimiklini",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4743,
+    "municip": "Kouka",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4747,
+    "municip": "Moniatis",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4750,
+    "municip": "Doros",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4760,
+    "municip": "Omodos",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4770,
+    "municip": "Arsos Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4772,
+    "municip": "Vouni",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4774,
+    "municip": "Dora",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4776,
+    "municip": "Koilani",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4778,
+    "municip": "Mandria Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4779,
+    "municip": "Pera Pedi",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4810,
+    "municip": "Amiantos Kato",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4814,
+    "municip": "Foini",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4815,
+    "municip": "Platres Kato",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4820,
+    "municip": "Platres Pano",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4860,
+    "municip": "Agros",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4870,
+    "municip": "Agios Theodoros Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4871,
+    "municip": "Agios Ioannis Lemesou",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4874,
+    "municip": "Mylos Kato",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4875,
+    "municip": "Chandria",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4876,
+    "municip": "Kyperounta",
+    "district": "Lemesos"
+  },
+  {
+    "code": 4878,
+    "municip": "Pelendri",
+    "district": "Lemesos"
+  }
+]

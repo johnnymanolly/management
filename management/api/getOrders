@@ -113,7 +113,7 @@ else
 {
     var queryParams = {};
     if(sortType == null) sortType = "string"
-    var fieldsParams = "name, address, number, client, fullName, orderedBy, orderedDate, deliveryDate, cancelled, assignee, orderStatus, delivered, location, scheduled, total, deliveredBy, formType, additionalInformation, orderId";
+    var fieldsParams = "name, address, number, client, fullName, orderedBy, orderedDate, deliveryDate, orderType ,cancelled, assignee, orderStatus, delivered, location, scheduled, total, deliveredBy, formType, additionalInformation, orderId";
     var queryString = 'formType = "onlineOrder"';
     if(number)
     {
